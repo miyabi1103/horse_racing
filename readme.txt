@@ -1,23 +1,20 @@
 
 使用方法は後半に記述
 
-main2は特徴量作成処理まで実行済みです
-モデルの学習から行なってください
-
-
 ソースコードの実行環境
 ・OS: Mac OS 13.6.9
 ・言語: Python 3.11.4
 
 beautifulsoup4==4.12.3
 lightgbm==4.5.0
-matplotlib==3.8.2
+
 numpy==2.1.0
 pandas==2.2.2
-PyYAML==6.0.1
-scikit_learn==1.4.0
-selenium==4.23.1
-tqdm==4.66.1
+matplotlib                3.9.2  
+pyyaml                    6.0.2 
+scikit-learn              1.5.2 
+selenium                  4.24.0  
+tqdm                      4.66.5
 webdriver_manager==4.0.2
 
 ■ディレクトリ構成
