@@ -3,7 +3,7 @@
 
 ソースコードの実行環境
 ・OS: Mac OS 13.6.9
-・言語: Python 3.11.4
+・言語: Python 3.11.8
 
 beautifulsoup4==4.12.3
 lightgbm==4.5.0
