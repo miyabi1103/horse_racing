@@ -8,7 +8,7 @@
 beautifulsoup4==4.12.3
 lightgbm==4.5.0
 
-numpy==2.1.0
+numpy==2.2.1
 pandas==2.2.2
 matplotlib                3.9.2  
 pyyaml                    6.0.2 
