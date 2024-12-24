@@ -5,17 +5,6 @@
 ・OS: Mac OS 13.6.9
 ・言語: Python 3.11.8
 
-beautifulsoup4==4.12.3
-lightgbm==4.5.0
-
-numpy==2.2.1
-pandas==2.2.2
-matplotlib                3.9.2  
-pyyaml                    6.0.2 
-scikit-learn              1.5.2 
-selenium                  4.24.0  
-tqdm                      4.66.5
-webdriver_manager==4.0.2
 
 ■ディレクトリ構成
 .
