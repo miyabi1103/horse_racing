@@ -231,6 +231,10 @@ class PredictionFeatureCreator:
             trainer_id = re.findall(r"\d{5}", a["href"])[0]
             trainer_id_list.append(int(trainer_id))
         df["trainer_id"] = trainer_id_list
+
+
+        df = df[df.iloc[:, 9] != '--']
+        df["tansho_odds"] = df.iloc[:, 9].astype(float)
         # 前処理
         df["wakuban"] = df.iloc[:, 0].astype(int)
         df["umaban"] = df.iloc[:, 1].astype(int)
@@ -240,16 +244,19 @@ class PredictionFeatureCreator:
         # df["weight"] = df.iloc[:, 8].str.extract(r"(\d+)").astype(int)
         # df["weight_diff"] = df.iloc[:, 8].str.extract(r"\((.+)\)").astype(int)
         df["weight"] = df.iloc[:, 8].astype(str).str.extract(r"(\d+)").astype(float)
-        df["weight_diff"] = df.iloc[:, 8].astype(str).str.extract(r"\((.+)\)").astype(float)
+        # df["weight_diff"] = df.iloc[:, 8].astype(str).str.extract(r"\((.+)\)").astype(float)
+        # 増減部分を抽出し、'前計不' を NaN に置き換える
+        df["weight_diff"] = df.iloc[:, 8].str.extract(r"\((.+)\)")
+
+        # '前計不'を NaN に置き換え、残りの部分を float 型に変換
+        df["weight_diff"] = df["weight_diff"].replace("前計不", np.nan).astype(float)
+        # 改行や不要な空白を完全に削除して、整数に変換
+        df["popularity"] = df.iloc[:, 10].astype(str).str.replace(r'\\n', '', regex=True).str.replace(r'\n', '', regex=True).str.strip().astype(int)
 
 
-        df = df[df.iloc[:, 9] != '--']
-        df["tansho_odds"] = df.iloc[:, 9].astype(float)
-        df["popularity"] = df.iloc[:, 10].astype(int)
+
         df["race_id"] = int(race_id)
         df["n_horses"] = df.groupby("race_id")["race_id"].transform("count")
-        
-
         
         result_df = df
 
@@ -359,8 +366,31 @@ class PredictionFeatureCreator:
         race_class = re.findall(regex_race_class, divs[1].text)
         if len(race_class_title) != 0:
             info_dict["race_class"] = race_class_mapping[race_class_title[0]]
-        elif len(race_class) != 0:
+        elif len(race_class) != 0 and race_class != ['オープン']:
             info_dict["race_class"] = race_class_mapping[race_class[0]]
+        elif len(race_class) != 0 and race_class ==['オープン']:
+            #オープンの場合
+            #賞金
+            #2900未満でオープン
+            #2900-5000G3
+            #5000-10000G2
+            #10000-G1
+            # 本賞金部分の抽出
+            prize_text = divs[1].find("span", string=lambda text: text and "本賞金:" in text).text
+            prize_amount = int(prize_text.split(":")[1].split(",")[0])  # 最初の金額を取得
+            # 本賞金に基づいてレースクラスを決定
+            if prize_amount < 2900:
+                race_grade = "オープン"
+                info_dict["race_class"] = race_class_mapping[race_grade]
+            elif 2900 <= prize_amount <= 5000:
+                race_grade = "GⅢ"
+                info_dict["race_class"] = race_class_mapping[race_grade]
+            elif 5000 < prize_amount < 10000:
+                race_grade = "GⅡ"
+                info_dict["race_class"] = race_class_mapping[race_grade]
+            elif 10000 <= prize_amount:
+                race_grade = "GⅠ"
+                info_dict["race_class"] = race_class_mapping[race_grade]
         else:
             info_dict["race_class"] = None
         info_dict["place"] = int(race_id[4:6])
@@ -1527,14 +1557,13 @@ class PredictionFeatureCreator:
 
 
 
-        
         # ターゲットエンコーディングを計算（カテゴリごとの複勝率の平均）
         df_old["target_rank"] = (df_old["rank"] <= 3).astype(int)
         df2 = df_old[["distance_place_type_umaban_ground_state_straight","distance_place_type_wakuban_ground_state_straight", "target_rank"]].dropna().astype(int)
         # グループごとのカウントを作成
         group_counts = df2.groupby("distance_place_type_umaban_ground_state_straight").size()
         # 100未満のグループを除外
-        valid_groups = group_counts[group_counts >= 100].index
+        valid_groups = group_counts[group_counts >= 10].index
         # 100以上のグループのみを使用して、平均複勝率を計算
         df2_filtered = df2[df2["distance_place_type_umaban_ground_state_straight"].isin(valid_groups)]
         # 平均複勝率を計算
@@ -1545,7 +1574,7 @@ class PredictionFeatureCreator:
         # グループごとのカウントを作成
         group_counts = df2.groupby("distance_place_type_wakuban_ground_state_straight").size()
         # 100未満のグループを除外
-        valid_groups = group_counts[group_counts >= 100].index
+        valid_groups = group_counts[group_counts >= 10].index
         # 100以上のグループのみを使用して、平均複勝率を計算
         df2_filtered = df2[df2["distance_place_type_wakuban_ground_state_straight"].isin(valid_groups)]
         # 平均複勝率を計算
