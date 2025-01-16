@@ -13,12 +13,15 @@ OUTPUT_DIR.mkdir(exist_ok=True, parents=True)
 class Evaluator_lightgbm_rank_niti_cross:
     def __init__(
         self,
-        return_tables_filepath: Path = PREPROCESSED_DIR / "return_tables.pickle",
+        return_tables_filename: str = "return_tables.pickle",
+        preprocessed_dir: Path = PREPROCESSED_DIR,
         train_dir: Path = TRAIN_DIR,
         evaluation_filename: str = "evaluation_lightgbm_rank_niti_cross.csv",
         output_dir: Path = OUTPUT_DIR,
     ):
-        self.return_tables = pd.read_pickle(return_tables_filepath)
+        self.return_tables_filepath = preprocessed_dir / return_tables_filename
+        
+        self.return_tables = pd.read_pickle(self.return_tables_filepath)        
         self.evaluation_df = pd.read_csv(train_dir / evaluation_filename, sep="\t")
         self.output_dir = output_dir
 

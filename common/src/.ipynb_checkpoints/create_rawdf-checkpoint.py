@@ -325,7 +325,7 @@ def create_horse_results(
                     df = tables[2]
                 else:
                     print(f"{horse_id} の HTML に3つ目のテーブルがありません")
-                    continue
+                    break
 
                 # 受賞歴がある場合
                 if len(tables) > 3 and df.columns[0] == "受賞歴":

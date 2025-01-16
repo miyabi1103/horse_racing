@@ -13,12 +13,15 @@ OUTPUT_DIR.mkdir(exist_ok=True, parents=True)
 class Evaluator_lightgbm_time_kaiki:
     def __init__(
         self,
-        return_tables_filepath: Path = PREPROCESSED_DIR / "return_tables.pickle",
+        return_tables_filename: str = "return_tables.pickle",
+        preprocessed_dir: Path = PREPROCESSED_DIR,
         train_dir: Path = TRAIN_DIR,
         evaluation_filename: str = "evaluation_lightgbm_time.csv",
         output_dir: Path = OUTPUT_DIR,
     ):
-        self.return_tables = pd.read_pickle(return_tables_filepath)
+        self.return_tables_filepath = preprocessed_dir / return_tables_filename
+        
+        self.return_tables = pd.read_pickle(self.return_tables_filepath)
         self.evaluation_df = pd.read_csv(train_dir / evaluation_filename, sep="\t")
         self.output_dir = output_dir
 
@@ -26,7 +29,7 @@ class Evaluator_lightgbm_time_kaiki:
         self,
         sort_col: str = "pred",
         ascending: bool = True,
-        n: int = 5,
+        n: int = 10,
         exp_name: str = "model",
     ):
         """
@@ -84,11 +87,13 @@ class Evaluator_lightgbm_time_kaiki:
         output_df.insert(0, "topn", n)
         return output_df
 
+
+
     def summarize_box_top_n(
         self,
         sort_col: str = "pred",
-        ascending: bool = False,
-        n: int = 5,
+        ascending: bool = True,
+        n: int = 10,
         exp_name: str = "model",
         save_filename: str = "box_summary_lightgbm_time.csv",
     ) -> pd.DataFrame:
@@ -119,6 +124,11 @@ class Evaluator_lightgbm_time_kaiki:
                 self.box_top_n(n=3, exp_name=exp_name),
                 self.box_top_n(n=4, exp_name=exp_name),
                 self.box_top_n(n=5, exp_name=exp_name),
+                self.box_top_n(n=6, exp_name=exp_name),
+                self.box_top_n(n=7, exp_name=exp_name),
+                self.box_top_n(n=8, exp_name=exp_name),
+                self.box_top_n(n=9, exp_name=exp_name),
+                self.box_top_n(n=10, exp_name=exp_name),
             ]
         )
         summary_df2 =pd.concat(
@@ -128,6 +138,11 @@ class Evaluator_lightgbm_time_kaiki:
                 self.box_top_n("popularity", True,3, "pop"),
                 self.box_top_n("popularity", True,4,"pop"),
                 self.box_top_n("popularity", True,5, "pop"),
+                self.box_top_n("popularity", True,6,"pop"),
+                self.box_top_n("popularity", True,7, "pop"),
+                self.box_top_n("popularity", True,8, "pop"),
+                self.box_top_n("popularity", True,9,"pop"),
+                self.box_top_n("popularity", True,10, "pop"),                
             ]
         )
         

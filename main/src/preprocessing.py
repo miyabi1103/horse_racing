@@ -14,6 +14,9 @@ POPULATION_DIR = Path("..", "data", "00_population")
 OUTPUT_DIR = Path("..", "data", "01_preprocessed")
 OUTPUT_DIR.mkdir(exist_ok=True, parents=True)
 
+
+POPULATION_DIR_NEW = COMMON_DATA_DIR / "prediction_population"
+
 # カテゴリ変数を数値に変換するためのマッピング
 with open(MAPPING_DIR / "sex.json", "r") as f:
     sex_mapping = json.load(f)
@@ -880,8 +883,7 @@ def process_horse_results(
     df["date"] = pd.to_datetime(df["日付"])
     df["weather"] = df["天気"].map(weather_mapping)
     df["race_type"] = df["距離"].str[0].map(race_type_mapping)
-    df = df[df["race_type"] != 2]
-    df = df[df["race_type"] != 0]
+    
     df["course_len"] = df["距離"].str.extract(r"(\d+)").astype(int)
     df["ground_state"] = df["馬場"].map(ground_state_mapping)
     df["rank_diff"] = df["着差"].map(lambda x: 0 if x < 0 else x)
@@ -925,7 +927,7 @@ def process_horse_results(
     df['course_len_prefix'] = df['course_len'].astype(str).str[:2].astype(float)  # 上2桁を取得
     
     # 奇数の場合に pace_diff を NaN に設定
-    df.loc[df['course_len_prefix'] % 2 != 0, 'pace_diff'] = None
+    df.loc[df['course_len_prefix'] % 2 != 0, 'pace_diff'] = df['pace_2'] - (df['pace_1']* 6/5)
     # pace_diff をカテゴリに分ける関数
     def categorize_pace_diff(value):
         if value < -1.0:

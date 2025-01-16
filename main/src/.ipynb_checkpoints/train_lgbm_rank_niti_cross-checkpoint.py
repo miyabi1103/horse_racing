@@ -255,7 +255,7 @@ class Trainer_lightgbm_rank_niti_cv:
 
     def create_dataset_for_cv(
         self, 
-        n_splits: int = 10
+        n_splits: int = 5
     ):
         """ 時系列クロスバリデーションのため、データをn_splitsに分割
         学習データを徐々に増やし、評価データを次に進めていく
@@ -275,7 +275,6 @@ class Trainer_lightgbm_rank_niti_cv:
             # 評価データの範囲
             valid_df = self.features.iloc[(i + 1) * fold_size: (i + 2) * fold_size]
             # 「馬の過去成績」の欠損率
-            valid_df = valid_df.query('rank_3races.notna()')
             # 学習データと評価データを返す
             yield train_df, valid_df
 
@@ -345,7 +344,7 @@ class Trainer_lightgbm_rank_niti_cv:
 
     def run(
         self, 
-        n_splits: int = 10, 
+        n_splits: int = 5, 
         importance_filename: str = "importance_lightgbm_rank_niti_cv", 
         model_filename: str = "model_lightgbm_rank_niti_cv.pkl", 
         evaluation_filename: str = "evaluation_lightgbm_rank_niti_cv.csv", 
@@ -386,7 +385,7 @@ class Trainer_lightgbm_rank_niti_cv:
 
         final_train_df = self.features
         lgb_train = lgb.Dataset(final_train_df[self.feature_cols], final_train_df["target"])
-        additional_boost_round = 1000 
+        additional_boost_round = 2000 
         total_boost_round = num_boost_round + additional_boost_round
 
         # 最終モデルを学習（前回のモデルを引き継ぐ）

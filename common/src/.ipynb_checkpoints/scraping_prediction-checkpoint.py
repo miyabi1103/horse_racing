@@ -193,6 +193,7 @@ def create_race_info(
     )
     return concat_df
 
+
 def update_rawdf(
     new_df: pd.DataFrame,
     key: str,

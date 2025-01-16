@@ -38,7 +38,7 @@ def create(
     race_info_filename: str = "race_info.csv",
     results_filename: str = "results.csv",
     output_dir: Path = OUTPUT_DIR,
-    output_filename: str = "population_turf.csv",
+    output_filename: str = "population.csv",
 ) -> pd.DataFrame:
     """
     from_に開始日、to_に終了日を指定（yyyy-mm-dd形式）して、その期間に絞って

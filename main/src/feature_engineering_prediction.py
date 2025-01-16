@@ -12,7 +12,9 @@ from tqdm.notebook import tqdm
 from webdriver_manager.chrome import ChromeDriverManager
 from io import StringIO 
 
-
+from urllib.request import Request, urlopen
+import time
+import chardet
 # commonディレクトリのパス
 COMMON_DATA_DIR = Path("..", "..", "common", "data")
 POPULATION_DIR = COMMON_DATA_DIR / "prediction_population"
@@ -63,16 +65,27 @@ class PredictionFeatureCreator:
         output_dir: Path = OUTPUT_DIR,
         output_filename: str = "features_prediction.csv",
 
+        population_all_filename: str = "population_all.csv",    
+        results_all_filename: str = "results_all.csv",
+        race_info_all_filename: str = "race_info_all.csv",
+        horse_results_all_filename: str = "horse_results_all.csv",  
+        # peds_all_filename: str = "peds_all.csv",      
 
+        
         old_results_condition_filename: str = "results_prediction.csv",
         old_race_info_condition_filename: str = "race_info_prediction.csv",   
         bms_leading_filename: str = "bms_leading.csv",     
     ):
         self.population = pd.read_csv(population_dir / population_filename, sep="\t")
-        self.old_results = pd.read_csv(input_dir / old_results_filename, sep="\t")
-        self.old_race_info = pd.read_csv(input_dir / old_race_info_filename, sep="\t")
-        self.old_population = pd.read_csv(old_population_dir / old_population_filename, sep="\t")
-        self.old_horse_results = pd.read_csv(input_dir / old_horse_results_filename, sep="\t")
+
+
+
+        self.all_population = pd.read_csv(old_population_dir / population_all_filename, sep="\t")
+        self.all_results = pd.read_csv(input_dir / results_all_filename, sep="\t")
+        self.all_race_info = pd.read_csv(input_dir / race_info_all_filename, sep="\t")
+        self.all_horse_results = pd.read_csv(input_dir / horse_results_all_filename, sep="\t")
+       
+
 
         self.old_results_condition = pd.read_csv(input_dir / old_results_condition_filename, sep="\t")
         self.old_race_info_condition = pd.read_csv(input_dir / old_race_info_condition_filename, sep="\t")
@@ -187,23 +200,52 @@ class PredictionFeatureCreator:
         self.agg_horse_n_races_relative_df = merged_df
 
     
+    # def fetch_shutuba_page_html(self, race_id: str) -> None:
+    #     """
+    #     レースidを指定すると、出馬表ページのhtmlをスクレイピングする関数。
+    #     """
+    #     print("fetching shutuba page html...")
+    #     options = Options()
+    #     options.add_argument("--headless")
+    #     options.add_argument("--no-sandbox")
+    #     options.add_argument("--disable-dev-shm-usage")
+    #     # chrome driverをインストール
+    #     driver_path = ChromeDriverManager().install()
+    #     url = f"https://race.netkeiba.com/race/shutuba.html?race_id={race_id}"
+    #     with webdriver.Chrome(service=Service(driver_path), options=options) as driver:
+    #         driver.implicitly_wait(10000)
+    #         driver.get(url)
+    #         self.htmls[race_id] = driver.page_source
+    #     print("fetching shutuba page html...comp")
+
     def fetch_shutuba_page_html(self, race_id: str) -> None:
         """
         レースidを指定すると、出馬表ページのhtmlをスクレイピングする関数。
         """
         print("fetching shutuba page html...")
-        options = Options()
-        options.add_argument("--headless")
-        options.add_argument("--no-sandbox")
-        options.add_argument("--disable-dev-shm-usage")
-        # chrome driverをインストール
-        driver_path = ChromeDriverManager().install()
+        
+        # ヘッダーを設定
+        headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36'}
+        
+        # URLを作成
         url = f"https://race.netkeiba.com/race/shutuba.html?race_id={race_id}"
-        with webdriver.Chrome(service=Service(driver_path), options=options) as driver:
-            driver.implicitly_wait(10000)
-            driver.get(url)
-            self.htmls[race_id] = driver.page_source
+        
+        # リクエストを作成し、HTMLを取得
+        request = Request(url, headers=headers)
+        html = urlopen(request).read()  # HTMLを取得
+        
+        # 文字エンコーディングを判別
+        result = chardet.detect(html)
+        
+        # エンコーディングを取得
+        encoding = result.get('encoding', 'utf-8')  # chardetがエンコーディングを判別できなかった場合、デフォルトで'utf-8'を使用
+        
+        self.htmls[race_id] = html.decode(encoding)  # 判別したエンコーディングでHTMLを文字列にデコードして保存
+
+        
         print("fetching shutuba page html...comp")
+
+
 
     def fetch_results(
         self, race_id: str, html: str, sex_mapping: dict = sex_mapping
@@ -229,14 +271,23 @@ class PredictionFeatureCreator:
         df["jockey_id"] = jockey_id_list
         trainer_id_list = []
         a_list = soup.find_all("a", href=re.compile(r"/trainer/"))
+        # for a in a_list:
+        #     trainer_id = re.findall(r"\d{5}", a["href"])[0]
+        #     trainer_id_list.append(int(trainer_id))
         for a in a_list:
-            trainer_id = re.findall(r"\d{5}", a["href"])[0]
-            trainer_id_list.append(int(trainer_id))
+            matches = re.findall(r"\d{5}", a["href"])
+            if matches:
+                trainer_id = matches[0]
+                trainer_id_list.append(int(trainer_id))
+            else:
+                trainer_id_list.append(0) 
+                                
         df["trainer_id"] = trainer_id_list
 
 
-        df = df[df.iloc[:, 9] != '--']
-        df["tansho_odds"] = df.iloc[:, 9].astype(float)
+        # df = df[df.iloc[:, 9] != '--']
+        # df = df[df.iloc[:, 9] != '---.-']
+        # df["tansho_odds"] = df.iloc[:, 9].astype(float)
         # 前処理
         df["wakuban"] = df.iloc[:, 0].astype(int)
         df["umaban"] = df.iloc[:, 1].astype(int)
@@ -271,7 +322,7 @@ class PredictionFeatureCreator:
 
         # 改行や不要な空白を完全に削除して、整数に変換
         # 数値型の場合、文字列に変換してから改行を削除
-        df["popularity"] = df.iloc[:, 10].astype(str).str.replace(r'\\n', '', regex=True).str.replace(r'\n', '', regex=True).str.strip().astype(int)
+        # df["popularity"] = df.iloc[:, 10].astype(str).str.replace(r'\\n', '', regex=True).str.replace(r'\n', '', regex=True).str.strip().astype(int)
 
 
         df["race_id"] = int(race_id)
@@ -328,8 +379,8 @@ class PredictionFeatureCreator:
                 # "nobori",
                 "umaban",
                 "wakuban",
-                "tansho_odds",
-                "popularity",
+                # "tansho_odds",
+                # "popularity",
                 "impost",
                 "sex",
                 "age",
@@ -763,8 +814,10 @@ class PredictionFeatureCreator:
         
         # 競馬場カテゴリに基づく変換を追加
         df[['goal_range', 'curve', 'goal_slope']] = df.apply(convert_course, axis=1)
-        
+        df["goal_range"] = df["goal_range"].fillna(-1).astype(int)
         df["goal_range_100"] = df["goal_range"]/100
+        df["goal_range_100"] = df["goal_range_100"].astype(float)
+        df["goal_range"] = df["goal_range"].astype(str)
         
         
         
@@ -1466,8 +1519,8 @@ class PredictionFeatureCreator:
 
 
         baselog_old = (
-            self.old_population.merge(
-                self.old_race_info[["race_id", "course_len", "race_type","race_grade","ground_state", "weather","place","around"]], on="race_id"
+            self.all_population.merge(
+                self.all_race_info[["race_id", "course_len", "race_type","race_grade","ground_state", "weather","place","around"]], on="race_id"
             )
             # .merge(
             #     self.old_horse_results,
@@ -1481,7 +1534,7 @@ class PredictionFeatureCreator:
              
         df_old = (
             baselog_old
-            .merge(self.old_results[["race_id", "horse_id", "nobori","time","wakuban", "umaban","rank","sex"]], on=["race_id", "horse_id"])
+            .merge(self.all_results[["race_id", "horse_id", "nobori","time","wakuban", "umaban","rank","sex"]], on=["race_id", "horse_id"])
         )
         df_old["nobori"] = df_old["nobori"].fillna(df_old["nobori"].mean())
 
@@ -1945,8 +1998,8 @@ class PredictionFeatureCreator:
         """
 
         baselog = (
-            self.old_population.merge(
-                self.old_race_info[["race_id", "course_len", "race_type","race_grade","ground_state", "weather","place"]], on="race_id"
+            self.all_population.merge(
+                self.all_race_info[["race_id", "course_len", "race_type","race_grade","ground_state", "weather","place"]], on="race_id"
             )
             # .merge(
             #     self.horse_results,
@@ -1960,7 +2013,7 @@ class PredictionFeatureCreator:
              
         df = (
             baselog
-            .merge(self.old_results[["race_id", "horse_id", "wakuban", "nobori","time","umaban"]], on=["race_id", "horse_id"])
+            .merge(self.all_results[["race_id", "horse_id", "wakuban", "nobori","time","umaban"]], on=["race_id", "horse_id"])
         )
         df["nobori"] = df["nobori"].fillna(df["nobori"].mean())
 
@@ -2794,12 +2847,12 @@ class PredictionFeatureCreator:
         
         
         # 距離/競馬場/タイプレースランク/直線/天気/馬場状態
-        df["distance_place_type_race_grade_weather_ground_state"] = (df["course_len"].astype(str) + df["place"].astype(str) + df["race_type"].astype(str)  + df["race_grade"].astype(str) + df["ground_state"].astype(str)+ df["weather"].astype(str)).astype(int)   
+        df["distance_place_type_ground_state"] = (df["course_len"].astype(str) + df["place"].astype(str) + df["race_type"].astype(str) + df["ground_state"].astype(str)).astype(int)   
         
         
         baselog_old = (
-            self.old_population.merge(
-                self.old_race_info[["race_id", "course_len", "race_type","race_grade","ground_state", "weather","place"]], on="race_id"
+            self.all_population.merge(
+                self.all_race_info[["race_id", "course_len", "race_type","race_grade","ground_state", "weather","place"]], on="race_id"
             )
             # .merge(
             #     self.old_horse_results,
@@ -2813,7 +2866,7 @@ class PredictionFeatureCreator:
              
         df_old = (
             baselog_old
-            .merge(self.old_results[["race_id", "horse_id", "wakuban", "umaban","nobori","time"]], on=["race_id", "horse_id"])
+            .merge(self.all_results[["race_id", "horse_id", "wakuban", "umaban","nobori","time"]], on=["race_id", "horse_id"])
         )
         df_old["nobori"] = df_old["nobori"].fillna(df_old["nobori"].mean())
         
@@ -2824,21 +2877,21 @@ class PredictionFeatureCreator:
         df_old["weather"] = df_old["weather"].astype(int)  
         
         # 距離/競馬場/タイプレースランク/直線/天気/馬場状態
-        df_old["distance_place_type_race_grade_weather_ground_state"] = (df_old["course_len"].astype(str) + df_old["place"].astype(str) + df_old["race_type"].astype(str)  + df_old["race_grade"].astype(str) + df_old["ground_state"].astype(str)+ df_old["weather"].astype(str)).astype(int)   
+        df_old["distance_place_type_ground_state"] = (df_old["course_len"].astype(str) + df_old["place"].astype(str) + df_old["race_type"].astype(str)  + df_old["ground_state"].astype(str)).astype(int)   
         
         #noboriの平均
-        target_mean_1 = df_old.groupby("distance_place_type_race_grade_weather_ground_state")["nobori"].mean()
+        target_mean_1 = df_old.groupby("distance_place_type_ground_state")["nobori"].mean()
         # 平均値をカテゴリ変数にマッピング
-        df_old["distance_place_type_race_grade_weather_ground_state_nobori_encoded"] = df_old["distance_place_type_race_grade_weather_ground_state"].map(target_mean_1)
+        df_old["distance_place_type_ground_state_nobori_encoded"] = df_old["distance_place_type_ground_state"].map(target_mean_1)
         
         # #pace_1の平均
         # target_mean_1 = df_old.groupby("distance_place_type_race_grade_around_weather_ground_state")["pace_1"].mean()
         # # 平均値をカテゴリ変数にマッピング
         # df_old["distance_place_type_race_grade_around_weather_ground_state_pace_1_encoded"] = df_old["distance_place_type_race_grade_around_weather_ground_state"].map(target_mean_1)
         
-        df_old = df_old[["distance_place_type_race_grade_weather_ground_state","distance_place_type_race_grade_weather_ground_state_nobori_encoded"]]
+        df_old = df_old[["distance_place_type_ground_state","distance_place_type_ground_state_nobori_encoded"]]
         
-        columns_to_merge = [("distance_place_type_race_grade_weather_ground_state","distance_place_type_race_grade_weather_ground_state_nobori_encoded")]
+        columns_to_merge = [("distance_place_type_ground_state","distance_place_type_ground_state_nobori_encoded")]
         
         
         for original_col, encoded_col in columns_to_merge:
@@ -2909,13 +2962,14 @@ class PredictionFeatureCreator:
         
         過去レースの最大値,平均を取ること
         """
-        
-        
+
         # rank_diffに+1してスコア計算用の列を作成
         df["adjusted_rank_diff"] = df["rank_diff"] + 1
         
-        # rank_diffとrace_gradeを利用した基本スコアを計算
-        df["base_score"] = 0.5 / df["adjusted_rank_diff"] *(df['race_grade_scaled'] )*1
+        # # rank_diffとrace_gradeを利用した基本スコアを計算
+        # df["base_score"] = 0.5 / df["adjusted_rank_diff"] *(df['race_grade_scaled'] )*1
+        df["base_score"] = ((df["race_grade"]) * ( 1/((((df["rank_diff"] + 1)+10)/10)*(((df["course_len"]*0.0025)+20)/20)*(((df["pace_diff"] * 1)+20)/20))))
+        
         
         # 条件に基づく変換
         df = df.copy()
@@ -2924,7 +2978,7 @@ class PredictionFeatureCreator:
         )
         
         # その後で1/1.7で割る
-        df["place_season_condition_type_categori_processed_1"] = df["place_season_condition_type_categori_processed"] / 4
+        df["place_season_condition_type_categori_processed_1"] = (df["place_season_condition_type_categori_processed"]+20) / 20
 
         # コーナー順位の平均を計算
         df["corner_avg_ratio"] = (
@@ -2933,7 +2987,7 @@ class PredictionFeatureCreator:
         )
         
         # 出走レースのnoboriとの差分を計算
-        df["nobori_diff"] = df["distance_place_type_race_grade_weather_ground_state_nobori_encoded"] - df["nobori"]
+        df["nobori_diff"] = df["distance_place_type_ground_state_nobori_encoded"] - df["nobori"]
         # df["pace_diff"]  = df["distance_place_type_race_grade_around_weather_ground_state_pace_1_encoded"] - df["pace_1"]
         
         # スコア分割用の列を作成
@@ -2941,38 +2995,44 @@ class PredictionFeatureCreator:
         df["zizoku"] = 0.0
         
         # 条件1: 持続力にスコアを割り振る
-        is_sustain_condition = df["corner_avg_ratio"] < 0.4
-        df.loc[is_sustain_condition, "zizoku"] = df["base_score"] + df["place_season_condition_type_categori_processed_1"]
+        is_sustain_condition = df["corner_avg_ratio"] < 0.45
+        df.loc[is_sustain_condition, "zizoku"] = df["base_score"] * 1/df["place_season_condition_type_categori_processed_1"]
+
         
         # 条件1_1: 瞬発力にもスコアを割り振る（nobori_diff > 0.3 の場合）
-        df.loc[is_sustain_condition & (df["nobori_diff"] > 0.3), "syunpatu"] = df["base_score"] - df["place_season_condition_type_categori_processed_1"]
-        
+        df.loc[(df["nobori_diff"] > 0.2), "syunpatu"] = df["base_score"] * df["place_season_condition_type_categori_processed_1"]* ((df["nobori_diff"]+10)/10)
+
         # 条件2: 瞬発力にスコアを割り振る（それ以外の場合）※未割り当ての場合のみ
-        df.loc[~is_sustain_condition & df["syunpatu"].isna(), "syunpatu"] = df["base_score"] - df["place_season_condition_type_categori_processed_1"]
+        df.loc[df["syunpatu"].isna(), "syunpatu"] = df["base_score"] * df["place_season_condition_type_categori_processed_1"] * ((df["nobori_diff"]+20)/20)
         
+        # 条件2:持続力にスコアを割り振る（それ以外の場合）※未割り当ての場合のみ
+        df.loc[~is_sustain_condition, "zizoku"] = df["base_score"]/(df["corner_avg_ratio"]*2.3) * 1/df["place_season_condition_type_categori_processed_1"]
         
         # 瞬発力に補正を加える
-        nobori_correction_factor = np.maximum(df["nobori_diff"] - 0.3, 0) * 0.4  # 補正を半分に減らす
-        df["syunpatu"] += nobori_correction_factor * df["base_score"] - df["place_season_condition_type_categori_processed_1"]
+        nobori_correction_factor = np.maximum(df["nobori_diff"] - 0.2, 0) * 0.1  # 補正を半分に減らす
+        df["syunpatu"] += nobori_correction_factor * df["base_score"] * df["place_season_condition_type_categori_processed_1"]
         
         # # pace_1列に基づく補正
         
         # pace_correction_factor = 0.1 - (df["pace_1"] - 36) / 3.6  # pace_1が36より小さいほど補正を増やし、増えるほど補正を減らす
         # df["pace_correction_factor"] = pace_correction_factor
-        pace_correction_factor =(df["pace_diff"]) * 1
+        pace_correction_factor =((df["pace_diff"])+10) /10
         df["pace_correction_factor"] = pace_correction_factor
         
-        # 持続力 (zizoku) に補正を加える
-        df["zizoku"] += pace_correction_factor *df["base_score"] *0.3 # 調整係数0.5は任意で調整可能
-        
+        #スローのとき  
+        df["zizoku"] *= 1/pace_correction_factor # 調整係数0.5は任意で調整可能
+        #ハイのとき      
         # 瞬発力 (syunpatu) に補正を加える
-        df["syunpatu"] += pace_correction_factor *df["base_score"]* 0.4  # 同様に調整係数を加えます
+        df["syunpatu"] *= pace_correction_factor *1  # 同様に調整係数を加えます
+
+
+        # # 持続力スコアを距離で補正
+        # distance_base = 1600
+        # distance_correction_factor = 1  # 距離補正の影響を抑えるスケーリング係数
+        # df["distance_correction"] = (df["course_len"] - distance_base) / 1500  # 分母を5000に変更し補正を小さく
+
         
-        # 持続力スコアを距離で補正
-        distance_base = 2000
-        distance_correction_factor = 1  # 距離補正の影響を抑えるスケーリング係数
-        df["distance_correction"] = (df["course_len"] - distance_base) / 1500  # 分母を5000に変更し補正を小さく
-        df["zizoku"] += df["distance_correction"]  * distance_correction_factor
+        df["zizoku"] *= (((df["course_len"]*0.0025) + 50) / 50) 
         df["syunpatu_minus"] = df["syunpatu"] * -1
    
 
@@ -3081,6 +3141,24 @@ class PredictionFeatureCreator:
         
         # merged_dfとrelative_dfをrace_idとhorse_idでマージ（必要なキーを指定）
         merged_df = merged_df.merge(relative_df, on=["race_id", "horse_id"], how="left")
+
+
+
+        syunpatu_columns_plus = [
+            "syunpatu_mean_1races_encoded", "syunpatu_mean_3races_encoded", "syunpatu_mean_5races_encoded", "syunpatu_mean_8races_encoded",
+            "syunpatu_min_1races_encoded", "syunpatu_min_3races_encoded", "syunpatu_min_5races_encoded", "syunpatu_min_8races_encoded",
+            "syunpatu_max_1races_encoded", "syunpatu_max_3races_encoded", "syunpatu_max_5races_encoded", "syunpatu_max_8races_encoded",
+            
+            # zizokuバージョンの列を追加
+            "zizoku_mean_1races_encoded", "zizoku_mean_3races_encoded", "zizoku_mean_5races_encoded", "zizoku_mean_8races_encoded",
+            "zizoku_min_1races_encoded", "zizoku_min_3races_encoded", "zizoku_min_5races_encoded", "zizoku_min_8races_encoded",
+            "zizoku_max_1races_encoded", "zizoku_max_3races_encoded", "zizoku_max_5races_encoded", "zizoku_max_8races_encoded"
+        ]
+        # 必要な列を指定
+        selected_columns = syunpatu_columns_plus + ['race_id', 'horse_id', 'date']
+
+        # merged_dfから指定した列だけを抽出
+        self.syunpatu_zizoku_df = merged_df[selected_columns]
 
 
 
@@ -3288,6 +3366,7 @@ class PredictionFeatureCreator:
         # 対象の列を削除
         merged_df = merged_df.drop(columns=columns_to_remove, errors="ignore")
 
+
         self.agg_cross_features_df_5 = merged_df
         print("running cross_features_5()...comp")
     
@@ -3296,7 +3375,7 @@ class PredictionFeatureCreator:
 
 
     def cross_features_6(
-        self, n_races: list[int] = [1,  3, 5,8]
+        self,date_condition_a: int, n_races: list[int] = [1,  3, 5,8],
     ):   
         #直近レースから、馬場状態調査、race_resultsで行う
         """
@@ -3307,16 +3386,17 @@ class PredictionFeatureCreator:
         5/その平均を取る
         6/+なら軽く、-なら重く、それぞれ5段階のカテゴリに入れる
         """
-        
+        #当該レース
         merged_df = self.population.copy()        
         df = (
             merged_df
             .merge(self.race_info[["race_id", "place","weather","ground_state","course_len","race_type","race_date_day_count"]], on="race_id")
         )
         df["place"] = df["place"].astype(int)
-        
+
+        #当該レース近辺のレース、馬場状態
         df_old2 = (
-            self.old_results_condition[["race_id", "horse_id","time","rank_per_horse"]]
+            self.old_results_condition[["race_id", "horse_id","time","rank","rank_per_horse"]]
             .merge(self.old_race_info_condition[["race_id", "place","weather","ground_state","race_grade","course_len","race_type","race_date_day_count"]], on="race_id")
         )
 
@@ -3338,9 +3418,10 @@ class PredictionFeatureCreator:
         #     # .query("date_horse < date")
         #     # .sort_values("date_horse", ascending=False)
         # )
+        #平均タイム、芝のみ
         df_old = (
-            self.old_race_info[["race_id", "course_len", "race_type","race_grade","ground_state", "weather","place","around"]]
-            .merge(self.old_results[["race_id", "horse_id", "wakuban", "umaban","nobori","time","sex"]], on="race_id")
+            self.all_race_info[["race_id", "course_len", "race_type","race_grade","ground_state", "weather","place","around"]]
+            .merge(self.all_results[["race_id", "horse_id", "wakuban", "rank","umaban","nobori","time","sex"]], on="race_id")
         )
         df_old["place"] = df_old["place"].astype(int)
         df_old["race_grade"] = df_old["race_grade"].astype(int)
@@ -3350,13 +3431,19 @@ class PredictionFeatureCreator:
                      
         
         df_old["distance_place_type_race_grade"] = (df_old["course_len"].astype(str) + df_old["place"].astype(str) + df_old["race_type"].astype(str) + df_old["race_grade"].astype(str)).astype(int)
+        df_old_copy = df_old
+        # rank列が1, 2, 3の行だけを抽出
+        df_old = df_old[df_old['rank'].isin([1, 2, 3])]
+
         target_mean_1 = df_old.groupby("distance_place_type_race_grade")["time"].mean()
         # 平均値をカテゴリ変数にマッピング
+        # スライスをコピーしてから処理
+        df_old = df_old.copy()
+
         df_old["distance_place_type_race_grade_encoded"] = df_old["distance_place_type_race_grade"].map(target_mean_1)
         
         
         df_old = df_old[["distance_place_type_race_grade",'distance_place_type_race_grade_encoded']]
-        
         
         columns_to_merge = [
             ("distance_place_type_race_grade",'distance_place_type_race_grade_encoded'),
@@ -3367,16 +3454,18 @@ class PredictionFeatureCreator:
             df2_subset = df_old[[original_col, encoded_col]].drop_duplicates()  # 重複を削除
             df2_subset = df2_subset.reset_index(drop=True)  # インデックスをリセット
             df_old2 = df_old2.merge(df2_subset, on=original_col, how='left')  # dfにマージ
+        df_old2 = df_old2[df_old2['rank'].isin([1, 2, 3])]
         df_old2["distance_place_type_race_grade_encoded_time_diff"] = df_old2['distance_place_type_race_grade_encoded'] - df_old2["time"]
 
-        df_old2= df_old2[df_old2["race_type"] != 2]
-        df_old2_1 = df_old2[df_old2["race_type"] != 0]
+        # df_old2= df_old2[df_old2["race_type"] != 2]
+        # df_old2_1 = df_old2[df_old2["race_type"] != 0]
+        df_old2_1 = df_old2.copy()
         # 2. df の各行について処理
 
         def compute_mean_for_row(row, df_old2_1):
             # race_type == 0 の場合は NaN を返す
-            if row["race_type"] == 0:
-                return np.nan
+            # if row["race_type"] == 0:
+                # return np.nan
             df_old2_1["race_date_day_count"] = df_old2_1["race_date_day_count"].astype(int)
             target_day_count = int(row["race_date_day_count"])  # df の各行の race_date_day_count
 
@@ -3388,20 +3477,27 @@ class PredictionFeatureCreator:
                 (df_old2_1["race_date_day_count"] >= (target_day_count - 1200)) &  # race_date_day_count が target_day_count-1200 以上
                 (df_old2_1["race_date_day_count"] <= (target_day_count - 1)) &  # race_date_day_count が target_day_count-1 以下
                 (df_old2_1["place"] == row["place"]) &  # place が一致
+                (df_old2_1["race_type"] == row["race_type"])  & 
                 (df_old2_1["weather"].isin([0, 1, 2])) &  # weather が 0, 1, 2 のいずれか
                 (df_old2_1["ground_state"] == 0)   # ground_state が 0
                 # &
                 # (df_old2_1["rank_per_horse"] < 0.87)  # rank_per_horse が 0.87 未満
             ]
-        
+    
             # 4. フィルタリングした行の "distance_place_type_race_grade_encoded_time_diff" の平均を計算
             mean_time_diff = filtered_df_old2_1["distance_place_type_race_grade_encoded_time_diff"].mean()
-        
             # 5. 計算結果を返す（NaNの場合も考慮）
             return mean_time_diff if not np.isnan(mean_time_diff) else np.nan
         
+
+
         # 6. df の各行に対して、計算した平均値を新しい列に追加
         df["mean_ground_state_time_diff"] = df.apply(compute_mean_for_row, axis=1, df_old2_1=df_old2_1)
+
+        # df["mean_ground_state_time_diff"] = df.apply(
+        #     lambda row: compute_mean_for_row(row, df_old2_1=df_old2_1), axis=1
+        # )
+
 
         def assign_value(row):
             # weather が 3, 4, 5 または ground_state が 0 以外の場合は 5 を設定
@@ -3432,7 +3528,12 @@ class PredictionFeatureCreator:
             return 3
         
         # 新しい列を追加
-        df["ground_state_level"] = df.apply(assign_value, axis=1)
+        if date_condition_a != 0:
+            df["ground_state_level"] = date_condition_a
+        else:
+            df["ground_state_level"] = df.apply(assign_value, axis=1)
+
+        
         merged_df = merged_df.merge(df[["race_id","date","horse_id","mean_ground_state_time_diff","ground_state_level"]],on=["race_id","date","horse_id"])	
 
         self.agg_cross_features_df_6 = merged_df
@@ -4282,23 +4383,23 @@ class PredictionFeatureCreator:
         
             # 急カーブ場合
             condition1 = (baselog["curve"] == 1) & (baselog["show"] == 1)
-            baselog.loc[condition1, "score_stamina"] += (baselog["race_grade_scaled"] + 1+(2/baselog['place_season_condition_type_categori'])) *baselog["course_len"]/2000/ 2.5 
+            baselog.loc[condition1, "score_stamina"] += (baselog["race_grade_scaled"] + 1+(2/baselog['place_season_condition_type_categori'])) *(((baselog["course_len"]*0.0025)+20)/20)*(((baselog["pace_diff"] * 1)+20)/20)/ 2.5 
         
             # 小回りカーブで場合
             condition2 = (baselog["curve"] == 2)  & (baselog["show"] == 1)
-            baselog.loc[condition2, "score_stamina"] += (baselog["race_grade_scaled"] + 1+(2/baselog['place_season_condition_type_categori'])) *baselog["course_len"]/2000/ 2.1
+            baselog.loc[condition2, "score_stamina"] += (baselog["race_grade_scaled"] + 1+(2/baselog['place_season_condition_type_categori'])) *(((baselog["course_len"]*0.0025)+20)/20)*(((baselog["pace_diff"] * 1)+20)/20)/ 2.1
             
             # 小スパカーブ場合
             condition3 = (baselog["curve"] == 3) & (baselog["show"] == 1)
-            baselog.loc[condition3, "score_stamina"] += (baselog["race_grade_scaled"] + 1+(2/baselog['place_season_condition_type_categori'])) *baselog["course_len"]/2000/ 1.8
+            baselog.loc[condition3, "score_stamina"] += (baselog["race_grade_scaled"] + 1+(2/baselog['place_season_condition_type_categori'])) *(((baselog["course_len"]*0.0025)+20)/20)*(((baselog["pace_diff"] * 1)+20)/20)/ 1.8
         
             # スパカーブ場合
             condition4 = (baselog["curve"] == 4)  & (baselog["show"] == 1)
-            baselog.loc[condition4, "score_stamina"] += (baselog["race_grade_scaled"] + 1+(2/baselog['place_season_condition_type_categori'])) *baselog["course_len"]/2000/ 1.5
+            baselog.loc[condition4, "score_stamina"] += (baselog["race_grade_scaled"] + 1+(2/baselog['place_season_condition_type_categori'])) *(((baselog["course_len"]*0.0025)+20)/20)*(((baselog["pace_diff"] * 1)+20)/20)/ 1.5
         
             # 複合カーブで場合
             condition5 = (baselog["curve"] == 5)  & (baselog["show"] == 1)
-            baselog.loc[condition5, "score_stamina"] += (baselog["race_grade_scaled"] + 1+(2/baselog['place_season_condition_type_categori']))*baselog["course_len"]/2000
+            baselog.loc[condition5, "score_stamina"] += (baselog["race_grade_scaled"] + 1+(2/baselog['place_season_condition_type_categori']))*(((baselog["course_len"]*0.0025)+20)/20)*(((baselog["pace_diff"] * 1)+20)/20)
             
             
              # showに入りらなかった場合 
@@ -4335,45 +4436,45 @@ class PredictionFeatureCreator:
             merged_df = merged_df.merge(raw_df, on=["race_id", "horse_id"], how="left")
             merged_df = merged_df.merge(std_df, on=["race_id", "horse_id"], how="left")
         
-        merged_df2 = merged_df.merge(self.race_info[["race_id","course_len"]], on="race_id")
-        merged_df2["course_len_relative"] = (merged_df2["course_len"] / 1800) -1
-        merged_df2.loc[merged_df2["course_len_relative"] < 0, "course_len_relative"] = 0
-        merged_df2["course_len_relative"] = merged_df2["course_len_relative"] * 5
-        # 対象の列名リスト
-        columns_to_multiply = [
-            'score_stamina_mean_1races_per_stamina_raw',
-            'score_stamina_max_1races_per_stamina_raw',
-            'score_stamina_min_1races_per_stamina_raw',
-            'score_stamina_mean_1races_per_stamina_raw_relative',
-            'score_stamina_max_1races_per_stamina_raw_relative',
-            'score_stamina_min_1races_per_stamina_raw_relative',
-            'score_stamina_mean_3races_per_stamina_raw',
-            'score_stamina_max_3races_per_stamina_raw',
-            'score_stamina_min_3races_per_stamina_raw',
-            'score_stamina_mean_3races_per_stamina_raw_relative',
-            'score_stamina_max_3races_per_stamina_raw_relative',
-            'score_stamina_min_3races_per_stamina_raw_relative',
-            'score_stamina_mean_5races_per_stamina_raw',
-            'score_stamina_max_5races_per_stamina_raw',
-            'score_stamina_min_5races_per_stamina_raw',
-            'score_stamina_mean_5races_per_stamina_raw_relative',
-            'score_stamina_max_5races_per_stamina_raw_relative',
-            'score_stamina_min_5races_per_stamina_raw_relative',
-            'score_stamina_mean_10races_per_stamina_raw',
-            'score_stamina_max_10races_per_stamina_raw',
-            'score_stamina_min_10races_per_stamina_raw',
-            'score_stamina_mean_10races_per_stamina_raw_relative',
-            'score_stamina_max_10races_per_stamina_raw_relative',
-            'score_stamina_min_10races_per_stamina_raw_relative'
-        ]
+        # merged_df2 = merged_df.merge(self.race_info[["race_id","course_len"]], on="race_id")
+        # merged_df2["course_len_relative"] = (merged_df2["course_len"] / 1600/7) +1
+        # merged_df2.loc[merged_df2["course_len_relative"] < 0, "course_len_relative"] = 0
+        # merged_df2["course_len_relative"] = merged_df2["course_len_relative"] 
+        # # 対象の列名リスト
+        # columns_to_multiply = [
+        #     'score_stamina_mean_1races_per_stamina_raw',
+        #     'score_stamina_max_1races_per_stamina_raw',
+        #     'score_stamina_min_1races_per_stamina_raw',
+        #     'score_stamina_mean_1races_per_stamina_raw_relative',
+        #     'score_stamina_max_1races_per_stamina_raw_relative',
+        #     'score_stamina_min_1races_per_stamina_raw_relative',
+        #     'score_stamina_mean_3races_per_stamina_raw',
+        #     'score_stamina_max_3races_per_stamina_raw',
+        #     'score_stamina_min_3races_per_stamina_raw',
+        #     'score_stamina_mean_3races_per_stamina_raw_relative',
+        #     'score_stamina_max_3races_per_stamina_raw_relative',
+        #     'score_stamina_min_3races_per_stamina_raw_relative',
+        #     'score_stamina_mean_5races_per_stamina_raw',
+        #     'score_stamina_max_5races_per_stamina_raw',
+        #     'score_stamina_min_5races_per_stamina_raw',
+        #     'score_stamina_mean_5races_per_stamina_raw_relative',
+        #     'score_stamina_max_5races_per_stamina_raw_relative',
+        #     'score_stamina_min_5races_per_stamina_raw_relative',
+        #     'score_stamina_mean_10races_per_stamina_raw',
+        #     'score_stamina_max_10races_per_stamina_raw',
+        #     'score_stamina_min_10races_per_stamina_raw',
+        #     'score_stamina_mean_10races_per_stamina_raw_relative',
+        #     'score_stamina_max_10races_per_stamina_raw_relative',
+        #     'score_stamina_min_10races_per_stamina_raw_relative'
+        # ]
         
-        # 'course_len_relative'を各列に掛け算
-        for col in columns_to_multiply:
-            merged_df2[col] = merged_df2[col] * merged_df2['course_len_relative']
-        # 'course_len'と'course_len_relative'の列を削除
-        merged_df2 = merged_df2.drop(columns=['course_len', 'course_len_relative'])
+        # # 'course_len_relative'を各列に掛け算
+        # for col in columns_to_multiply:
+        #     merged_df2[col] = merged_df2[col] * merged_df2['course_len_relative']
+        # # 'course_len'と'course_len_relative'の列を削除
+        # merged_df2 = merged_df2.drop(columns=['course_len', 'course_len_relative'])
 
-        self.agg_cross_features_df_12 = merged_df2
+        self.agg_cross_features_df_12 = merged_df
         print("running cross_features_12()...comp")
 
     
@@ -4814,23 +4915,23 @@ class PredictionFeatureCreator:
         
             # 急カーブ場合
             condition1 = (baselog["curve"] == 1) & (baselog["show"] == 1)
-            baselog.loc[condition1, "score_stamina"] += (baselog["race_grade_scaled"] + 1+(2/baselog['place_season_condition_type_categori'])) *baselog["course_len"]/2000/ 2.5
+            baselog.loc[condition1, "score_stamina"] += (baselog["race_grade_scaled"] + 1+(2/baselog['place_season_condition_type_categori']))*(((baselog["course_len"]*0.0025)+20)/20)*(((baselog["pace_diff"] * 1)+20)/20)/ 2.5
         
             # 小回りカーブで場合
             condition2 = (baselog["curve"] == 2)  & (baselog["show"] == 1)
-            baselog.loc[condition2, "score_stamina"] += (baselog["race_grade_scaled"] + 1+(2/baselog['place_season_condition_type_categori'])) *baselog["course_len"]/2000/ 2.1
+            baselog.loc[condition2, "score_stamina"] += (baselog["race_grade_scaled"] + 1+(2/baselog['place_season_condition_type_categori']))*(((baselog["course_len"]*0.0025)+20)/20)*(((baselog["pace_diff"] * 1)+20)/20)/ 2.1
             
             # 小スパカーブ場合
             condition3 = (baselog["curve"] == 3) & (baselog["show"] == 1)
-            baselog.loc[condition3, "score_stamina"] += (baselog["race_grade_scaled"] + 1+(2/baselog['place_season_condition_type_categori'])) *baselog["course_len"]/2000/ 1.8
+            baselog.loc[condition3, "score_stamina"] += (baselog["race_grade_scaled"] + 1+(2/baselog['place_season_condition_type_categori']))*(((baselog["course_len"]*0.0025)+20)/20)*(((baselog["pace_diff"] * 1)+20)/20)/ 1.8
         
             # スパカーブ場合
             condition4 = (baselog["curve"] == 4)  & (baselog["show"] == 1)
-            baselog.loc[condition4, "score_stamina"] += (baselog["race_grade_scaled"] + 1+(2/baselog['place_season_condition_type_categori'])) *baselog["course_len"]/2000/ 1.5
+            baselog.loc[condition4, "score_stamina"] += (baselog["race_grade_scaled"] + 1+(2/baselog['place_season_condition_type_categori']))*(((baselog["course_len"]*0.0025)+20)/20)*(((baselog["pace_diff"] * 1)+20)/20)/ 1.5
         
             # 複合カーブで場合
             condition5 = (baselog["curve"] == 5)  & (baselog["show"] == 1)
-            baselog.loc[condition5, "score_stamina"] += (baselog["race_grade_scaled"] + 1+(2/baselog['place_season_condition_type_categori']))*baselog["course_len"]/2000
+            baselog.loc[condition5, "score_stamina"] += (baselog["race_grade_scaled"] + 1+(2/baselog['place_season_condition_type_categori']))*(((baselog["course_len"]*0.0025)+20)/20)*(((baselog["pace_diff"] * 1)+20)/20)
             
             
             
@@ -4865,35 +4966,35 @@ class PredictionFeatureCreator:
             merged_df5 = merged_df5.merge(raw_df, on=["race_id", "horse_id"], how="left")
             
         
-        merged_df5 = merged_df5.merge(self.race_info[["race_id","course_len"]], on="race_id")
-        merged_df5["course_len_relative"] = (merged_df5["course_len"] / 2000) -1
-        merged_df5.loc[merged_df5["course_len_relative"] < 0, "course_len_relative"] = 0
-        merged_df5["course_len_relative"] = merged_df5["course_len_relative"] * 2.2
-        # 対象の列名リスト
-        columns_to_multiply = [
-            'score_stamina_mean_1races_per_stamina_raw',
-            'score_stamina_max_1races_per_stamina_raw',
-            'score_stamina_min_1races_per_stamina_raw',
+        # merged_df5 = merged_df5.merge(self.race_info[["race_id","course_len"]], on="race_id")
+        # merged_df5["course_len_relative"] = (merged_df5["course_len"] / 1600/7) +1
+        # merged_df5.loc[merged_df5["course_len_relative"] < 0, "course_len_relative"] = 0
+        # merged_df5["course_len_relative"] = merged_df5["course_len_relative"] 
+        # # 対象の列名リスト
+        # columns_to_multiply = [
+        #     'score_stamina_mean_1races_per_stamina_raw',
+        #     'score_stamina_max_1races_per_stamina_raw',
+        #     'score_stamina_min_1races_per_stamina_raw',
         
-            'score_stamina_mean_3races_per_stamina_raw',
-            'score_stamina_max_3races_per_stamina_raw',
-            'score_stamina_min_3races_per_stamina_raw',
+        #     'score_stamina_mean_3races_per_stamina_raw',
+        #     'score_stamina_max_3races_per_stamina_raw',
+        #     'score_stamina_min_3races_per_stamina_raw',
         
-            'score_stamina_mean_5races_per_stamina_raw',
-            'score_stamina_max_5races_per_stamina_raw',
-            'score_stamina_min_5races_per_stamina_raw',
+        #     'score_stamina_mean_5races_per_stamina_raw',
+        #     'score_stamina_max_5races_per_stamina_raw',
+        #     'score_stamina_min_5races_per_stamina_raw',
         
-            'score_stamina_mean_10races_per_stamina_raw',
-            'score_stamina_max_10races_per_stamina_raw',
-            'score_stamina_min_10races_per_stamina_raw',
+        #     'score_stamina_mean_10races_per_stamina_raw',
+        #     'score_stamina_max_10races_per_stamina_raw',
+        #     'score_stamina_min_10races_per_stamina_raw',
         
-        ]
+        # ]
         
-        # 'course_len_relative'を各列に掛け算
-        for col in columns_to_multiply:
-            merged_df5[col] = merged_df5[col] * merged_df5['course_len_relative']
-        # 'course_len'と'course_len_relative'の列を削除
-        merged_df5 = merged_df5.drop(columns=['course_len', 'course_len_relative'])
+        # # 'course_len_relative'を各列に掛け算
+        # for col in columns_to_multiply:
+        #     merged_df5[col] = merged_df5[col] * merged_df5['course_len_relative']
+        # # 'course_len'と'course_len_relative'の列を削除
+        # merged_df5 = merged_df5.drop(columns=['course_len', 'course_len_relative'])
         
         
         results_df = (
@@ -4964,7 +5065,7 @@ class PredictionFeatureCreator:
     
     
     def cross_features_14(
-        self, n_races: list[int] = [1, 3, 5, 10]
+        self, date_condition_a:int,n_races: list[int] = [1, 3, 5, 10],
     ):  
         
         def calculate_race_position_percentage(group, n_race):
@@ -5137,31 +5238,31 @@ class PredictionFeatureCreator:
             taking_lead_per = row.get("taking_lead_per", 0)
         
             if escape_count >= 3:
-                return 1  # ハイペース
+                return 4  # ハイペース
             elif escape_count == 2:
                 if taking_lead_per > 0.7:
-                    return 1  # ハイペース
+                    return 4  # ハイペース
                 else:
-                    return 2  
+                    return 3  
             elif escape_count == 1:
                 if taking_lead_per > 0.75:
-                    return 1  # ハイペース
+                    return 4  # ハイペース
                 elif 0.65 < taking_lead_per <= 0.75:
-                    return 2  # ハイミドルペース
+                    return 3  # ハイミドルペース
                 elif 0.55 < taking_lead_per <= 0.65:
-                    return 3  # スローミドルペース
+                    return 2  # スローミドルペース
                 else:
-                    return 4  # スローペース
+                    return 1  # スローペース
             elif escape_count == 0:
                 # 逃げ馬が0の場合、先行馬の割合に基づく
                 if taking_lead_per > 0.88:
-                    return 1  # ハイペース
+                    return 4  # ハイペース
                 elif 0.75 < taking_lead_per <= 0.88:
-                    return 2  # ハイミドルペース
+                    return 3  # ハイミドルペース
                 elif 0.65 < taking_lead_per <= 0.75:
-                    return 3  # スローミドルペース
+                    return 2  # スローミドルペース
                 else:
-                    return 4  # スローペース
+                    return 1  # スローペース
             return None  # 予期しない場合は None
         merged_df["pace_category"] = merged_df.apply(calculate_pace_category, axis=1)
         
@@ -5267,7 +5368,7 @@ class PredictionFeatureCreator:
         df["place"] = df["place"].astype(int)
         
         df_old2 = (
-            self.old_results_condition[["race_id", "horse_id","time","rank_per_horse"]]
+            self.old_results_condition[["race_id", "horse_id","time","rank","rank_per_horse"]]
             .merge(self.old_race_info_condition[["race_id", "place","weather","ground_state","race_grade","course_len","race_type","race_date_day_count"]], on="race_id")
         )
 
@@ -5290,8 +5391,8 @@ class PredictionFeatureCreator:
         #     # .sort_values("date_horse", ascending=False)
         # )
         df_old = (
-            self.old_race_info[["race_id", "course_len", "race_type","race_grade","ground_state", "weather","place","around"]]
-            .merge(self.old_results[["race_id", "horse_id", "wakuban", "umaban","nobori","time","sex"]], on="race_id")
+            self.all_race_info[["race_id", "course_len", "race_type","race_grade","ground_state", "weather","place","around"]]
+            .merge(self.all_results[["race_id", "horse_id", "wakuban", "umaban","nobori","rank","time","sex"]], on="race_id")
         )
         df_old["place"] = df_old["place"].astype(int)
         df_old["race_grade"] = df_old["race_grade"].astype(int)
@@ -5301,8 +5402,12 @@ class PredictionFeatureCreator:
                      
         
         df_old["distance_place_type_race_grade"] = (df_old["course_len"].astype(str) + df_old["place"].astype(str) + df_old["race_type"].astype(str) + df_old["race_grade"].astype(str)).astype(int)
+        df_old_copy = df_old
+        # rank列が1, 2, 3の行だけを抽出
+        df_old = df_old[df_old['rank'].isin([1, 2, 3])]        
         target_mean_1 = df_old.groupby("distance_place_type_race_grade")["time"].mean()
         # 平均値をカテゴリ変数にマッピング
+        df_old = df_old.copy()
         df_old["distance_place_type_race_grade_encoded"] = df_old["distance_place_type_race_grade"].map(target_mean_1)
         
         
@@ -5318,16 +5423,18 @@ class PredictionFeatureCreator:
             df2_subset = df_old[[original_col, encoded_col]].drop_duplicates()  # 重複を削除
             df2_subset = df2_subset.reset_index(drop=True)  # インデックスをリセット
             df_old2 = df_old2.merge(df2_subset, on=original_col, how='left')  # dfにマージ
+        df_old2 = df_old2[df_old2['rank'].isin([1, 2, 3])]
         df_old2["distance_place_type_race_grade_encoded_time_diff"] = df_old2['distance_place_type_race_grade_encoded'] - df_old2["time"]
         
-        df_old2= df_old2[df_old2["race_type"] != 2]
-        df_old2_1 = df_old2[df_old2["race_type"] != 0]
+        # df_old2= df_old2[df_old2["race_type"] != 2]
+        # df_old2_1 = df_old2[df_old2["race_type"] != 0]
+        df_old2_1 = df_old2
         
         # 2. df の各行について処理
         def compute_mean_for_row(row, df_old2_1):
             # race_type == 0 の場合は NaN を返す
-            if row["race_type"] == 0:
-                return np.nan
+            # if row["race_type"] == 0:
+            #     return np.nan
             df_old2_1["race_date_day_count"] = df_old2_1["race_date_day_count"].astype(int)
             target_day_count = int(row["race_date_day_count"])  # df の各行の race_date_day_count
     
@@ -5338,6 +5445,7 @@ class PredictionFeatureCreator:
                 (df_old2_1["race_date_day_count"] >= (target_day_count - 1200)) &  # race_date_day_count が target_day_count-1200 以上
                 (df_old2_1["race_date_day_count"] <= (target_day_count - 1)) &  # race_date_day_count が target_day_count-1 以下
                 (df_old2_1["place"] == row["place"]) &  # place が一致
+                (df_old2_1["race_type"] == row["race_type"])  & 
                 (df_old2_1["weather"].isin([0, 1, 2])) &  # weather が 0, 1, 2 のいずれか
                 (df_old2_1["ground_state"] == 0)   # ground_state が 0
                 # &
@@ -5381,13 +5489,16 @@ class PredictionFeatureCreator:
                 return 7  # 道悪7
             # 該当しない場合は NaN を設定
             return 3
-        
+
         # 新しい列を追加
-        df["ground_state_level"] = df.apply(assign_value, axis=1)
+        if date_condition_a != 0:
+            df["ground_state_level"] = date_condition_a
+        else:
+            df["ground_state_level"] = df.apply(assign_value, axis=1)
         
         merged_df = merged_df.merge(df[["race_id","date","horse_id","mean_ground_state_time_diff","ground_state_level"]],on=["race_id","date","horse_id"])	
         merged_df3 = merged_df
-        
+  
         
         
         
@@ -5473,7 +5584,9 @@ class PredictionFeatureCreator:
             on=["race_id","date","horse_id"],
         )
         merged_df_all = merged_df100[["race_id","date","horse_id","dominant_position_category","pace_category","ground_state_level"]]
-        
+
+
+        self.pace_category = merged_df_all               
         
         
         """
@@ -5537,18 +5650,18 @@ class PredictionFeatureCreator:
         # ground_state_level_processed 列の処理
         merged_df_all.loc[:, "ground_state_level_processed"] = (
             merged_df_all["ground_state_level"].fillna(4) - 4
-        )
+        ).astype(float)
         
         # pace_category_processed 列の処理
         merged_df_all.loc[:, "pace_category_processed"] = (
             merged_df_all["pace_category"] - 2.5
-        )
+        ).astype(float)
         
         # dominant_position_category_processed 列の処理
         merged_df_all.loc[:, "dominant_position_category_processed"] = (
             merged_df_all["dominant_position_category"]
             .replace({1: -2, 2: -2, 3: 2, 4: 1.8})
-        )
+        ).astype(float)
         
         # goal_range_100 に -3.5 を行う
         merged_df_all["goal_range_100_processed"] = merged_df_all["goal_range_100"] - 3.5
@@ -5577,7 +5690,7 @@ class PredictionFeatureCreator:
         
         # それぞれの列に倍率を適用
         ground_state_multiplier = 4.5 # 必要に応じて調整
-        pace_multiplier = 3.5  # 必要に応じて調整
+        pace_multiplier = 5  # 必要に応じて調整
         dominant_multiplier = 2.8  # 必要に応じて調整
         goal_range_multiplier = 18
         curve_multiplier = 2.25
@@ -5733,12 +5846,13 @@ class PredictionFeatureCreator:
             .sort_values("date_horse", ascending=False)
         )
         
-        df_x = df_x[["race_id","date","horse_id","date_horse","race_grade_scaled","rank_diff"]]
+        
+        df_x = df_x[["race_id","date","horse_id","date_horse","race_grade","rank_diff","course_len","pace_diff"]]
+        
         
         df_x = df_x.copy()  # df_xのコピーを作成
-        df_x.loc[:, "race_grade_rank_diff_multi"] = ((df_x["race_grade_scaled"] + 1)) * (0.5 / (df_x["rank_diff"] + 1)) * 48
-        df_x.loc[:, "race_grade_rank_diff_sum"] = ((df_x["race_grade_scaled"] + 1) ) + (0.5 / (df_x["rank_diff"] + 1)) * 60
-        
+        df_x.loc[:, "race_grade_rank_diff_multi"] = ((df_x["race_grade"]) * ( 1/((((df_x["rank_diff"] + 1)+10)/10)*(((df_x["course_len"]*0.0025)+20)/20)*(((df_x["pace_diff"] * 1)+20)/20))))
+        df_x.loc[:, "race_grade_rank_diff_sum"] = (((df_x["race_grade"])/10) +( 1/((((df_x["rank_diff"] + 1)+10)/10)*(((df_x["course_len"]*0.0025)+20)/20)*(((df_x["pace_diff"] * 1)+20)/20))))*10
         n_races: list[int] = [1, 3, 5, 10]
         grouped_df = df_x.groupby(["race_id", "horse_id"])
         merged_x = self.population.copy() 
@@ -5852,8 +5966,8 @@ class PredictionFeatureCreator:
         for col in columns_to_multiply:
             merge_all_ex[f"{col}_plus_tenkai_combined"] = merge_all_ex[col] + merge_all_ex["tenkai_combined"]
             merge_all_ex[f"{col}_plus_tenkai_all_combined"] = merge_all_ex[col] + merge_all_ex["tenkai_all_combined"]
-            merge_all_ex[f"{col}_px_tenkai_combined"] = merge_all_ex[col] * merge_all_ex["tenkai_combined"]
-            merge_all_ex[f"{col}_px_tenkai_all_combined"] = merge_all_ex[col] * merge_all_ex["tenkai_all_combined"]
+            merge_all_ex[f"{col}_px_tenkai_combined"] = merge_all_ex[col]*(((merge_all_ex["tenkai_combined"]+40))/10)
+            merge_all_ex[f"{col}_px_tenkai_all_combined"] = merge_all_ex[col]  *  (((merge_all_ex["tenkai_all_combined"]+40))/10)
 
 
         # 標準化
@@ -5888,13 +6002,14 @@ class PredictionFeatureCreator:
         ]
         merge_all_ex = merge_all_ex.drop(columns=columns_to_drop)
 
-        # '_standardized', 'race_id', 'date', 'horse_id' を除くすべての列を削除
-        merge_all_ex = merge_all_ex.filter(regex='_standardized|race_id|date|horse_id')
+        # # '_standardized', 'race_id', 'date', 'horse_id' を除くすべての列を削除
+        # merge_all_ex = merge_all_ex.filter(regex='_standardized|race_id|date|horse_id')
 
         self.agg_cross_features_df_14 = merge_all_ex 
         print("running cross_features_14()...comp")
 
 
+        
 
     def cross_features_15(
         self, n_races: list[int] = [1, 3, 5, 10]
@@ -5919,17 +6034,32 @@ class PredictionFeatureCreator:
 
 
         １０００万クラスのタイムを基準
-        85
+        ・3歳上 / 4歳以上
+        ・1勝クラス
+        ・良 / 稍重
+        ・入線順位1～3着馬
+        上記条件の走破タイムの平均を出す
+        (牝馬限定戦を除く)
+        ・3歳上 / 4歳以上
+        ・2勝クラス
+        ・良 / 稍重
+        ・入線順位1～3着馬
+        上記条件の走破タイムの平均を出す
+        (牝馬限定戦を除く)
+        それらを更に平均する
+
+        データ数が少ないコースでは、存在するクラスの平均走破タイムを
+        「クラス指数の指数差 ÷ 距離指数 ÷ 10」で秒換算し、基準タイムを補正する。
         """
         baselog = (
-            self.old_population.merge(
-                self.old_race_info[["race_id", "course_len", "race_type","race_grade","ground_state", "weather","place"]], on="race_id"
+            self.all_population.merge(
+                self.all_race_info[["race_id", "course_len", "race_type","race_grade","ground_state", "weather","place"]], on="race_id"
             )
         )
 
         df = (
             baselog
-            .merge(self.old_results[["race_id", "horse_id", "wakuban", "nobori","time","umaban"]], on=["race_id", "horse_id"])
+            .merge(self.all_results[["race_id", "horse_id", "wakuban", "nobori","time","umaban","rank"]], on=["race_id", "horse_id"])
         )
         df["nobori"] = df["nobori"].fillna(df["nobori"].mean())
 
@@ -5938,16 +6068,19 @@ class PredictionFeatureCreator:
         df["ground_state"] = df["ground_state"].astype(int)
         df["weather"] = df["weather"].astype(int)  
         df["distance_place_type"] = (df["course_len"].astype(str) + df["place"].astype(str) + df["race_type"].astype(str)).astype(int)
-
-
+        df2 = df
         # 1. 計算したいrace_gradeのリスト
-        grades = [55, 60, 70, 79, 85, 89, 91, 94, 98]
+        grades = [55,60,70,79,85,  89,  91,  94,  98]
 
         # 2. 各race_gradeごとにtimeとnoboriの平均を計算し、結合
         for grade in grades:
             # race_gradeが指定された値のときのtimeとnoboriの平均を計算
             time_nobori_avg = (
-                df[df['race_grade'] == grade]  # race_gradeが指定のgradeの行を抽出
+                df[
+                (df['race_grade'] == grade) &  # race_gradeが指定のgrade
+                (df['ground_state'].isin([0, 2])) &  # ground_stateが0または2
+                (df['rank'].isin([1, 2, 3]))  # rankが1, 2, 3
+                ]
                 .groupby(['course_len', 'place', 'race_type'])[['time', 'nobori']]  # 3つのカテゴリごとにtimeとnoboriを集計
                 .mean()
                 .reset_index()  # インデックスをリセット
@@ -5956,11 +6089,8 @@ class PredictionFeatureCreator:
             
             # 元のDataFrameにマージ（left join）
             horse_results_baselog = pd.merge(horse_results_baselog, time_nobori_avg, on=['course_len', 'place', 'race_type'], how='left')
-
-
-
         # 1. 補完する順番を指定
-        grades = [85, 79, 89, 70, 91, 60, 94, 55, 98]
+        grades = [70, 79,85, 89, 60, 91,  94, 55, 98]
 
         # 2. まずhorse_results_baselog内の補完処理を行う
         horse_results_baselog['final_time_avg'] = np.nan
@@ -5969,29 +6099,93 @@ class PredictionFeatureCreator:
         # 3. 最初に85で補完
         horse_results_baselog['final_time_avg'] = np.where(
             horse_results_baselog['final_time_avg'].isna(), 
-            horse_results_baselog['time_avg_85'], 
+            horse_results_baselog['time_avg_70'], 
             horse_results_baselog['final_time_avg']
         )
         horse_results_baselog['final_nobori_avg'] = np.where(
             horse_results_baselog['final_nobori_avg'].isna(), 
-            horse_results_baselog['nobori_avg_85'], 
+            horse_results_baselog['nobori_avg_70'], 
             horse_results_baselog['final_nobori_avg']
         )
 
+
+        """
+        距離指数をかける
+        距離	芝	ダート
+        1000m	1.8	1.7
+        1150m	1.52	1.45
+        1200m	1.45	1.39
+        1300m	1.34	1.27
+        1400m	1.23	1.18
+        1500m	1.12	1.08
+        1600m	1.06	1.02
+        1700m	1.00	0.94
+        1800m	0.93	0.88
+        1900m	0.88	0.83
+        2000m	0.83	0.79
+        2100m	0.79	0.75
+        2200m	0.75	0.7
+        2300m	0.71	0.67
+        2400m	0.68	0.64
+        2500m	0.64	0.61
+        2600m	0.62	0.59
+        2800m	0.56	0.53
+        3000m	0.53	0.5
+        3200m	0.50	0.47
+        3400m	0.47	0.44
+        3600m	0.45	0.42
+        """
+        # 距離と芝ダートの対応表を辞書として定義
+        conversion_table = {
+            1000: {1: 1.8, 0: 1.7},
+            1150: {1: 1.52, 0: 1.45},
+            1200: {1: 1.45, 0: 1.39},
+            1300: {1: 1.34, 0: 1.27},
+            1400: {1: 1.23, 0: 1.18},
+            1500: {1: 1.12, 0: 1.08},
+            1600: {1: 1.06, 0: 1.02},
+            1700: {1: 1.00, 0: 0.94},
+            1800: {1: 0.93, 0: 0.88},
+            1900: {1: 0.88, 0: 0.83},
+            2000: {1: 0.83, 0: 0.79},
+            2100: {1: 0.79, 0: 0.75},
+            2200: {1: 0.75, 0: 0.7},
+            2300: {1: 0.71, 0: 0.67},
+            2400: {1: 0.68, 0: 0.64},
+            2500: {1: 0.64, 0: 0.61},
+            2600: {1: 0.62, 0: 0.59},
+            2800: {1: 0.56, 0: 0.53},
+            3000: {1: 0.53, 0: 0.5},
+            3200: {1: 0.5, 0: 0.47},
+            3400: {1: 0.47, 0: 0.44},
+            3600: {1: 0.45, 0: 0.42}
+        }
+
+        # 新しい列に変換後の値を格納
+        def map_conversion(row):
+            course_len = row['course_len']
+            race_type = row['race_type']
+            if course_len in conversion_table and race_type in conversion_table[course_len]:
+                return conversion_table[course_len][race_type]
+            else:
+                return None  # 該当しない場合はNoneを返す
+
+        # 適用
+        horse_results_baselog['converted_value'] = horse_results_baselog.apply(map_conversion, axis=1)
+
+
         # 4. 残りのグレードで補完（順番に）
         for grade in grades:
-            # `85`はすでに補完されているので、以降のグレードのみで補完
-            if grade != 85:
+            if grade != 70:
                 time_col = f'time_avg_{grade}'
                 nobori_col = f'nobori_avg_{grade}'
                 
                 # timeの欠損を補完
                 horse_results_baselog['final_time_avg'] = np.where(
                     horse_results_baselog['final_time_avg'].isna(), 
-                    horse_results_baselog[time_col], 
+                    horse_results_baselog[time_col] + ((grade - 70) / 1.2/horse_results_baselog['converted_value']/10),
                     horse_results_baselog['final_time_avg']
                 )
-                
                 # noboriの欠損を補完
                 horse_results_baselog['final_nobori_avg'] = np.where(
                     horse_results_baselog['final_nobori_avg'].isna(), 
@@ -5999,36 +6193,27 @@ class PredictionFeatureCreator:
                     horse_results_baselog['final_nobori_avg']
                 )
 
-        # 5. 不要な中間列を削除し、必要な列だけ残す
-        columns_to_drop = [f'time_avg_{grade}' for grade in grades] + [f'nobori_avg_{grade}' for grade in grades]
-        horse_results_baselog = horse_results_baselog.drop(columns=columns_to_drop)
-
 
 
         # 1. final_time_avgからtimeを引いた数値（秒）を計算
         horse_results_baselog['time_diff_sp'] = horse_results_baselog['final_time_avg'] - horse_results_baselog['time']
 
         # 2. time_diffを0.1秒ごとのポイントに変換（1ポイント = 0.1秒）
-        horse_results_baselog['time_points'] = (horse_results_baselog['time_diff_sp'] *10)
+        horse_results_baselog['time_points'] = (horse_results_baselog['time_diff_sp'])*10
 
         # 1. final_nobori_avgからnoboriを引いた数値（秒）を計算
         horse_results_baselog['nobori_diff_sp'] = horse_results_baselog['final_nobori_avg'] - horse_results_baselog['nobori']
 
         # 2. nobori_diffを0.1秒ごとのポイントに変換（1ポイント = 0.1秒）
-        horse_results_baselog['nobori_points'] = (horse_results_baselog['nobori_diff_sp'] *10)
+        horse_results_baselog['nobori_points'] = (horse_results_baselog['nobori_diff_sp'])*10
 
 
-
-        """
-        距離指数をかける
-        """
 
         # 2. time_diffを0.1秒ごとのポイントに変換（1ポイント = 0.1秒）
-        horse_results_baselog['time_points_course_index'] = (horse_results_baselog['time_points'] *(1600/horse_results_baselog["course_len"]))
+        horse_results_baselog['time_points_course_index'] = horse_results_baselog['time_points'] *horse_results_baselog['converted_value'] 
 
         # 2. nobori_diffを0.1秒ごとのポイントに変換（1ポイント = 0.1秒）
-        horse_results_baselog['nobori_points_course_index'] = (horse_results_baselog['nobori_points'] *(1600/horse_results_baselog["course_len"]))
-
+        horse_results_baselog['nobori_points_course_index'] = horse_results_baselog['nobori_points'] *horse_results_baselog['converted_value'] 
 
 
         """
@@ -6041,11 +6226,10 @@ class PredictionFeatureCreator:
         horse_results_baselog['nobori_points_impost'] = (horse_results_baselog['nobori_points_course_index']+(horse_results_baselog["impost"]-55) *1.7)
 
 
+
         """
-        （	走破
-        タイム	－	基準
-        タイム（グレード別）	）×	距離
-        指数	＋	クラス値＋pase_diff
+        暫定馬場指数＝（馬場指数用基準タイム－該当レース上位３頭の平均タイム）× 距離指数
+        馬場指数用基準タイム ＝ 基準タイム － (クラス指数 × 距離指数)　＋pase_diff
 
         ハイペースなら低く（早く見える）でてしまう
         スローペースなら高く（遅く見える）でてしまう
@@ -6054,47 +6238,151 @@ class PredictionFeatureCreator:
         そのまま+してよいかも
         """
 
-        # race_gradeが指定された値のときのtimeとnoboriの平均を計算
-        time_nobori_grade_avg = (
-            df.groupby(['course_len', 'place', 'race_type',"race_grade"])[['time', 'nobori']]# 3つのカテゴリごとにtimeとnoboriを集計
-            .mean()
-            .reset_index()  # インデックスをリセット
-            .rename(columns={'time': f'time_grade_avg', 'nobori': f'nobori_grade_avg'})  # 列名を変更
+        # # 2. 各race_gradeごとにtimeとnoboriの平均を計算し、結合
+        # for grade in grades:
+        #     # race_gradeが指定された値のときのtimeとnoboriの平均を計算
+        #     time_nobori_avg_top = (
+        #         df2[
+        #         (df2['race_grade'] == grade) &  # race_gradeが指定のgrade
+        #         (df2['ground_state'].isin([0,2])) &  # ground_stateが0または2
+        #         (df2['rank'].isin([1]))  # rankが1, 2, 3
+        #         ]
+        #         .groupby(['course_len', 'place', 'race_type'])[['time', 'nobori']]  # 3つのカテゴリごとにtimeとnoboriを集計
+        #         .mean()
+        #         .reset_index()  # インデックスをリセット
+        #         .rename(columns={'time': f'time_avg_{grade}_top', 'nobori': f'nobori_avg_{grade}_top'})  # 列名を変更
+        #     )
+            
+        #     # 元のDataFrameにマージ（left join）
+        #     horse_results_baselog = pd.merge(horse_results_baselog, time_nobori_avg_top, on=['course_len', 'place', 'race_type'], how='left')
+        # # 1. 補完する順番を指定
+        # grades = [70, 79,85, 89, 60, 91,  94, 55, 98]
+
+        # # 2. まずhorse_results_baselog内の補完処理を行う
+        # horse_results_baselog['final_time_avg_top'] = np.nan
+        # horse_results_baselog['final_nobori_avg_top'] = np.nan
+
+        # # 3. 最初に85で補完
+        # horse_results_baselog['final_time_avg_top'] = np.where(
+        #     horse_results_baselog['final_time_avg_top'].isna(), 
+        #     horse_results_baselog['time_avg_70_top'], 
+        #     horse_results_baselog['final_time_avg_top']
+        # )
+        # horse_results_baselog['final_nobori_avg_top'] = np.where(
+        #     horse_results_baselog['final_nobori_avg_top'].isna(), 
+        #     horse_results_baselog['nobori_avg_70_top'], 
+        #     horse_results_baselog['final_nobori_avg_top']
+        # )
+
+        # # 4. 残りのグレードで補完（順番に）
+        # for grade in grades:
+        #     if grade != 70:
+        #         time_col = f'time_avg_{grade}_top'
+        #         nobori_col = f'nobori_avg_{grade}_top'
+                
+        #         # timeの欠損を補完
+        #         horse_results_baselog['final_time_avg_top'] = np.where(
+        #             horse_results_baselog['final_time_avg_top'].isna(), 
+        #             horse_results_baselog[time_col] + ((grade - 70) / 1.2/horse_results_baselog['converted_value']/10),
+        #             horse_results_baselog['final_time_avg_top']
+        #         )
+        #         # noboriの欠損を補完
+        #         horse_results_baselog['final_nobori_avg_top'] = np.where(
+        #             horse_results_baselog['final_nobori_avg_top'].isna(), 
+        #             horse_results_baselog[nobori_col], 
+        #             horse_results_baselog['final_nobori_avg_top']
+        #         )
+
+
+        # 2. 各race_gradeごとにtimeとnoboriの平均を計算し、結合
+        for grade in grades:
+            # race_gradeが指定された値のときのtimeとnoboriの平均を計算
+            time_nobori_avg_top = (
+                df2[
+                (df2['race_grade'] == grade) &  # race_gradeが指定のgrade
+                (df2['ground_state'].isin([0])) &  # ground_stateが0または2
+                (df2['rank'].isin([1]))  # rankが1, 2, 3
+                ]
+                .groupby(['course_len', 'place', 'race_type'])[['time', 'nobori']]  # 3つのカテゴリごとにtimeとnoboriを集計
+                .mean()
+                .reset_index()  # インデックスをリセット
+                .rename(columns={'time': f'time_avg_{grade}_top', 'nobori': f'nobori_avg_{grade}_top'})  # 列名を変更
+            )
+            
+            # 元のDataFrameにマージ（left join）
+            horse_results_baselog = pd.merge(horse_results_baselog, time_nobori_avg_top, on=['course_len', 'place', 'race_type'], how='left')
+        # 1. 補完する順番を指定
+        grades = [70, 79,85, 89, 60, 91,  94, 55, 98]
+
+        # 2. まずhorse_results_baselog内の補完処理を行う
+        horse_results_baselog['final_time_avg_top'] = np.nan
+        horse_results_baselog['final_nobori_avg_top'] = np.nan
+
+        # 1. race_grade に基づいて time_avg_〇_top から補完
+        horse_results_baselog['final_time_avg_top'] = horse_results_baselog.apply(
+            lambda row: row[f'time_avg_{int(row["race_grade"])}_top'] 
+            if pd.isna(row['final_time_avg_top']) and f'time_avg_{int(row["race_grade"])}_top' in horse_results_baselog.columns 
+            else row['final_time_avg_top'], 
+            axis=1
         )
 
-        # 元のDataFrameにマージ（left join）
-        horse_results_baselog = pd.merge(horse_results_baselog, time_nobori_grade_avg, on=['course_len', 'place', 'race_type',"race_grade"], how='left')
+        # 2. race_grade に基づいて nobori_avg_〇_top から補完
+        horse_results_baselog['final_nobori_avg_top'] = horse_results_baselog.apply(
+            lambda row: row[f'nobori_avg_{int(row["race_grade"])}_top'] 
+            if pd.isna(row['final_nobori_avg_top']) and f'nobori_avg_{int(row["race_grade"])}_top' in horse_results_baselog.columns 
+            else row['final_nobori_avg_top'], 
+            axis=1
+        )
+
+        horse_results_baselog['time_condition_index_shaft'] = horse_results_baselog['final_time_avg_top']
+        horse_results_baselog['nobori_condition_index_shaft'] = horse_results_baselog['final_nobori_avg_top']
+
+        # rankが1の場合はそのまま、rankが2以上の場合はtimeからrank_diffを引く
+        horse_results_baselog['adjusted_time'] = horse_results_baselog.apply(
+            lambda row: row['time'] if row['rank'] == 1 else row['time'] - row['rank_diff']+1 ,
+            axis=1
+        )
 
 
         # 1. final_time_avgからtimeを引いた数値（秒）を計算
-        horse_results_baselog['time_diff_grade'] = horse_results_baselog['time'] - horse_results_baselog["time_grade_avg"] 
+        horse_results_baselog['time_diff_grade'] = horse_results_baselog['time_condition_index_shaft'] - horse_results_baselog['adjusted_time']
 
         # 2. time_diffを0.1秒ごとのポイントに変換（1ポイント = 0.1秒）
-        horse_results_baselog['time_points_grade'] = (horse_results_baselog['time_diff_grade'] *10)
+        horse_results_baselog['time_points_grade'] = (horse_results_baselog['time_diff_grade'] ) *10
 
         # 1. final_nobori_avgからnoboriを引いた数値（秒）を計算
-        horse_results_baselog['nobori_diff_grade'] = horse_results_baselog['nobori'] - horse_results_baselog['nobori_grade_avg']
+        horse_results_baselog['nobori_diff_grade'] = horse_results_baselog['nobori_condition_index_shaft']
 
         # 2. nobori_diffを0.1秒ごとのポイントに変換（1ポイント = 0.1秒）
-        horse_results_baselog['nobori_points_grade'] = (horse_results_baselog['nobori_diff_grade'] *10)
+        horse_results_baselog['nobori_points_grade'] = (horse_results_baselog['time_diff_grade'] ) *10
 
         """
         距離指数をかける
         """
 
         # 2. time_diffを0.1秒ごとのポイントに変換（1ポイント = 0.1秒）
-        horse_results_baselog['time_points_grade_index'] = (horse_results_baselog['time_points_grade'] *(1600/horse_results_baselog["course_len"]))
+        horse_results_baselog['time_points_grade_index'] = (horse_results_baselog['time_points_grade'] *horse_results_baselog['converted_value'])
 
         # 2. nobori_diffを0.1秒ごとのポイントに変換（1ポイント = 0.1秒）
-        horse_results_baselog['nobori_points_grade_index'] = (horse_results_baselog['nobori_points_grade'] *(1600/horse_results_baselog["course_len"]))
+        horse_results_baselog['nobori_points_grade_index'] = (horse_results_baselog['nobori_points_grade'] *horse_results_baselog['converted_value'])
 
-        horse_results_baselog['time_condition_index'] = horse_results_baselog['nobori_points_grade_index'] +horse_results_baselog['pace_diff'] +horse_results_baselog['race_grade']
-        horse_results_baselog['nobori_condition_index'] = horse_results_baselog['nobori_points_grade_index'] +horse_results_baselog['pace_diff'] +horse_results_baselog['race_grade']
+        horse_results_baselog['time_condition_index'] = horse_results_baselog['time_points_grade_index'] -horse_results_baselog['pace_diff'] *7
+        horse_results_baselog['nobori_condition_index'] = horse_results_baselog['nobori_points_grade_index'] +horse_results_baselog['pace_diff'] *7
 
 
-        horse_results_baselog['speed_index'] = horse_results_baselog['time_points_impost'] + horse_results_baselog['time_condition_index'] + 80
-        horse_results_baselog['nobori_index'] = horse_results_baselog['nobori_points_impost'] + horse_results_baselog['nobori_condition_index'] + 80
-        
+        # 新しい列を作成
+        horse_results_baselog['race_grade_transformed'] = (horse_results_baselog['race_grade'] - 80) / 10 + 80
+
+
+        horse_results_baselog['speed_index'] = horse_results_baselog['time_points_impost'] + horse_results_baselog['time_condition_index'] + horse_results_baselog['race_grade_transformed'] 
+        horse_results_baselog['nobori_index'] = horse_results_baselog['nobori_points_impost'] + horse_results_baselog['nobori_condition_index'] + horse_results_baselog['race_grade_transformed'] 
+
+        # 5. 不要な中間列を削除し、必要な列だけ残す
+        columns_to_drop = [f'time_avg_{grade}' for grade in grades] + [f'nobori_avg_{grade}' for grade in grades]
+        horse_results_baselog = horse_results_baselog.drop(columns=columns_to_drop)
+
+
+
         horse_results_baselog = horse_results_baselog[['race_id',
         'date',
         'horse_id',
@@ -6160,9 +6448,228 @@ class PredictionFeatureCreator:
 
         self.agg_cross_features_df_15 = merged_df
         print("running cross_features_15()...comp")
-
+        
+        
 
     
+
+
+
+
+
+    def cross_features_16(
+        self, n_races: list[int] = [1, 3, 5, 10]
+    ):  
+                
+        merged_df = self.population.copy()    
+        df_syunpatu = self.syunpatu_zizoku_df
+        df_pace = self.pace_category
+
+        df = df_syunpatu.merge(
+            df_pace,
+            on=["race_id","date","horse_id"],
+        )
+        """
+        syunpatuは道悪がよく、ローペースが得意、内枠が良い
+        zizokuは高速馬場がよく、長距離がよく、ミドルハイペース・ハイペースが良い、外枠が得意である
+        dfにはumaban,course_len,"pace_category","ground_state_level"
+        と以下のsyunpatu_columns_plus列がある
+        "pace_category"はペース
+        "ground_state_level"は馬場状態である
+                ＿＿ハイペース4
+                
+                ミドルハイペース3
+                
+                ミドルローペース2
+                
+                ＿＿ローペース1
+
+        #　超高速馬場1
+        # 高速馬場2
+        # 軽い馬場3
+                    # 標準的な馬場4
+                
+                    # やや重い馬場5
+            # 重い馬場5
+        # 道悪7
+        である
+
+        このとき、syunpatu_columns_plusの各値とペース、馬場状態、距離、枠をそれぞれかけ合わせ、
+        「        syunpatuは道悪がよく、ローハイペースが得意、内枠が良い
+                zizokuは高速馬場がよく、長距離がよく、ミドルハイペース・ハイペースが良い、外枠が得意である
+        」
+        の条件を満たすように、補正をかける
+        """
+        df = df.merge(
+            self.results[["race_id","horse_id","umaban"]],
+            on=["race_id","horse_id"],
+        )
+
+        df = df.merge(
+            self.race_info[["race_id","course_len"]],
+            on=["race_id"],
+        )
+
+        syunpatu_columns_plus = [
+            "syunpatu_mean_1races_encoded", "syunpatu_mean_3races_encoded", "syunpatu_mean_5races_encoded", "syunpatu_mean_8races_encoded",
+            "syunpatu_min_1races_encoded", "syunpatu_min_3races_encoded", "syunpatu_min_5races_encoded", "syunpatu_min_8races_encoded",
+            "syunpatu_max_1races_encoded", "syunpatu_max_3races_encoded", "syunpatu_max_5races_encoded", "syunpatu_max_8races_encoded",
+        
+        ]
+        zizoku_columns_plus = [      
+            # zizokuバージョンの列を追加
+            "zizoku_mean_1races_encoded", "zizoku_mean_3races_encoded", "zizoku_mean_5races_encoded", "zizoku_mean_8races_encoded",
+            "zizoku_min_1races_encoded", "zizoku_min_3races_encoded", "zizoku_min_5races_encoded", "zizoku_min_8races_encoded",
+            "zizoku_max_1races_encoded", "zizoku_max_3races_encoded", "zizoku_max_5races_encoded", "zizoku_max_8races_encoded"
+        
+        ]
+
+        # for col in syunpatu_columns_plus:
+        #     df[f"{col}_index"] = df[col] * ((df["pace_category"]+20)/20) * (1/((df["ground_state_level"]+20)/20)) * (1/((df["umaban"]+60)/60))
+
+        # for col in zizoku_columns_plus:
+        #     df[f"{col}_index"] = df[col] * (1/((df["pace_category"]+20)/20)) * (((df["ground_state_level"]+20)/20)) * (((df["umaban"]+70)/70)) * (((df["course_len"]/100)+35)/35)
+
+        # オリジナルの統計値（mean, min）を保持
+        df2 = df.copy()
+
+        # syunpatu_columns_plusの補正値を計算
+        for col in syunpatu_columns_plus:
+            # 補正後の列を計算
+            df[f"{col}_index"] = df[col] * ((df["pace_category"] + 15) / 15) * (1 / ((df["ground_state_level"] + 20) / 20)) * (1 / ((df["umaban"] + 50) / 50))
+            # レースごとの相対値に変換
+            tmp_df = df.groupby(["race_id"])[f"{col}_index"].transform(lambda x: (x - x.mean()) / x.std())
+            df[f"{col}_index_relative"] = tmp_df
+
+        # zizoku_columns_plusの補正値を計算
+        for col in zizoku_columns_plus:
+            # 補正後の列を計算
+            df[f"{col}_index"] = df[col] * (1 / ((df["pace_category"] + 15) / 15)) * (((df["ground_state_level"] + 20) / 20)) * (((df["umaban"] + 50) / 50)) * (((df["course_len"] / 100) + 35) / 35)
+            # レースごとの相対値に変換
+            # レースごとの相対値に変換
+            tmp_df = df.groupby(["race_id"])[f"{col}_index"].transform(lambda x: (x - x.mean()) / x.std())
+            df[f"{col}_index_relative"] = tmp_df
+
+
+        """                
+        ＿＿ハイペース4
+                
+                ミドルハイペース3
+                
+                ミドルローペース2
+                
+                ＿＿ローペース1
+
+        #　超高速馬場1
+        # 高速馬場2
+        # 軽い馬場3
+                    # 標準的な馬場4
+                
+                    # やや重い馬場5
+            # 重い馬場5
+        # 道悪7
+        "pace_category","ground_state_level"
+        ローペース、道悪のとき、瞬発指数を
+        ハイペース、高速のとき、持続指数を
+        それぞれ参照する新たな列を作成
+        """
+        n_values = [1, 3, 5, 8]
+        for n in n_values:
+            # 各条件を個別に評価して、比較結果を適切に集約
+            condition1 = (df["pace_category"] < 2.5) & (df["ground_state_level"] >= 4)
+            condition2 = (df["pace_category"] > 2.5) & (df["ground_state_level"] <= 4)
+            
+            if condition1.any():  # condition1がTrueの行が1つでもあればTrue
+                df[f'advantage_mean_{n}_index'] = df[f"syunpatu_mean_{n}races_encoded_index"]
+            elif condition2.any():  # condition2がTrueの行が1つでもあればTrue
+                df[f'advantage_mean_{n}_index'] = df[f"zizoku_mean_{n}races_encoded_index"]
+            else:
+                df[f'advantage_mean_{n}_index'] = df[f"syunpatu_mean_{n}races_encoded_index"] + df[f"zizoku_mean_{n}races_encoded_index"]
+
+        for n in n_values:
+            condition1 = (df["pace_category"] < 2.5) & (df["ground_state_level"] >= 4)
+            condition2 = (df["pace_category"] > 2.5) & (df["ground_state_level"] <= 4)
+            
+            if condition1.any():
+                df[f'advantage_min_{n}_index'] = df[f"syunpatu_min_{n}races_encoded_index"]
+            elif condition2.any():
+                df[f'advantage_min_{n}_index'] = df[f"zizoku_min_{n}races_encoded_index"]
+            else:
+                df[f'advantage_min_{n}_index'] = df[f"syunpatu_min_{n}races_encoded_index"] + df[f"zizoku_min_{n}races_encoded_index"]
+
+        for n in n_values:
+            condition1 = (df["pace_category"] < 2.5) & (df["ground_state_level"] >= 4)
+            condition2 = (df["pace_category"] > 2.5) & (df["ground_state_level"] <= 4)
+            
+            if condition1.any():
+                df[f'advantage_max_{n}_index'] = df[f"syunpatu_max_{n}races_encoded_index"]
+            elif condition2.any():
+                df[f'advantage_max_{n}_index'] = df[f"zizoku_max_{n}races_encoded_index"]
+            else:
+                df[f'advantage_max_{n}_index'] = df[f"syunpatu_max_{n}races_encoded_index"] + df[f"zizoku_max_{n}races_encoded_index"]
+
+                    
+
+        advantage_row = [
+            "advantage_max_1_index", "advantage_max_3_index", "advantage_max_5_index", "advantage_max_8_index",
+            "advantage_min_1_index", "advantage_min_3_index", "advantage_min_5_index", "advantage_min_8_index",
+            "advantage_mean_1_index", "advantage_mean_3_index", "advantage_mean_5_index", "advantage_mean_8_index"
+            ]
+
+
+        for col in advantage_row:
+            tmp_df = df.groupby(["race_id"])[f"{col}"].transform(lambda x: (x - x.mean()) / x.std())
+            df[f"{col}_relative"] = tmp_df
+
+
+
+        select_row = [
+            "syunpatu_mean_1races_encoded_index", "syunpatu_mean_3races_encoded_index", "syunpatu_mean_5races_encoded_index", "syunpatu_mean_8races_encoded_index",
+            "syunpatu_min_1races_encoded_index", "syunpatu_min_3races_encoded_index", "syunpatu_min_5races_encoded_index", "syunpatu_min_8races_encoded_index",
+            "syunpatu_max_1races_encoded_index", "syunpatu_max_3races_encoded_index", "syunpatu_max_5races_encoded_index", "syunpatu_max_8races_encoded_index",
+            
+            # zizokuバージョンの列を追加
+            "zizoku_mean_1races_encoded_index", "zizoku_mean_3races_encoded_index", "zizoku_mean_5races_encoded_index", "zizoku_mean_8races_encoded_index",
+            "zizoku_min_1races_encoded_index", "zizoku_min_3races_encoded_index", "zizoku_min_5races_encoded_index", "zizoku_min_8races_encoded_index",
+            "zizoku_max_1races_encoded_index", "zizoku_max_3races_encoded_index", "zizoku_max_5races_encoded_index", "zizoku_max_8races_encoded_index",
+
+            "advantage_max_1_index", "advantage_max_3_index", "advantage_max_5_index", "advantage_max_8_index",
+            "advantage_min_1_index", "advantage_min_3_index", "advantage_min_5_index", "advantage_min_8_index",
+            "advantage_mean_1_index", "advantage_mean_3_index", "advantage_mean_5_index", "advantage_mean_8_index",
+
+
+            "syunpatu_mean_1races_encoded_index_relative", "syunpatu_mean_3races_encoded_index_relative", "syunpatu_mean_5races_encoded_index_relative", "syunpatu_mean_8races_encoded_index_relative",
+            "syunpatu_min_1races_encoded_index_relative", "syunpatu_min_3races_encoded_index_relative", "syunpatu_min_5races_encoded_index_relative", "syunpatu_min_8races_encoded_index_relative",
+            "syunpatu_max_1races_encoded_index_relative", "syunpatu_max_3races_encoded_index_relative", "syunpatu_max_5races_encoded_index_relative", "syunpatu_max_8races_encoded_index_relative",
+            
+            # zizokuバージョンの列を追加
+            "zizoku_mean_1races_encoded_index_relative", "zizoku_mean_3races_encoded_index_relative", "zizoku_mean_5races_encoded_index_relative", "zizoku_mean_8races_encoded_index_relative",
+            "zizoku_min_1races_encoded_index_relative", "zizoku_min_3races_encoded_index_relative", "zizoku_min_5races_encoded_index_relative", "zizoku_min_8races_encoded_index_relative",
+            "zizoku_max_1races_encoded_index_relative", "zizoku_max_3races_encoded_index_relative", "zizoku_max_5races_encoded_index_relative", "zizoku_max_8races_encoded_index_relative",
+
+            "advantage_max_1_index_relative", "advantage_max_3_index_relative", "advantage_max_5_index_relative", "advantage_max_8_index_relative",
+            "advantage_min_1_index_relative", "advantage_min_3_index_relative", "advantage_min_5_index_relative", "advantage_min_8_index_relative",
+            "advantage_mean_1_index_relative", "advantage_mean_3_index_relative", "advantage_mean_5_index_relative", "advantage_mean_8_index_relative",
+
+            'race_id', 'horse_id', 'date'
+
+
+        ]
+
+        # merged_dfから指定した列だけを抽出
+        merged_df2 = df[select_row]
+
+
+        self.agg_cross_features_df_16 = merged_df2
+        print("running cross_features_16()...comp")
+
+
+
+
+
+
+
+
     # def cross_features_15(
     #     self, n_races: list[int] = [1, 3, 5, 10]
     # ):  
@@ -6172,7 +6679,7 @@ class PredictionFeatureCreator:
         
             
     def create_features(
-        self, race_id: str, date_content_a: str,skip_agg_horse: bool = False
+        self, race_id: str, date_content_a: str, date_condition_a: int,skip_agg_horse: bool = False
     ) -> pd.DataFrame:
         """
         特徴量作成処理を実行し、populationテーブルに全ての特徴量を結合する。
@@ -6196,7 +6703,7 @@ class PredictionFeatureCreator:
         self.cross_features_3()
         self.cross_features_4()
         self.cross_features_5()
-        self.cross_features_6()
+        self.cross_features_6(date_condition_a)
         self.cross_features_7()
         self.cross_features_8()
         self.cross_features_9()
@@ -6204,8 +6711,9 @@ class PredictionFeatureCreator:
         self.cross_features_11()
         self.cross_features_12()
         self.cross_features_13()
-        self.cross_features_14()
+        self.cross_features_14(date_condition_a)
         self.cross_features_15()
+        self.cross_features_16()
         
         self.agg_horse_per_course_len()
         self.agg_horse_per_group_cols(
@@ -6380,23 +6888,29 @@ class PredictionFeatureCreator:
                 how="left",
                 # copy=False,
             )          
+            .merge(
+                self.agg_cross_features_df_16,
+                on=["race_id", "date", "horse_id"],
+                how="left",
+                # copy=False,
+            )                      
             
             # .merge(
             #     self.agg_horse_per_group_cols_dfs["around_per_wakuban"],
             #     on=["race_id", "horse_id"],
             #     how="left",
             # )
-            .merge(
-                self.agg_horse_per_group_cols_dfs["race_place"],
-                on=["race_id", "date", "horse_id"],
-                how="left",
-            )
-            .merge(
-                self.agg_horse_per_group_cols_dfs["weather"],
-                on=["race_id", "date", "horse_id"],
-                how="left",
-                # copy=False,
-            )                     
+            # .merge(
+            #     self.agg_horse_per_group_cols_dfs["race_place"],
+            #     on=["race_id", "date", "horse_id"],
+            #     how="left",
+            # )
+            # .merge(
+            #     self.agg_horse_per_group_cols_dfs["weather"],
+            #     on=["race_id", "date", "horse_id"],
+            #     how="left",
+            #     # copy=False,
+            # )                     
             .merge(
                 self.agg_sire_df,
                 on=["race_id", "horse_id"],

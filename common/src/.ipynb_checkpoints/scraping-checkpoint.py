@@ -245,8 +245,8 @@ def scrape_race_id_list(
     remaining_dates = [date for date in kaisai_date_list_2 if date not in processed_dates]
     
     with webdriver.Chrome(service=Service(driver_path), options=options) as driver:
-        wait = WebDriverWait(driver, 10000)
-        driver.set_page_load_timeout(10000)  # タイムアウトを10000秒に設定
+        wait = WebDriverWait(driver, 1000)
+        driver.set_page_load_timeout(1000)  # タイムアウトを10000秒に設定
         for kaisai_date in tqdm(remaining_dates):
             url = f"https://race.netkeiba.com/top/race_list.html?kaisai_date={kaisai_date}"
             try:
@@ -383,6 +383,8 @@ def scrape_html_horse(
     スキップされたhtmlのパスは返り値に含まれない。
     """
     updated_html_path_list = []
+    error_horse_ids = []  # エラーになった horse_id を格納するリスト
+
     save_dir.mkdir(parents=True, exist_ok=True)
     headers = {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
@@ -411,7 +413,10 @@ def scrape_html_horse(
             
             except Exception as e:
                 print(f"An error occurred for horse_id {horse_id}: {e}")
-    
+                error_horse_ids.append(horse_id)
+    # エラーになった horse_id のリストを表示
+    print("\nErrors occurred for the following horse_ids:")
+    print(repr(error_horse_ids))  
     return updated_html_path_list
 
 
