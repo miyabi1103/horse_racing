@@ -34,11 +34,21 @@ def predict(
         "dominant_position_category",
         "pace_category",
         "ground_state_level",       
-        #展開の有利不利
+        # #展開の有利不利
         # "tenkai_combined",
         # "tenkai_all_combined",
+        # "tenkai_goal_range_combined",
+        # "tenkai_curve_combined",
+        # "tenkai_goal_slope_combined",
+        # "tenkai_goal_range_curve_combined",
+        # "tenkai_goal_range_goal_slope_combined",
+        # "tenkai_all_combined",
+        # "umaban_relative",
+        
         "tenkai_combined_standardized",
         "tenkai_all_combined_standardized",
+        "weight_diff",
+        # "course_len_diff_mean_1races",
         "race_grade_rank_diff_sum_mean_3races_grade_rankdiff_score_plus_tenkai_combined_standardized",
         # "race_grade_rank_diff_multi_mean_3races_grade_rankdiff_score_plus_tenkai_combined_standardized",
         # "race_grade_rank_diff_sum_mean_3races_grade_rankdiff_score_plus_tenkai_all_combined_standardized",

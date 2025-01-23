@@ -261,16 +261,14 @@ class FeatureCreator:
 
 
     
-
     def agg_horse_n_races_relative(
         self, n_races: list[int] = [1, 3, 5, 10]
     ) -> None:
         """
-        直近nレースの馬の過去成績を集計し、相対値に変換する関数。
+        直近nレースの平均を集計して標準化した関数。
         """
         grouped_df = self.baselog.groupby(["race_id", "horse_id"])
         merged_df = self.population.copy()
-        
         for n_race in tqdm(n_races, desc="agg_horse_n_races_relative"):
             df = (
                 grouped_df.head(n_race)
@@ -281,13 +279,12 @@ class FeatureCreator:
                         
                         "prize",
                         "rank_diff",
-                        "course_len",
+                        # "course_len",
                         "race_grade",
-                        "n_horses",
-                        
-                       # "time",
+                        #"time",
                         
                         "nobori",
+                        # "n_horses",       
                         
                         # "corner_1",
                         # "corner_2",
@@ -302,20 +299,116 @@ class FeatureCreator:
                         "pace_2",
                     ]
                 ]
-                .agg(["mean",  "max", "min"])
+                .agg(["mean", "max", "min"])
             )
             df.columns = ["_".join(col) + f"_{n_race}races" for col in df.columns]
             # レースごとの相対値に変換
+
+            tmp_df = df.groupby(["race_id"])
+            
+            relative_df = ((df - tmp_df.mean()) / tmp_df.std()).add_suffix("_relative")
+            merged_df = merged_df.merge(
+                relative_df, on=["race_id", "horse_id"], how="left"
+            )
+
+        
+        
+        # merged_df = merged_df.astype({col: 'float32' for col in merged_df.select_dtypes('float64').columns})
+        # merged_df = merged_df.astype({col: 'int32' for col in merged_df.select_dtypes('int64').columns})        
+        
+        self.agg_horse_n_races_relative_df = merged_df
+
+
+
+
+    def agg_course_len(
+        self, n_races: list[int] = [1, 3, 5, 10]
+    ) -> None:
+        """
+        直近nレースの平均を集計して標準化した関数。
+        """
+        baselog_df_info = self.baselog.merge(
+                self.race_info[["race_id", "course_len"]], on="race_id", suffixes=("", "_info")
+            )
+        baselog_df = baselog_df_info.merge(
+            self.results[["race_id", "n_horses"]], on="race_id", suffixes=("", "_results")
+            )
+                        
+        baselog_df["course_len_diff"] = baselog_df["course_len_info"] - baselog_df["course_len"]
+        baselog_df["n_horses_diff"] = baselog_df["n_horses_results"] - baselog_df["n_horses"]
+
+        grouped_df = baselog_df.groupby(["race_id", "horse_id"])
+        merged_df = self.population.copy()
+
+        for n_race in tqdm(n_races, desc="course_len_relative"):
+            df = (
+                grouped_df.head(n_race)
+                .groupby(["race_id", "horse_id"])[
+                    [
+                        "course_len",
+                        "course_len_diff",
+                        "n_horses",
+                        "n_horses_diff",
+                    ]
+                ]
+                .agg(["mean", "max", "min"])
+            )
+            df.columns = ["_".join(col) + f"_{n_race}races" for col in df.columns]
+            # レースごとの相対値に変換
+            original_df = df.copy()
+
             tmp_df = df.groupby(["race_id"])
             relative_df = ((df - tmp_df.mean()) / tmp_df.std()).add_suffix("_relative")
             merged_df = merged_df.merge(
                 relative_df, on=["race_id", "horse_id"], how="left"
             )
+            merged_df = merged_df.merge(original_df, on=["race_id", "horse_id"], how="left")
+
+        
         
         # merged_df = merged_df.astype({col: 'float32' for col in merged_df.select_dtypes('float64').columns})
-        # merged_df = merged_df.astype({col: 'int32' for col in merged_df.select_dtypes('int64').columns})
+        # merged_df = merged_df.astype({col: 'int32' for col in merged_df.select_dtypes('int64').columns})        
         
-        self.agg_horse_n_races_relative_df = merged_df
+        self.course_len_df = merged_df
+
+
+
+
+    def results_relative(
+        self, n_races: list[int] = [1, 3, 5, 10]
+    ) -> None:
+        """
+        直近nレースの平均を集計して標準化した関数。
+        """
+        merged_df = self.population.copy()
+        results_normal = self.population.merge(
+                self.results[["race_id","horse_id","umaban","wakuban","impost","age","weight","weight_diff","impost_percent"]], on=["race_id","horse_id"]
+            )
+
+        required_columns = ["umaban", "wakuban", "impost", "age", "weight", "weight_diff", "impost_percent"]
+
+
+        tmp_df_results_normal= results_normal.groupby("race_id")[required_columns]
+        mean_results_normal = tmp_df_results_normal.transform("mean")
+        std_results_normal = tmp_df_results_normal.transform("std").replace(0, np.nan)  # 標準偏差が 0 の場合 NaN に置換
+        relative_cols = [f"{col}_relative" for col in required_columns]
+        results_normal[relative_cols] = (results_normal[required_columns] - mean_results_normal) / std_results_normal
+
+
+
+
+
+        merged_df = merged_df.merge(
+            results_normal[["race_id", "horse_id","umaban_relative", "wakuban_relative", "impost_relative", "age_relative", "weight_relative", "weight_diff_relative", "impost_percent_relative"]], 
+            on=["race_id", "horse_id"], 
+            how="left"
+        )
+        
+        
+        # merged_df = merged_df.astype({col: 'float32' for col in merged_df.select_dtypes('float64').columns})
+        # merged_df = merged_df.astype({col: 'int32' for col in merged_df.select_dtypes('int64').columns})        
+        
+        self.results_relative_df = merged_df
 
 
     
@@ -4924,8 +5017,9 @@ class FeatureCreator:
         )
         merged_df_all = merged_df100[["race_id","date","horse_id","dominant_position_category","pace_category","ground_state_level"]]
         self.pace_category = merged_df_all 
-        
-        
+
+
+
         """
         dominant_position_categoryが当該レースの脚質予想
         pace_categoryが当該レースのペース予想
@@ -4970,7 +5064,13 @@ class FeatureCreator:
         "curve"は-4.5を行い、+の場合は数値を8倍する
         
         "goal_slope"は-1を行う、pace_categoryに-をかける、pace_categoryと掛け合わせる
-        
+        #     "平坦": 1,        
+        #     "緩坂": 2,
+        #     "急坂": 3
+
+        ③内枠は基本的に、先行馬にとって有利で、差し馬には不利である
+        ④外枠は基本的に、差し馬に有利で、先行馬には不利である
+        ⑤中枠は内と外の特徴をマイルドにしたもので、どの脚質でも柔軟に対応可能
         """
         
         
@@ -4980,11 +5080,30 @@ class FeatureCreator:
                 on="race_id",
             )
         
+
+        merged_df_all = merged_df_all.merge(
+                self.results[["race_id","horse_id","umaban"]], 
+                on=["horse_id","race_id"],
+            )
+
         # 必要に応じてコピーを作成
         merged_df_all = merged_df_all.copy()
-        
-        
-        
+        merged_df_all_umaban = merged_df_all[["race_id","umaban"]]
+
+        tmp_df_umaban = merged_df_all_umaban.groupby("race_id")
+        mean_umaban = tmp_df_umaban["umaban"].transform("mean")
+        std_umaban = tmp_df_umaban["umaban"].transform("std")
+
+        merged_df_all_umaban = merged_df_all_umaban.copy()
+        merged_df_all_umaban.loc[:, "umaban_relative"] = (
+            (merged_df_all_umaban["umaban"] - mean_umaban) / std_umaban
+        )
+
+        merged_df_all = merged_df_all.merge(
+            merged_df_all_umaban[["race_id","umaban", "umaban_relative"]], on=["race_id","umaban"], how="left"
+        )
+
+
         # ground_state_level_processed 列の処理
         merged_df_all.loc[:, "ground_state_level_processed"] = (
             merged_df_all["ground_state_level"].fillna(4) - 4
@@ -4998,7 +5117,7 @@ class FeatureCreator:
         # dominant_position_category_processed 列の処理
         merged_df_all.loc[:, "dominant_position_category_processed"] = (
             merged_df_all["dominant_position_category"]
-            .replace({1: -2, 2: -2, 3: 2, 4: 1.8})
+            .replace({1: -1.8, 2: -2, 3: 2, 4: 1.6})
         ).astype(float)
         
         # goal_range_100 に -3.5 を行う
@@ -5011,7 +5130,7 @@ class FeatureCreator:
         merged_df_all["curve_processed"] = merged_df_all["curve"] - 4.5
         # +の場合は数値を8倍する
         merged_df_all["curve_processed"] = merged_df_all["curve_processed"].apply(
-            lambda x: x * 8 if x > 0 else x
+            lambda x: x * 10 if x > 0 else x
         )
         
         
@@ -5019,27 +5138,34 @@ class FeatureCreator:
         merged_df_all["goal_slope_processed"] = merged_df_all["goal_slope"] - 1
         
         # pace_category に - をかけて符号反転
-        merged_df_all["pace_category_processed"] = merged_df_all["pace_category"] * -1
+        merged_df_all["pace_category_processed"] = (merged_df_all["pace_category"] * -1)*3
         
         # goal_slope_processed と pace_category_processed を掛け合わせる
         merged_df_all["goal_slope_processed"] = merged_df_all["goal_slope_processed"] * merged_df_all["pace_category_processed"]
         
         
-        
+
         # それぞれの列に倍率を適用
         ground_state_multiplier = 4.5 # 必要に応じて調整
-        pace_multiplier = 5  # 必要に応じて調整
+        pace_multiplier = 7  # 必要に応じて調整
         dominant_multiplier = 2.8  # 必要に応じて調整
         goal_range_multiplier = 18
-        curve_multiplier = 2.25
-        goal_slope_multiplier = 2.5
+        curve_multiplier = 5
+        goal_slope_multiplier = 1.8
         
         merged_df_all["dominant_position_category_processed"] = merged_df_all["dominant_position_category_processed"].astype(float)
         merged_df_all["goal_range_100_processed"] = merged_df_all["goal_range_100_processed"].astype(float)
         merged_df_all["goal_slope_processed"] = merged_df_all["goal_slope_processed"].astype(float)
         merged_df_all["pace_category_processed"] = merged_df_all["pace_category_processed"].astype(float)
         
-                
+        merged_df_all["umaban"] = merged_df_all["umaban"]-8
+        merged_df_all["umaban"] = merged_df_all["umaban"].apply(
+            lambda x: x * 1/2 if x < 0 else x
+        )
+        merged_df_all["umaban_relative"] = merged_df_all["umaban"] + (merged_df_all["umaban_relative"]*4)
+        merged_df_all.loc[:, "dominant_position_category_processed"] += (merged_df_all["umaban_relative"]/20)
+
+
         merged_df_all.loc[:, "ground_state_level_processed"] *= ground_state_multiplier
         merged_df_all.loc[:, "pace_category_processed"] *= pace_multiplier
         merged_df_all.loc[:, "dominant_position_category_processed"] *= dominant_multiplier
@@ -5302,10 +5428,10 @@ class FeatureCreator:
 
         # `tenkai_combined` と `tenkai_all_combined` を掛け算し、新しい列を作成
         for col in columns_to_multiply:
-            merge_all_ex[f"{col}_plus_tenkai_combined"] = merge_all_ex[col] + merge_all_ex["tenkai_combined"]
-            merge_all_ex[f"{col}_plus_tenkai_all_combined"] = merge_all_ex[col] + merge_all_ex["tenkai_all_combined"]
-            merge_all_ex[f"{col}_px_tenkai_combined"] = merge_all_ex[col]*(((merge_all_ex["tenkai_combined"]+40))/10)
-            merge_all_ex[f"{col}_px_tenkai_all_combined"] = merge_all_ex[col]  *  (((merge_all_ex["tenkai_all_combined"]+40))/10)
+            merge_all_ex[f"{col}_plus_tenkai_combined"] = merge_all_ex[col] + (merge_all_ex["tenkai_combined"]*13)
+            merge_all_ex[f"{col}_plus_tenkai_all_combined"] = merge_all_ex[col] + (merge_all_ex["tenkai_all_combined"]*13)
+            merge_all_ex[f"{col}_px_tenkai_combined"] = merge_all_ex[col]*(((merge_all_ex["tenkai_combined"]+7))/7)
+            merge_all_ex[f"{col}_px_tenkai_all_combined"] = merge_all_ex[col]  *  (((merge_all_ex["tenkai_all_combined"]+7))/7)
 
         # 標準化
         combined_columns = [
@@ -5554,13 +5680,13 @@ class FeatureCreator:
 
 
         """
-        ＋（	斥量	－	５５	）
+        ＋（	斥量	－	５５	）馬体重の12%から斤量がかなりくるらしい
         """
         # 2. time_diffを0.1秒ごとのポイントに変換（1ポイント = 0.1秒）
-        horse_results_baselog['time_points_impost'] = (horse_results_baselog['time_points_course_index'] +(horse_results_baselog["impost"]-55) *1.7)
+        horse_results_baselog['time_points_impost'] = (horse_results_baselog['time_points_course_index'] +(((horse_results_baselog["impost"]-(55- ((55 - (horse_results_baselog["weight"] *(12/100)))/7))) *1.7)*(((horse_results_baselog["course_len"]*0.0025)+20)/20)*(((horse_results_baselog["race_type"])+10)/10)))
 
         # 2. nobori_diffを0.1秒ごとのポイントに変換（1ポイント = 0.1秒）
-        horse_results_baselog['nobori_points_impost'] = (horse_results_baselog['nobori_points_course_index']+(horse_results_baselog["impost"]-55) *1.7)
+        horse_results_baselog['nobori_points_impost'] = (horse_results_baselog['nobori_points_course_index']+(((horse_results_baselog["impost"]-(55- ((55 - (horse_results_baselog["weight"] *(12/100)))/7))) *1.7)*(((horse_results_baselog["course_len"]*0.0025)+20)/20)*(((horse_results_baselog["race_type"])+10)/10)))
 
 
 
@@ -5700,8 +5826,8 @@ class FeatureCreator:
         # 2. nobori_diffを0.1秒ごとのポイントに変換（1ポイント = 0.1秒）
         horse_results_baselog['nobori_points_grade_index'] = (horse_results_baselog['nobori_points_grade'] *horse_results_baselog['converted_value'])
 
-        horse_results_baselog['time_condition_index'] = horse_results_baselog['time_points_grade_index'] -horse_results_baselog['pace_diff']*7
-        horse_results_baselog['nobori_condition_index'] = horse_results_baselog['nobori_points_grade_index'] +horse_results_baselog['pace_diff']*7
+        horse_results_baselog['time_condition_index'] = horse_results_baselog['time_points_grade_index'] -horse_results_baselog['pace_diff']*5
+        horse_results_baselog['nobori_condition_index'] = horse_results_baselog['nobori_points_grade_index'] +horse_results_baselog['pace_diff']*5
 
 
 
@@ -5912,39 +6038,64 @@ class FeatureCreator:
         """
         n_values = [1, 3, 5, 8]
         for n in n_values:
-            # 各条件を個別に評価して、比較結果を適切に集約
-            condition1 = (df["pace_category"] < 2.5) & (df["ground_state_level"] >= 4)
-            condition2 = (df["pace_category"] > 2.5) & (df["ground_state_level"] <= 4)
-            
-            if condition1.any():  # condition1がTrueの行が1つでもあればTrue
-                df[f'advantage_mean_{n}_index'] = df[f"syunpatu_mean_{n}races_encoded_index"]
-            elif condition2.any():  # condition2がTrueの行が1つでもあればTrue
-                df[f'advantage_mean_{n}_index'] = df[f"zizoku_mean_{n}races_encoded_index"]
-            else:
-                df[f'advantage_mean_{n}_index'] = df[f"syunpatu_mean_{n}races_encoded_index"] + df[f"zizoku_mean_{n}races_encoded_index"]
+            # 各条件の定義
+            condition1 = (df["pace_category"] < 2.5) & (df["ground_state_level"] >= 3)
+            condition2 = (df["pace_category"] > 2.5) & (df["ground_state_level"] <= 5)
+            condition3 = (~condition1 & ~condition2) & (df["course_len"] > 2000)
+            condition4 = (~condition1 & ~condition2) & (df["course_len"] <= 2000)
+
+            # 条件リストと対応する値
+            conditions = [condition1, condition2, condition3, condition4]
+            choices = [
+                df[f"syunpatu_mean_{n}races_encoded_index"],  # condition1
+                df[f"zizoku_mean_{n}races_encoded_index"],    # condition2
+                df[f"zizoku_mean_{n}races_encoded_index"],    # condition3
+                df[f"syunpatu_mean_{n}races_encoded_index"]   # condition4
+            ]
+
+            # 条件ごとに列を適用
+            df[f'advantage_mean_{n}_index'] = np.select(conditions, choices, default=np.nan)
+
+
 
         for n in n_values:
-            condition1 = (df["pace_category"] < 2.5) & (df["ground_state_level"] >= 4)
-            condition2 = (df["pace_category"] > 2.5) & (df["ground_state_level"] <= 4)
-            
-            if condition1.any():
-                df[f'advantage_min_{n}_index'] = df[f"syunpatu_min_{n}races_encoded_index"]
-            elif condition2.any():
-                df[f'advantage_min_{n}_index'] = df[f"zizoku_min_{n}races_encoded_index"]
-            else:
-                df[f'advantage_min_{n}_index'] = df[f"syunpatu_min_{n}races_encoded_index"] + df[f"zizoku_min_{n}races_encoded_index"]
+            # 各条件の定義
+            condition1 = (df["pace_category"] < 2.5) & (df["ground_state_level"] >= 3)
+            condition2 = (df["pace_category"] > 2.5) & (df["ground_state_level"] <= 5)
+            condition3 = (~condition1 & ~condition2) & (df["course_len"] > 2000)
+            condition4 = (~condition1 & ~condition2) & (df["course_len"] <= 2000)
+
+            # 条件リストと対応する値
+            conditions = [condition1, condition2, condition3, condition4]
+            choices = [
+                df[f"syunpatu_min_{n}races_encoded_index"],  # condition1
+                df[f"zizoku_min_{n}races_encoded_index"],    # condition2
+                df[f"zizoku_min_{n}races_encoded_index"],    # condition3
+                df[f"syunpatu_min_{n}races_encoded_index"]   # condition4
+            ]
+
+            # 条件ごとに列を適用
+            df[f'advantage_min_{n}_index'] = np.select(conditions, choices, default=np.nan)
+
 
         for n in n_values:
-            condition1 = (df["pace_category"] < 2.5) & (df["ground_state_level"] >= 4)
-            condition2 = (df["pace_category"] > 2.5) & (df["ground_state_level"] <= 4)
-            
-            if condition1.any():
-                df[f'advantage_max_{n}_index'] = df[f"syunpatu_max_{n}races_encoded_index"]
-            elif condition2.any():
-                df[f'advantage_max_{n}_index'] = df[f"zizoku_max_{n}races_encoded_index"]
-            else:
-                df[f'advantage_max_{n}_index'] = df[f"syunpatu_max_{n}races_encoded_index"] + df[f"zizoku_max_{n}races_encoded_index"]
+            # 各条件の定義
+            condition1 = (df["pace_category"] < 2.5) & (df["ground_state_level"] >= 3)
+            condition2 = (df["pace_category"] > 2.5) & (df["ground_state_level"] <= 5)
+            condition3 = (~condition1 & ~condition2) & (df["course_len"] > 2000)
+            condition4 = (~condition1 & ~condition2) & (df["course_len"] <= 2000)
 
+            # 条件リストと対応する値
+            conditions = [condition1, condition2, condition3, condition4]
+            choices = [
+                df[f"syunpatu_max_{n}races_encoded_index"],  # condition1
+                df[f"zizoku_max_{n}races_encoded_index"],    # condition2
+                df[f"zizoku_max_{n}races_encoded_index"],    # condition3
+                df[f"syunpatu_max_{n}races_encoded_index"]   # condition4
+            ]
+
+            # 条件ごとに列を適用
+            df[f'advantage_max_{n}_index'] = np.select(conditions, choices, default=np.nan)
 
         advantage_row = [
             "advantage_max_1_index", "advantage_max_3_index", "advantage_max_5_index", "advantage_max_8_index",
@@ -6434,6 +6585,8 @@ class FeatureCreator:
         self.create_race_grade()
         self.agg_horse_n_races()
         self.agg_horse_n_races_relative()
+        self.agg_course_len()
+        self.results_relative()
         self.agg_jockey()
         self.agg_trainer()
         self.agg_horse_per_course_len()
@@ -6498,6 +6651,18 @@ class FeatureCreator:
                 how="left",
                 # copy=False,
             )
+            .merge(
+                self.course_len_df,
+                on=["race_id","date","horse_id"],
+                how="left",
+                # copy=False,
+            )     
+            .merge(
+                self.results_relative_df,
+                on=["race_id","date","horse_id"],
+                how="left",
+                # copy=False,
+            )                 
             .merge(
                 self.agg_jockey_df,
                 on=["race_id", "horse_id"],

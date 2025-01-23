@@ -154,7 +154,7 @@ def process_results(
     result_df = result_df.loc[:, ~result_df.columns.str.endswith('_drop')]
 
 
-
+    result_df["impost_percent"] = result_df["impost"] / result_df["weight"]
     # データが着順に並んでいることによるリーク防止のため、各レースを馬番順にソートする
     result_df = result_df.sort_values(["race_id", "umaban"])
 
@@ -179,6 +179,7 @@ def process_results(
             "age",
             "weight",
             "weight_diff",
+            "impost_percent",
             "n_horses",
             "corner_1_per_horse",
             "corner_2_per_horse",
@@ -911,6 +912,9 @@ def process_horse_results(
     df["place"] = df["開催"].str.extract(r"(\D+)")[0].map(place_mapping)
     df.dropna(subset=["place"], inplace=True)    
     df.rename(columns={"頭数": "n_horses"}, inplace=True)
+    df["weight"] = df["馬体重"].str.extract(r"(\d+)").astype(float)
+    df["weight_diff"] = df["馬体重"].str.extract(r"\((.+)\)").astype(float)
+
 
     pace_cols = df['ペース'].str.split('-', expand=True)
     pace_cols.columns = [f'pace_{i+1}' for i in range(pace_cols.shape[1])]
@@ -920,14 +924,15 @@ def process_horse_results(
 
     # 元のデータフレームと結合
     df = pd.concat([df, pace_cols], axis=1)
+
+    # course_len の上2桁を取得して奇数かどうかを判定
+    df['course_len_prefix'] = df['course_len'].astype(str).str[:2].astype(float)  # 上2桁を取得
+        
+    df.loc[df['course_len_prefix'] % 2 != 0, 'pace_1'] = (df['pace_1']* 6/5)
     
     # pace_2 - pace_1 の計算
     df['pace_diff'] = df['pace_2'] - df['pace_1']
-    # course_len の上2桁を取得して奇数かどうかを判定
-    df['course_len_prefix'] = df['course_len'].astype(str).str[:2].astype(float)  # 上2桁を取得
-    
-    # 奇数の場合に pace_diff を NaN に設定
-    df.loc[df['course_len_prefix'] % 2 != 0, 'pace_diff'] = df['pace_2'] - (df['pace_1']* 6/5)
+
     # pace_diff をカテゴリに分ける関数
     def categorize_pace_diff(value):
         if value < -1.0:
@@ -1456,6 +1461,8 @@ def process_horse_results(
             "goal_range_100",
             "place_course_category",
             "place_course_tough",
+            "weight",
+            "weight_diff",
 
             "corner_1_per_horse",
             "corner_2_per_horse",

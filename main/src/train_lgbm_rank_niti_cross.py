@@ -348,7 +348,8 @@ class Trainer_lightgbm_rank_niti_cv:
         importance_filename: str = "importance_lightgbm_rank_niti_cv", 
         model_filename: str = "model_lightgbm_rank_niti_cv.pkl", 
         evaluation_filename: str = "evaluation_lightgbm_rank_niti_cv.csv", 
-        final_model_filename: str = "model_lightgbm_rank_niti_cv_full.pkl"
+        final_model_filename: str = "model_lightgbm_rank_niti_cv_full.pkl",
+        final_num_boost_round: int = 1000
     ):
         """ 時系列クロスバリデーションを実行し、最後に全データを使って学習したモデルを保存
         """
@@ -392,8 +393,8 @@ class Trainer_lightgbm_rank_niti_cv:
         model = lgb.train(
             self.params,
             lgb_train,
-            num_boost_round=additional_boost_round,
-            init_model=init_model
+            num_boost_round=final_num_boost_round,  # 必ず1000回学習
+            init_model=init_model,  # 前回モデルを引き継ぐ
         )
 
         # 最終モデルの保存
