@@ -36,6 +36,66 @@ class Evaluator_lightgbm_rank_niti_cross:
         sort_colで指定した列でソートし、上位n件のBOX馬券の的中率・回収率を
         シミュレーションする関数。
         """
+
+        """
+        sortする場合は個々で記入
+        """
+        # self.evaluation_df = self.evaluation_df.query("course_len <= 1500")
+        # self.evaluation_df = self.evaluation_df.query("1500 < course_len <= 2200")
+        self.evaluation_df = self.evaluation_df.query("1900 <= course_len")
+
+        # self.evaluation_df = self.evaluation_df.query("weather <= 2")
+        # self.evaluation_df = self.evaluation_df.query("2 <  weather")
+
+        # self.evaluation_df = self.evaluation_df.query("ground_state <= 0")
+        # self.evaluation_df = self.evaluation_df.query("1 <=  ground_state")
+
+        # self.evaluation_df = self.evaluation_df.query("race_class <= 4")
+        # self.evaluation_df = self.evaluation_df.query("3 <= race_class")
+
+        # self.evaluation_df = self.evaluation_df.query("mean_age <= 3.4")
+        # self.evaluation_df = self.evaluation_df.query("3.4 < mean_age")
+
+        # ・距離1500以下	
+        # ・距離1500～2200	
+        # ・距離2200～	
+            
+        # ・天気2以下	
+        # ・天気3以上	
+            
+        # ・馬場状態0	
+        # ・馬場状態1以上	
+            
+        # ・レースクラス4以下	
+        # ・５以上	
+            
+        # ・年齢3歳以下	
+        # ・4歳以上	
+
+
+        #距離、1400未満、1400～1700,1800～2200m,2200～2800m,2800m-
+        #天気2以下、2以上
+        #馬場状態0、それ以外
+        #race_class、4(３勝)以下、以上
+        #年齢三歳以下、以上
+
+        # "course_len","weather","ground_state","race_class","age","place",
+        # "小雨": 0,
+        # "晴": 1,
+        # "曇": 2,
+        # "雨": 3,
+        # "小雪": 4,
+        # "雪": 5
+
+        #    "良": 0,
+        # "重": 1,
+        # "稍": 2,
+        # "不": 3,
+        # "稍重": 2,
+        # "不良": 3
+
+
+
         bet_df = (
             self.evaluation_df.sort_values(sort_col, ascending=ascending)
             .groupby("race_id")
@@ -46,10 +106,13 @@ class Evaluator_lightgbm_rank_niti_cross:
             .reset_index()
         )
         df = bet_df.merge(self.return_tables, on="race_id")
+
+
         # 的中判定。BOXで全通り賭けるシミュレーションなので、集合の包含関係で判定できる。
         df["hit"] = df.apply(
             lambda x: set(x["win_umaban"]).issubset(set(x["umaban"])), axis=1
         )
+
         # 馬券種ごとの的中率
         agg_hitrate = (
             df.groupby(["race_id", "bet_type"])["hit"]

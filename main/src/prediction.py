@@ -18,14 +18,24 @@ def predict(
         feature_cols = yaml.safe_load(f)["features"]
     with open(model_dir / model_filename, "rb") as f:
         model = pickle.load(f)
+    features = features.dropna(subset=["tansho_odds"])
+    
+    # features["popularity"] =  fuatures["popularity"].astype(int)
+    # features = features[features["tansho_odds"] != "取消"]
     prediction_df = features[[
         "race_id", 
         "umaban",               
         "tansho_odds", 
         "popularity",
-                             ]].copy()
+    ]].copy()
+
     prediction_df["pred"] = model.predict(features[feature_cols])
+    # race_id ごとに pred の合計が 1 になるように正規化
+    prediction_df["pred"] = prediction_df.groupby("race_id")["pred"].transform(lambda x: x / x.sum())
+
     prediction_df["Ex_value"] = prediction_df["pred"] * prediction_df["tansho_odds"]
+    prediction_df["popularity"] =  prediction_df["popularity"].astype(int)*100
+
 
     prediction_df = prediction_df.join(features[[
         "mean_fukusho_rate_wakuban",
@@ -33,7 +43,8 @@ def predict(
         #ここから展開予想
         "dominant_position_category",
         "pace_category",
-        "ground_state_level",       
+        "ground_state_level",     
+        "place_season_condition_type_categori_x",
         # #展開の有利不利
         # "tenkai_combined",
         # "tenkai_all_combined",
@@ -61,8 +72,8 @@ def predict(
         #各馬番、枠番の勝率がわかる
         # "goal_range",
         # "goal_range_100",
-        "sire_n_wins_relative",
-        "bms_n_wins_relative",
+        # "sire_n_wins_relative",
+        # "bms_n_wins_relative",
         "interval",
         "sin_date_sex",
         # "distance_place_type_ground_state_encoded_time_diff_mean_1races_cross_encoded_relative",
@@ -79,16 +90,16 @@ def predict(
         # "mean_5races_sum_relative",
 
         #スピード指数
-        "speed_index_mean_1races",
-        # "nobori_index_mean_1races",
-        "speed_index_mean_3races",
-        "nobori_index_mean_3races",
+        # "speed_index_mean_1races",
+        # # "nobori_index_mean_1races",
+        # "speed_index_mean_3races",
+        # "nobori_index_mean_3races",
 
 
-        "syunpatu_mean_3races_encoded_index_relative",
-        "zizoku_mean_3races_encoded_index_relative",
-        "advantage_mean_3_index", 
-        "advantage_mean_3_index_relative",
+        # "syunpatu_mean_3races_encoded_index_relative",
+        # "zizoku_mean_3races_encoded_index_relative",
+        # "advantage_mean_3_index", 
+        # "advantage_mean_3_index_relative",
         # "speed_index_min_5races",
         # "nobori_index_min_5races",
         # "speed_index_mean_3races_relative",

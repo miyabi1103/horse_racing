@@ -7,7 +7,7 @@ params:
     "bagging_fraction": 0.8
     "learning_rate": 0.01
     "bagging_freq": 1
-    'min_child_samples': 80
+    'min_child_samples': 87
     # "colsample_bytree": 0.7
 
 ##^(?=.*1races)
@@ -34,11 +34,33 @@ features:
     - wakuban
     # - tansho_odds
     # - popularity
+    - umaban_odd
+    - course_type
+    - course_len_type
+    - start_point_umaban
+    - curve_amount
+    - start_point
+    - start_range
+    - straight_total
+    - curve_total
+    - curve_R12
+    - curve_R34
+    - height_diff
+    - width
+    - start_slope
+    - flont_slope
+    - first_curve_slope
+    - last_curve_slope
+    - weight_weather_relative
+    - course_type_ground_position
+    - mean_fukusho_rate_position
+    - all_umaban_odd_processed
+    - all_umaban_processed
     - impost
     - sex
     - age
-    - weight
-    - weight_diff
+    # - weight
+    # - weight_diff
     - n_horses
     - mean_age
     - median_age
@@ -63,6 +85,19 @@ features:
     - day_condition
     - place_season_condition_type
     - place_season_condition_type_categori_x
+    - place_course_category
+    - place_course_tough
+    - goal_range
+    - curve
+    - goal_slope
+    - place_season_type_course_len
+    - lap_type
+    - race_day_count
+    - race_date_day_count
+    # - goal_range_100
+    - age_season
+    - race_grade
+    # - race_grade_scaled
     - umaban_relative
     # - wakuban_relative
     # - impost_relative
@@ -71,19 +106,6 @@ features:
     # - weight_diff_relative
     # - impost_percent_relative
     - impost_percent
-#     - place_course_category
-#     - place_course_tough
-#     - goal_range
-#     - curve
-#     - goal_slope
-    - place_season_type_course_len
-#     - lap_type
-    - race_day_count
-    - race_date_day_count
-#     - goal_range_100
-    - age_season
-    - race_grade
-    # - race_grade_scaled
     #     - rank_1races
     #     - rank_per_horse_1races
 #     #     - prize_1races
@@ -122,31 +144,31 @@ features:
     - course_len_diff_min_1races_relative
     - course_len_diff_min_3races_relative
     - course_len_diff_min_5races_relative
-    - course_len_diff_min_10races_relative    
-    - n_horses_diff_mean_1races
-    - n_horses_diff_mean_3races
-    - n_horses_diff_mean_5races
-    - n_horses_diff_mean_10races
-    - n_horses_diff_max_1races
-    - n_horses_diff_max_3races
-    - n_horses_diff_max_5races
-    - n_horses_diff_max_10races
-    - n_horses_diff_min_1races
-    - n_horses_diff_min_3races
-    - n_horses_diff_min_5races
-    - n_horses_diff_min_10races
+    - course_len_diff_min_10races_relative   
+    # - n_horses_diff_mean_1races
+    # - n_horses_diff_mean_3races
+    # - n_horses_diff_mean_5races
+    # - n_horses_diff_mean_10races
+    # - n_horses_diff_max_1races
+    # - n_horses_diff_max_3races
+    # - n_horses_diff_max_5races
+    # - n_horses_diff_max_10races
+    # - n_horses_diff_min_1races
+    # - n_horses_diff_min_3races
+    # - n_horses_diff_min_5races
+    # - n_horses_diff_min_10races
     - n_horses_diff_mean_1races_relative
     - n_horses_diff_mean_3races_relative
     - n_horses_diff_mean_5races_relative
     - n_horses_diff_mean_10races_relative
-    - n_horses_diff_max_1races_relative
-    - n_horses_diff_max_3races_relative
-    - n_horses_diff_max_5races_relative
-    - n_horses_diff_max_10races_relative
-    - n_horses_diff_min_1races_relative
-    - n_horses_diff_min_3races_relative
-    - n_horses_diff_min_5races_relative
-    - n_horses_diff_min_10races_relative
+    # - n_horses_diff_max_1races_relative
+    # - n_horses_diff_max_3races_relative
+    # - n_horses_diff_max_5races_relative
+    # - n_horses_diff_max_10races_relative
+    # - n_horses_diff_min_1races_relative
+    # - n_horses_diff_min_3races_relative
+    # - n_horses_diff_min_5races_relative
+    # - n_horses_diff_min_10races_relative
     #     - rank_mean_1races_relative
     #     - rank_max_1races_relative
     #     - rank_min_1races_relative
@@ -1139,39 +1161,39 @@ features:
     - distance_place_type_encoded
     - distance_place_type_race_grade_encoded
     - distance_place_type_wakuban_encoded
-    - distance_place_type_umaban_encoded
-    - distance_place_type_wakuban_race_grade_encoded
+    # - distance_place_type_umaban_encoded
+    # - distance_place_type_wakuban_race_grade_encoded
     # - distance_place_type_umaban_race_grade_encoded
-    - distance_place_type_wakuban_straight_encoded
+    # - distance_place_type_wakuban_straight_encoded
     # - distance_place_type_umaban_straight_encoded
-    - distance_place_type_wakuban_ground_state_encoded
+    # - distance_place_type_wakuban_ground_state_encoded
     # - distance_place_type_umaban_ground_state_encoded
-    - distance_place_type_wakuban_ground_state_straight_encoded
+    # - distance_place_type_wakuban_ground_state_straight_encoded
     # - distance_place_type_umaban_ground_state_straight_encoded
-    - distance_type_weather_encoded
+    # - distance_type_weather_encoded
     - distance_place_type_weather_encoded
-    - distance_place_type_race_grade_weather_encoded
-    - distance_type_ground_state_encoded
+    # - distance_place_type_race_grade_weather_encoded
+    # - distance_type_ground_state_encoded
     - distance_place_type_ground_state_encoded
     - distance_place_type_race_grade_ground_state_encoded
-    - distance_type_sex_encoded
+    # - distance_type_sex_encoded
     - distance_place_type_sex_encoded
-    - distance_place_type_race_grade_sex_encoded
-    - distance_type_sex_weather_encoded
-    - distance_place_type_sex_weather_encoded
-    - distance_place_type_race_grade_sex_weather_encoded
-    - distance_type_sex_ground_state_encoded
-    - distance_place_type_sex_ground_state_encoded
-    - distance_place_type_race_grade_sex_ground_state_encoded
-    - distance_type_straight_encoded
-    - distance_place_type_straight_encoded
-    - distance_place_type_race_grade_straight_encoded
-    - distance_type_straight_ground_state_encoded
-    - distance_place_type_straight_ground_state_encoded
-    - distance_place_type_race_grade_straight_ground_state_encoded
-    - distance_place_type_race_grade_around_weather_ground_state_encoded
+    # - distance_place_type_race_grade_sex_encoded
+    # - distance_type_sex_weather_encoded
+    # - distance_place_type_sex_weather_encoded
+    # - distance_place_type_race_grade_sex_weather_encoded
+    # - distance_type_sex_ground_state_encoded
+    # - distance_place_type_sex_ground_state_encoded
+    # - distance_place_type_race_grade_sex_ground_state_encoded
+    # - distance_type_straight_encoded
+    # - distance_place_type_straight_encoded
+    # - distance_place_type_race_grade_straight_encoded
+    # - distance_type_straight_ground_state_encoded
+    # - distance_place_type_straight_ground_state_encoded
+    # - distance_place_type_race_grade_straight_ground_state_encoded
+    # - distance_place_type_race_grade_around_weather_ground_state_encoded
     # - distance_place_type_umaban_race_grade_around_weather_ground_state_encoded
-    - distance_place_type_ground_state_weather_encoded
+    # - distance_place_type_ground_state_weather_encoded
     # - distance_place_type_umaban_race_grade_around_weather_ground_state_nobori_encoded
     - distance_place_type_race_grade_nobori_encoded
     - distance_place_type_ground_state_weather_nobori_encoded
@@ -2367,13 +2389,13 @@ features:
     # - min_3races_sum_relative
     # - min_5races_sum_relative
     - tenkai_combined_standardized
-    # - tenkai_goal_range_combined_standardized
-    # - tenkai_curve_combined_standardized
-    # - tenkai_goal_slope_combined_standardized
-    # - tenkai_goal_range_curve_combined_standardized
-    # - tenkai_goal_range_goal_slope_combined_standardized
-    # - tenkai_curve_goal_slope_combined_standardized
-    # - tenkai_all_combined_standardized
+    - tenkai_goal_range_combined_standardized
+    - tenkai_curve_combined_standardized
+    - tenkai_goal_slope_combined_standardized
+    - tenkai_goal_range_curve_combined_standardized
+    - tenkai_goal_range_goal_slope_combined_standardized
+    - tenkai_curve_goal_slope_combined_standardized
+    - tenkai_all_combined_standardized
     # - race_grade_rank_diff_sum_mean_1races_grade_rankdiff_score_standardized
     # - race_grade_rank_diff_sum_max_1races_grade_rankdiff_score_standardized
     # - race_grade_rank_diff_sum_min_1races_grade_rankdiff_score_standardized
@@ -2398,30 +2420,30 @@ features:
     # - race_grade_rank_diff_multi_mean_10races_grade_rankdiff_score_standardized
     # - race_grade_rank_diff_multi_max_10races_grade_rankdiff_score_standardized
     # - race_grade_rank_diff_multi_min_10races_grade_rankdiff_score_standardized
-    - race_grade_rank_diff_sum_mean_1races_grade_rankdiff_score_plus_tenkai_combined_standardized
-    - race_grade_rank_diff_sum_max_1races_grade_rankdiff_score_plus_tenkai_combined_standardized
-    - race_grade_rank_diff_sum_min_1races_grade_rankdiff_score_plus_tenkai_combined_standardized
-    - race_grade_rank_diff_sum_mean_3races_grade_rankdiff_score_plus_tenkai_combined_standardized
-    - race_grade_rank_diff_sum_max_3races_grade_rankdiff_score_plus_tenkai_combined_standardized
-    - race_grade_rank_diff_sum_min_3races_grade_rankdiff_score_plus_tenkai_combined_standardized
-    - race_grade_rank_diff_sum_mean_5races_grade_rankdiff_score_plus_tenkai_combined_standardized
-    - race_grade_rank_diff_sum_max_5races_grade_rankdiff_score_plus_tenkai_combined_standardized
-    - race_grade_rank_diff_sum_min_5races_grade_rankdiff_score_plus_tenkai_combined_standardized
-    - race_grade_rank_diff_sum_mean_10races_grade_rankdiff_score_plus_tenkai_combined_standardized
-    - race_grade_rank_diff_sum_max_10races_grade_rankdiff_score_plus_tenkai_combined_standardized
-    - race_grade_rank_diff_sum_min_10races_grade_rankdiff_score_plus_tenkai_combined_standardized
-    - race_grade_rank_diff_multi_mean_1races_grade_rankdiff_score_plus_tenkai_combined_standardized
-    - race_grade_rank_diff_multi_max_1races_grade_rankdiff_score_plus_tenkai_combined_standardized
-    - race_grade_rank_diff_multi_min_1races_grade_rankdiff_score_plus_tenkai_combined_standardized
-    - race_grade_rank_diff_multi_mean_3races_grade_rankdiff_score_plus_tenkai_combined_standardized
-    - race_grade_rank_diff_multi_max_3races_grade_rankdiff_score_plus_tenkai_combined_standardized
-    - race_grade_rank_diff_multi_min_3races_grade_rankdiff_score_plus_tenkai_combined_standardized
-    - race_grade_rank_diff_multi_mean_5races_grade_rankdiff_score_plus_tenkai_combined_standardized
-    - race_grade_rank_diff_multi_max_5races_grade_rankdiff_score_plus_tenkai_combined_standardized
-    - race_grade_rank_diff_multi_min_5races_grade_rankdiff_score_plus_tenkai_combined_standardized
-    - race_grade_rank_diff_multi_mean_10races_grade_rankdiff_score_plus_tenkai_combined_standardized
-    - race_grade_rank_diff_multi_max_10races_grade_rankdiff_score_plus_tenkai_combined_standardized
-    - race_grade_rank_diff_multi_min_10races_grade_rankdiff_score_plus_tenkai_combined_standardized
+    # - race_grade_rank_diff_sum_mean_1races_grade_rankdiff_score_plus_tenkai_combined_standardized
+    # - race_grade_rank_diff_sum_max_1races_grade_rankdiff_score_plus_tenkai_combined_standardized
+    # - race_grade_rank_diff_sum_min_1races_grade_rankdiff_score_plus_tenkai_combined_standardized
+    # - race_grade_rank_diff_sum_mean_3races_grade_rankdiff_score_plus_tenkai_combined_standardized
+    # - race_grade_rank_diff_sum_max_3races_grade_rankdiff_score_plus_tenkai_combined_standardized
+    # - race_grade_rank_diff_sum_min_3races_grade_rankdiff_score_plus_tenkai_combined_standardized
+    # - race_grade_rank_diff_sum_mean_5races_grade_rankdiff_score_plus_tenkai_combined_standardized
+    # - race_grade_rank_diff_sum_max_5races_grade_rankdiff_score_plus_tenkai_combined_standardized
+    # - race_grade_rank_diff_sum_min_5races_grade_rankdiff_score_plus_tenkai_combined_standardized
+    # - race_grade_rank_diff_sum_mean_10races_grade_rankdiff_score_plus_tenkai_combined_standardized
+    # - race_grade_rank_diff_sum_max_10races_grade_rankdiff_score_plus_tenkai_combined_standardized
+    # - race_grade_rank_diff_sum_min_10races_grade_rankdiff_score_plus_tenkai_combined_standardized
+    # - race_grade_rank_diff_multi_mean_1races_grade_rankdiff_score_plus_tenkai_combined_standardized
+    # - race_grade_rank_diff_multi_max_1races_grade_rankdiff_score_plus_tenkai_combined_standardized
+    # - race_grade_rank_diff_multi_min_1races_grade_rankdiff_score_plus_tenkai_combined_standardized
+    # - race_grade_rank_diff_multi_mean_3races_grade_rankdiff_score_plus_tenkai_combined_standardized
+    # - race_grade_rank_diff_multi_max_3races_grade_rankdiff_score_plus_tenkai_combined_standardized
+    # - race_grade_rank_diff_multi_min_3races_grade_rankdiff_score_plus_tenkai_combined_standardized
+    # - race_grade_rank_diff_multi_mean_5races_grade_rankdiff_score_plus_tenkai_combined_standardized
+    # - race_grade_rank_diff_multi_max_5races_grade_rankdiff_score_plus_tenkai_combined_standardized
+    # - race_grade_rank_diff_multi_min_5races_grade_rankdiff_score_plus_tenkai_combined_standardized
+    # - race_grade_rank_diff_multi_mean_10races_grade_rankdiff_score_plus_tenkai_combined_standardized
+    # - race_grade_rank_diff_multi_max_10races_grade_rankdiff_score_plus_tenkai_combined_standardized
+    # - race_grade_rank_diff_multi_min_10races_grade_rankdiff_score_plus_tenkai_combined_standardized
     # - race_grade_rank_diff_sum_mean_1races_grade_rankdiff_score_plus_tenkai_all_combined_standardized
     # - race_grade_rank_diff_sum_max_1races_grade_rankdiff_score_plus_tenkai_all_combined_standardized
     # - race_grade_rank_diff_sum_min_1races_grade_rankdiff_score_plus_tenkai_all_combined_standardized
@@ -2446,30 +2468,30 @@ features:
     # - race_grade_rank_diff_multi_mean_10races_grade_rankdiff_score_plus_tenkai_all_combined_standardized
     # - race_grade_rank_diff_multi_max_10races_grade_rankdiff_score_plus_tenkai_all_combined_standardized
     # - race_grade_rank_diff_multi_min_10races_grade_rankdiff_score_plus_tenkai_all_combined_standardized
-    - race_grade_rank_diff_sum_mean_1races_grade_rankdiff_score_px_tenkai_combined_standardized
-    - race_grade_rank_diff_sum_max_1races_grade_rankdiff_score_px_tenkai_combined_standardized
-    - race_grade_rank_diff_sum_min_1races_grade_rankdiff_score_px_tenkai_combined_standardized
-    - race_grade_rank_diff_sum_mean_3races_grade_rankdiff_score_px_tenkai_combined_standardized
-    - race_grade_rank_diff_sum_max_3races_grade_rankdiff_score_px_tenkai_combined_standardized
-    - race_grade_rank_diff_sum_min_3races_grade_rankdiff_score_px_tenkai_combined_standardized
-    - race_grade_rank_diff_sum_mean_5races_grade_rankdiff_score_px_tenkai_combined_standardized
-    - race_grade_rank_diff_sum_max_5races_grade_rankdiff_score_px_tenkai_combined_standardized
-    - race_grade_rank_diff_sum_min_5races_grade_rankdiff_score_px_tenkai_combined_standardized
-    - race_grade_rank_diff_sum_mean_10races_grade_rankdiff_score_px_tenkai_combined_standardized
-    - race_grade_rank_diff_sum_max_10races_grade_rankdiff_score_px_tenkai_combined_standardized
-    - race_grade_rank_diff_sum_min_10races_grade_rankdiff_score_px_tenkai_combined_standardized
-    - race_grade_rank_diff_multi_mean_1races_grade_rankdiff_score_px_tenkai_combined_standardized
-    - race_grade_rank_diff_multi_max_1races_grade_rankdiff_score_px_tenkai_combined_standardized
-    - race_grade_rank_diff_multi_min_1races_grade_rankdiff_score_px_tenkai_combined_standardized
-    - race_grade_rank_diff_multi_mean_3races_grade_rankdiff_score_px_tenkai_combined_standardized
-    - race_grade_rank_diff_multi_max_3races_grade_rankdiff_score_px_tenkai_combined_standardized
-    - race_grade_rank_diff_multi_min_3races_grade_rankdiff_score_px_tenkai_combined_standardized
-    - race_grade_rank_diff_multi_mean_5races_grade_rankdiff_score_px_tenkai_combined_standardized
-    - race_grade_rank_diff_multi_max_5races_grade_rankdiff_score_px_tenkai_combined_standardized
-    - race_grade_rank_diff_multi_min_5races_grade_rankdiff_score_px_tenkai_combined_standardized
-    - race_grade_rank_diff_multi_mean_10races_grade_rankdiff_score_px_tenkai_combined_standardized
-    - race_grade_rank_diff_multi_max_10races_grade_rankdiff_score_px_tenkai_combined_standardized
-    - race_grade_rank_diff_multi_min_10races_grade_rankdiff_score_px_tenkai_combined_standardized
+    # - race_grade_rank_diff_sum_mean_1races_grade_rankdiff_score_px_tenkai_combined_standardized
+    # - race_grade_rank_diff_sum_max_1races_grade_rankdiff_score_px_tenkai_combined_standardized
+    # - race_grade_rank_diff_sum_min_1races_grade_rankdiff_score_px_tenkai_combined_standardized
+    # - race_grade_rank_diff_sum_mean_3races_grade_rankdiff_score_px_tenkai_combined_standardized
+    # - race_grade_rank_diff_sum_max_3races_grade_rankdiff_score_px_tenkai_combined_standardized
+    # - race_grade_rank_diff_sum_min_3races_grade_rankdiff_score_px_tenkai_combined_standardized
+    # - race_grade_rank_diff_sum_mean_5races_grade_rankdiff_score_px_tenkai_combined_standardized
+    # - race_grade_rank_diff_sum_max_5races_grade_rankdiff_score_px_tenkai_combined_standardized
+    # - race_grade_rank_diff_sum_min_5races_grade_rankdiff_score_px_tenkai_combined_standardized
+    # - race_grade_rank_diff_sum_mean_10races_grade_rankdiff_score_px_tenkai_combined_standardized
+    # - race_grade_rank_diff_sum_max_10races_grade_rankdiff_score_px_tenkai_combined_standardized
+    # - race_grade_rank_diff_sum_min_10races_grade_rankdiff_score_px_tenkai_combined_standardized
+    # - race_grade_rank_diff_multi_mean_1races_grade_rankdiff_score_px_tenkai_combined_standardized
+    # - race_grade_rank_diff_multi_max_1races_grade_rankdiff_score_px_tenkai_combined_standardized
+    # - race_grade_rank_diff_multi_min_1races_grade_rankdiff_score_px_tenkai_combined_standardized
+    # - race_grade_rank_diff_multi_mean_3races_grade_rankdiff_score_px_tenkai_combined_standardized
+    # - race_grade_rank_diff_multi_max_3races_grade_rankdiff_score_px_tenkai_combined_standardized
+    # - race_grade_rank_diff_multi_min_3races_grade_rankdiff_score_px_tenkai_combined_standardized
+    # - race_grade_rank_diff_multi_mean_5races_grade_rankdiff_score_px_tenkai_combined_standardized
+    # - race_grade_rank_diff_multi_max_5races_grade_rankdiff_score_px_tenkai_combined_standardized
+    # - race_grade_rank_diff_multi_min_5races_grade_rankdiff_score_px_tenkai_combined_standardized
+    # - race_grade_rank_diff_multi_mean_10races_grade_rankdiff_score_px_tenkai_combined_standardized
+    # - race_grade_rank_diff_multi_max_10races_grade_rankdiff_score_px_tenkai_combined_standardized
+    # - race_grade_rank_diff_multi_min_10races_grade_rankdiff_score_px_tenkai_combined_standardized
     # - race_grade_rank_diff_sum_mean_1races_grade_rankdiff_score_px_tenkai_all_combined_standardized
     # - race_grade_rank_diff_sum_max_1races_grade_rankdiff_score_px_tenkai_all_combined_standardized
     # - race_grade_rank_diff_sum_min_1races_grade_rankdiff_score_px_tenkai_all_combined_standardized
@@ -2910,3 +2932,944 @@ features:
     # - advantage_mean_3_index_relative 
     # - advantage_mean_5_index_relative 
     # - advantage_mean_8_index_relative
+
+
+
+
+
+
+    - season_turf
+    - day_season_turf
+    - season_turf_condition
+
+
+
+
+
+
+    # - rush_type_min_1races_relative
+    # - rush_type_max_1races_relative
+    # - rush_type_mean_1races_relative
+    # - rank_diff_pace_diff_slope_range_groundstate_position_min_1races_relative
+    # - rank_diff_pace_diff_slope_range_groundstate_position_max_1races_relative
+    # - rank_diff_pace_diff_slope_range_groundstate_position_mean_1races_relative
+    # - rank_diff_correction_min_1races_relative
+    # - rank_diff_correction_max_1races_relative
+    # - rank_diff_correction_mean_1races_relative
+    # - rank_diff_correction_min_1races_relative
+    # - rank_diff_correction_max_1races_relative
+    # - rank_diff_correction_mean_1races_relative
+    - time_class_min_1races_relative
+    - time_class_max_1races_relative
+    - time_class_mean_1races_relative
+    # - rank_diff_correction_min_1races_relative
+    # - rank_diff_correction_max_1races_relative
+    # - rank_diff_correction_mean_1races_relative
+    # - rank_diff_correction_min_1races_relative
+    # - rank_diff_correction_max_1races_relative
+    # - rank_diff_correction_mean_1races_relative
+    # - rank_diff_position_xxx_race_grade_multi_min_1races_relative
+    # - rank_diff_position_xxx_race_grade_multi_max_1races_relative
+    # - rank_diff_position_xxx_race_grade_multi_mean_1races_relative
+#     -  rank_diff_all_xxx_race_grade_multi_min_1races_relative
+#     -  rank_diff_all_xxx_race_grade_multi_max_1races_relative
+#     -  rank_diff_all_xxx_race_grade_multi_mean_1races_relative
+    # - rank_diff_position_xxx_race_grade_sum_min_1races_relative
+    # - rank_diff_position_xxx_race_grade_sum_max_1races_relative
+    # - rank_diff_position_xxx_race_grade_sum_mean_1races_relative
+#     -  rank_diff_all_xxx_race_grade_sum_min_1races_relative
+#     -  rank_diff_all_xxx_race_grade_sum_max_1races_relative
+#     -  rank_diff_all_xxx_race_grade_sum_mean_1races_relative
+    # - rush_type_min_1races
+    # - rush_type_max_1races
+    # - rush_type_mean_1races
+    # - rank_diff_pace_diff_slope_range_groundstate_position_min_1races
+    # - rank_diff_pace_diff_slope_range_groundstate_position_max_1races
+    # - rank_diff_pace_diff_slope_range_groundstate_position_mean_1races
+    # - rank_diff_correction_min_1races
+    # - rank_diff_correction_max_1races
+    # - rank_diff_correction_mean_1races
+    # - rank_diff_correction_min_1races
+    # - rank_diff_correction_max_1races
+    # - rank_diff_correction_mean_1races
+    # - time_class_min_1races
+    # - time_class_max_1races
+    # - time_class_mean_1races
+    # - rank_diff_correction_min_1races
+    # - rank_diff_correction_max_1races
+    # - rank_diff_correction_mean_1races
+    # - rank_diff_correction_min_1races
+    # - rank_diff_correction_max_1races
+    # - rank_diff_correction_mean_1races
+    # - rank_diff_position_xxx_race_grade_multi_min_1races
+    # - rank_diff_position_xxx_race_grade_multi_max_1races
+    # - rank_diff_position_xxx_race_grade_multi_mean_1races
+#     -  rank_diff_all_xxx_race_grade_multi_min_1races
+#     -  rank_diff_all_xxx_race_grade_multi_max_1races
+#     -  rank_diff_all_xxx_race_grade_multi_mean_1races
+    # - rank_diff_position_xxx_race_grade_sum_min_1races
+    # - rank_diff_position_xxx_race_grade_sum_max_1races
+    # - rank_diff_position_xxx_race_grade_sum_mean_1races
+#     -  rank_diff_all_xxx_race_grade_sum_min_1races
+#     -  rank_diff_all_xxx_race_grade_sum_max_1races
+#     -  rank_diff_all_xxx_race_grade_sum_mean_1races
+    # - rush_type_min_3races_relative
+    # - rush_type_max_3races_relative
+    # - rush_type_mean_3races_relative
+    # - rank_diff_pace_diff_slope_range_groundstate_position_min_3races_relative
+    # - rank_diff_pace_diff_slope_range_groundstate_position_max_3races_relative
+    # - rank_diff_pace_diff_slope_range_groundstate_position_mean_3races_relative
+    # - rank_diff_correction_min_3races_relative
+    # - rank_diff_correction_max_3races_relative
+    # - rank_diff_correction_mean_3races_relative
+    # - rank_diff_correction_min_3races_relative
+    # - rank_diff_correction_max_3races_relative
+    # - rank_diff_correction_mean_3races_relative
+    - time_class_min_3races_relative
+    - time_class_max_3races_relative
+    - time_class_mean_3races_relative
+    # - rank_diff_correction_min_3races_relative
+    # - rank_diff_correction_max_3races_relative
+    # - rank_diff_correction_mean_3races_relative
+    # - rank_diff_correction_min_3races_relative
+    # - rank_diff_correction_max_3races_relative
+    # - rank_diff_correction_mean_3races_relative
+    # - rank_diff_position_xxx_race_grade_multi_min_3races_relative
+    # - rank_diff_position_xxx_race_grade_multi_max_3races_relative
+    # - rank_diff_position_xxx_race_grade_multi_mean_3races_relative
+#     -  rank_diff_all_xxx_race_grade_multi_min_3races_relative
+#     -  rank_diff_all_xxx_race_grade_multi_max_3races_relative
+#     -  rank_diff_all_xxx_race_grade_multi_mean_3races_relative
+    # - rank_diff_position_xxx_race_grade_sum_min_3races_relative
+    # - rank_diff_position_xxx_race_grade_sum_max_3races_relative
+    # - rank_diff_position_xxx_race_grade_sum_mean_3races_relative
+#     -  rank_diff_all_xxx_race_grade_sum_min_3races_relative
+#     -  rank_diff_all_xxx_race_grade_sum_max_3races_relative
+#     -  rank_diff_all_xxx_race_grade_sum_mean_3races_relative
+    # - rush_type_min_3races
+    # - rush_type_max_3races
+    # - rush_type_mean_3races
+    # - rank_diff_pace_diff_slope_range_groundstate_position_min_3races
+    # - rank_diff_pace_diff_slope_range_groundstate_position_max_3races
+    # - rank_diff_pace_diff_slope_range_groundstate_position_mean_3races
+    # - rank_diff_correction_min_3races
+    # - rank_diff_correction_max_3races
+    # - rank_diff_correction_mean_3races
+    # - rank_diff_correction_min_3races
+    # - rank_diff_correction_max_3races
+    # - rank_diff_correction_mean_3races
+    # - time_class_min_3races
+    # - time_class_max_3races
+    # - time_class_mean_3races
+    # - rank_diff_correction_min_3races
+    # - rank_diff_correction_max_3races
+    # - rank_diff_correction_mean_3races
+    # - rank_diff_correction_min_3races
+    # - rank_diff_correction_max_3races
+    # - rank_diff_correction_mean_3races
+    # - rank_diff_position_xxx_race_grade_multi_min_3races
+    # - rank_diff_position_xxx_race_grade_multi_max_3races
+    # - rank_diff_position_xxx_race_grade_multi_mean_3races
+#     -  rank_diff_all_xxx_race_grade_multi_min_3races
+#     -  rank_diff_all_xxx_race_grade_multi_max_3races
+#     -  rank_diff_all_xxx_race_grade_multi_mean_3races
+    # - rank_diff_position_xxx_race_grade_sum_min_3races
+    # - rank_diff_position_xxx_race_grade_sum_max_3races
+    # - rank_diff_position_xxx_race_grade_sum_mean_3races
+#     -  rank_diff_all_xxx_race_grade_sum_min_3races
+#     -  rank_diff_all_xxx_race_grade_sum_max_3races
+#     -  rank_diff_all_xxx_race_grade_sum_mean_3races
+    # - rush_type_min_5races_relative
+    # - rush_type_max_5races_relative
+    # - rush_type_mean_5races_relative
+    # - rank_diff_pace_diff_slope_range_groundstate_position_min_5races_relative
+    # - rank_diff_pace_diff_slope_range_groundstate_position_max_5races_relative
+    # - rank_diff_pace_diff_slope_range_groundstate_position_mean_5races_relative
+    # - rank_diff_correction_min_5races_relative
+    # - rank_diff_correction_max_5races_relative
+    # - rank_diff_correction_mean_5races_relative
+    # - rank_diff_correction_min_5races_relative
+    # - rank_diff_correction_max_5races_relative
+    # - rank_diff_correction_mean_5races_relative
+    - time_class_min_5races_relative
+    - time_class_max_5races_relative
+    - time_class_mean_5races_relative
+    # - rank_diff_correction_min_5races_relative
+    # - rank_diff_correction_max_5races_relative
+    # - rank_diff_correction_mean_5races_relative
+    # - rank_diff_correction_min_5races_relative
+    # - rank_diff_correction_max_5races_relative
+    # - rank_diff_correction_mean_5races_relative
+    # - rank_diff_position_xxx_race_grade_multi_min_5races_relative
+    # - rank_diff_position_xxx_race_grade_multi_max_5races_relative
+    # - rank_diff_position_xxx_race_grade_multi_mean_5races_relative
+#     -  rank_diff_all_xxx_race_grade_multi_min_5races_relative
+#     -  rank_diff_all_xxx_race_grade_multi_max_5races_relative
+#     -  rank_diff_all_xxx_race_grade_multi_mean_5races_relative
+    # - rank_diff_position_xxx_race_grade_sum_min_5races_relative
+    # - rank_diff_position_xxx_race_grade_sum_max_5races_relative
+    # - rank_diff_position_xxx_race_grade_sum_mean_5races_relative
+#     -  rank_diff_all_xxx_race_grade_sum_min_5races_relative
+#     -  rank_diff_all_xxx_race_grade_sum_max_5races_relative
+#     -  rank_diff_all_xxx_race_grade_sum_mean_5races_relative
+    # - rush_type_min_5races
+    # - rush_type_max_5races
+    # - rush_type_mean_5races
+    # - rank_diff_pace_diff_slope_range_groundstate_position_min_5races
+    # - rank_diff_pace_diff_slope_range_groundstate_position_max_5races
+    # - rank_diff_pace_diff_slope_range_groundstate_position_mean_5races
+    # - rank_diff_correction_min_5races
+    # - rank_diff_correction_max_5races
+    # - rank_diff_correction_mean_5races
+    # - rank_diff_correction_min_5races
+    # - rank_diff_correction_max_5races
+    # - rank_diff_correction_mean_5races
+    # - time_class_min_5races
+    # - time_class_max_5races
+    # - time_class_mean_5races
+    # - rank_diff_correction_min_5races
+    # - rank_diff_correction_max_5races
+    # - rank_diff_correction_mean_5races
+    # - rank_diff_correction_min_5races
+    # - rank_diff_correction_max_5races
+    # - rank_diff_correction_mean_5races
+    # - rank_diff_position_xxx_race_grade_multi_min_5races
+    # - rank_diff_position_xxx_race_grade_multi_max_5races
+    # - rank_diff_position_xxx_race_grade_multi_mean_5races
+#     -  rank_diff_all_xxx_race_grade_multi_min_5races
+#     -  rank_diff_all_xxx_race_grade_multi_max_5races
+#     -  rank_diff_all_xxx_race_grade_multi_mean_5races
+    # - rank_diff_position_xxx_race_grade_sum_min_5races
+    # - rank_diff_position_xxx_race_grade_sum_max_5races
+    # - rank_diff_position_xxx_race_grade_sum_mean_5races
+#     -  rank_diff_all_xxx_race_grade_sum_min_5races
+#     -  rank_diff_all_xxx_race_grade_sum_max_5races
+#     -  rank_diff_all_xxx_race_grade_sum_mean_5races
+    # - rush_type_min_8races_relative
+    # - rush_type_max_8races_relative
+    # - rush_type_mean_8races_relative
+    # - rank_diff_pace_diff_slope_range_groundstate_position_min_8races_relative
+    # - rank_diff_pace_diff_slope_range_groundstate_position_max_8races_relative
+    # - rank_diff_pace_diff_slope_range_groundstate_position_mean_8races_relative
+    # - rank_diff_correction_min_8races_relative
+    # - rank_diff_correction_max_8races_relative
+    # - rank_diff_correction_mean_8races_relative
+    # - rank_diff_correction_min_8races_relative
+    # - rank_diff_correction_max_8races_relative
+    # - rank_diff_correction_mean_8races_relative
+    - time_class_min_8races_relative
+    - time_class_max_8races_relative
+    - time_class_mean_8races_relative
+    # - rank_diff_correction_min_8races_relative
+    # - rank_diff_correction_max_8races_relative
+    # - rank_diff_correction_mean_8races_relative
+    # - rank_diff_correction_min_8races_relative
+    # - rank_diff_correction_max_8races_relative
+    # - rank_diff_correction_mean_8races_relative
+    # - rank_diff_position_xxx_race_grade_multi_min_8races_relative
+    # - rank_diff_position_xxx_race_grade_multi_max_8races_relative
+    # - rank_diff_position_xxx_race_grade_multi_mean_8races_relative
+#     -  rank_diff_all_xxx_race_grade_multi_min_8races_relative
+#     -  rank_diff_all_xxx_race_grade_multi_max_8races_relative
+#     -  rank_diff_all_xxx_race_grade_multi_mean_8races_relative
+    # - rank_diff_position_xxx_race_grade_sum_min_8races_relative
+    # - rank_diff_position_xxx_race_grade_sum_max_8races_relative
+    # - rank_diff_position_xxx_race_grade_sum_mean_8races_relative
+#     -  rank_diff_all_xxx_race_grade_sum_min_8races_relative
+#     -  rank_diff_all_xxx_race_grade_sum_max_8races_relative
+#     -  rank_diff_all_xxx_race_grade_sum_mean_8races_relative
+    # - rush_type_min_8races
+    # - rush_type_max_8races
+    # - rush_type_mean_8races
+    # - rank_diff_pace_diff_slope_range_groundstate_position_min_8races
+    # - rank_diff_pace_diff_slope_range_groundstate_position_max_8races
+    # - rank_diff_pace_diff_slope_range_groundstate_position_mean_8races
+    # - rank_diff_correction_min_8races
+    # - rank_diff_correction_max_8races
+    # - rank_diff_correction_mean_8races
+    # - rank_diff_correction_min_8races
+    # - rank_diff_correction_max_8races
+    # - rank_diff_correction_mean_8races
+    # - time_class_min_8races
+    # - time_class_max_8races
+    # - time_class_mean_8races
+    # - rank_diff_correction_min_8races
+    # - rank_diff_correction_max_8races
+    # - rank_diff_correction_mean_8races
+    # - rank_diff_correction_min_8races
+    # - rank_diff_correction_max_8races
+    # - rank_diff_correction_mean_8races
+    # - rank_diff_position_xxx_race_grade_multi_min_8races
+    # - rank_diff_position_xxx_race_grade_multi_max_8races
+    # - rank_diff_position_xxx_race_grade_multi_mean_8races
+#     -  rank_diff_all_xxx_race_grade_multi_min_8races
+#     -  rank_diff_all_xxx_race_grade_multi_max_8races
+#     -  rank_diff_all_xxx_race_grade_multi_mean_8races
+    # - rank_diff_position_xxx_race_grade_sum_min_8races
+    # - rank_diff_position_xxx_race_grade_sum_max_8races
+    # - rank_diff_position_xxx_race_grade_sum_mean_8races
+#     -  rank_diff_all_xxx_race_grade_sum_min_8races
+#     -  rank_diff_all_xxx_race_grade_sum_max_8races
+#     -  rank_diff_all_xxx_race_grade_sum_mean_8races
+    # - rush_type_Advantages
+    # - rush_type_final
+    # - rush_advantages_cross
+    # - rush_advantages_cross_plus
+    - rush_type_final_standardized
+    - rush_type_Advantages_standardized
+    - rush_advantages_cross_standardized
+    - rush_advantages_cross_plus_standardized
+    - tenkai_combined_2_standardized
+    - tenkai_place_combined_standardized
+    - tenkai_place_start_slope_combined_standardized
+    - tenkai_place_start_slope_range_combined_standardized
+    - tenkai_place_start_slope_range_grade_combined_standardized
+    - tenkai_place_start_slope_range_grade_lcurve_slope_combined_standardized
+    - tenkai_place_start_slope_range_grade_lcurve_slope_type_combined_standardized
+    - tenkai_place_start_slope_range_grade_lcurve_slope_type_curve_combined_standardized
+    - tenkai_place_start_slope_range_grade_lcurve_slope_type_curve_goal_range_combined_standardized
+    - tenkai_place_start_slope_range_grade_lcurve_slope_type_curve_goal_range_slope_combined_standardized
+    - tenkai_place_start_slope_range_grade_lcurve_slope_type_curve_goal_range_slope_first_curve_combined_standardized
+    - tenkai_place_start_slope_range_grade_lcurve_slope_type_curve_goal_range_slope_first_curve_front_combined_standardized
+    - tenkai_place_start_slope_range_grade_lcurve_slope_type_curve_goal_range_slope_first_curve_front_len_combined_standardized
+    - tenkai_place_start_slope_range_grade_lcurve_slope_type_curve_goal_range_slope_first_curve_front_len_umaban_combined_standardized
+    - umaban_combined_standardized
+    - umaban_curve_combined_standardized
+    - umaban_curve_lcurves_combined_standardized
+    - umaban_curve_lcurves_condition_combined_standardized
+    - umaban_curve_lcurves_condition_type_combined_standardized
+    - umaban_curve_lcurves_condition_type_corner_combined_standardized
+    - rank_diff_position_xxx_race_grade_multi_mean_1races_tenkai_plus_standardized
+    - rank_diff_position_xxx_race_grade_multi_mean_1races_tenkai_all_plus_standardized
+    - rank_diff_position_xxx_race_grade_multi_mean_1races_umaban_plus_standardized
+    - rank_diff_position_xxx_race_grade_multi_mean_1races_umaban_tenkai_plus_standardized
+    - rank_diff_position_xxx_race_grade_multi_mean_1races_umaban_tenkai_all_plus_standardized
+    - rank_diff_position_xxx_race_grade_multi_mean_1races_tenkai_com_standardized
+    - rank_diff_position_xxx_race_grade_multi_mean_1races_tenkai_all_com_standardized
+    - rank_diff_position_xxx_race_grade_multi_mean_1races_umaban_com_standardized
+    - rank_diff_position_xxx_race_grade_multi_mean_1races_umaban_tenkai_com_standardized
+    - rank_diff_position_xxx_race_grade_multi_mean_1races_umaban_tenkai_all_com_standardized
+    - rank_diff_all_xxx_race_grade_multi_mean_1races_tenkai_plus_standardized
+    - rank_diff_all_xxx_race_grade_multi_mean_1races_tenkai_all_plus_standardized
+    - rank_diff_all_xxx_race_grade_multi_mean_1races_umaban_plus_standardized
+    - rank_diff_all_xxx_race_grade_multi_mean_1races_umaban_tenkai_plus_standardized
+    - rank_diff_all_xxx_race_grade_multi_mean_1races_umaban_tenkai_all_plus_standardized
+    - rank_diff_all_xxx_race_grade_multi_mean_1races_tenkai_com_standardized
+    - rank_diff_all_xxx_race_grade_multi_mean_1races_tenkai_all_com_standardized
+    - rank_diff_all_xxx_race_grade_multi_mean_1races_umaban_com_standardized
+    - rank_diff_all_xxx_race_grade_multi_mean_1races_umaban_tenkai_com_standardized
+    - rank_diff_all_xxx_race_grade_multi_mean_1races_umaban_tenkai_all_com_standardized
+    - rank_diff_position_xxx_race_grade_sum_mean_1races_tenkai_plus_standardized
+    - rank_diff_position_xxx_race_grade_sum_mean_1races_tenkai_all_plus_standardized
+    - rank_diff_position_xxx_race_grade_sum_mean_1races_umaban_plus_standardized
+    - rank_diff_position_xxx_race_grade_sum_mean_1races_umaban_tenkai_plus_standardized
+    - rank_diff_position_xxx_race_grade_sum_mean_1races_umaban_tenkai_all_plus_standardized
+    - rank_diff_position_xxx_race_grade_sum_mean_1races_tenkai_com_standardized
+    - rank_diff_position_xxx_race_grade_sum_mean_1races_tenkai_all_com_standardized
+    - rank_diff_position_xxx_race_grade_sum_mean_1races_umaban_com_standardized
+    - rank_diff_position_xxx_race_grade_sum_mean_1races_umaban_tenkai_com_standardized
+    - rank_diff_position_xxx_race_grade_sum_mean_1races_umaban_tenkai_all_com_standardized
+    - rank_diff_all_xxx_race_grade_sum_mean_1races_tenkai_plus_standardized
+    - rank_diff_all_xxx_race_grade_sum_mean_1races_tenkai_all_plus_standardized
+    - rank_diff_all_xxx_race_grade_sum_mean_1races_umaban_plus_standardized
+    - rank_diff_all_xxx_race_grade_sum_mean_1races_umaban_tenkai_plus_standardized
+    - rank_diff_all_xxx_race_grade_sum_mean_1races_umaban_tenkai_all_plus_standardized
+    - rank_diff_all_xxx_race_grade_sum_mean_1races_tenkai_com_standardized
+    - rank_diff_all_xxx_race_grade_sum_mean_1races_tenkai_all_com_standardized
+    - rank_diff_all_xxx_race_grade_sum_mean_1races_umaban_com_standardized
+    - rank_diff_all_xxx_race_grade_sum_mean_1races_umaban_tenkai_com_standardized
+    - rank_diff_all_xxx_race_grade_sum_mean_1races_umaban_tenkai_all_com_standardized
+    - rank_diff_position_xxx_race_grade_multi_mean_3races_tenkai_plus_standardized
+    - rank_diff_position_xxx_race_grade_multi_mean_3races_tenkai_all_plus_standardized
+    - rank_diff_position_xxx_race_grade_multi_mean_3races_umaban_plus_standardized
+    - rank_diff_position_xxx_race_grade_multi_mean_3races_umaban_tenkai_plus_standardized
+    - rank_diff_position_xxx_race_grade_multi_mean_3races_umaban_tenkai_all_plus_standardized
+    - rank_diff_position_xxx_race_grade_multi_mean_3races_tenkai_com_standardized
+    - rank_diff_position_xxx_race_grade_multi_mean_3races_tenkai_all_com_standardized
+    - rank_diff_position_xxx_race_grade_multi_mean_3races_umaban_com_standardized
+    - rank_diff_position_xxx_race_grade_multi_mean_3races_umaban_tenkai_com_standardized
+    - rank_diff_position_xxx_race_grade_multi_mean_3races_umaban_tenkai_all_com_standardized
+    - rank_diff_all_xxx_race_grade_multi_mean_3races_tenkai_plus_standardized
+    - rank_diff_all_xxx_race_grade_multi_mean_3races_tenkai_all_plus_standardized
+    - rank_diff_all_xxx_race_grade_multi_mean_3races_umaban_plus_standardized
+    - rank_diff_all_xxx_race_grade_multi_mean_3races_umaban_tenkai_plus_standardized
+    - rank_diff_all_xxx_race_grade_multi_mean_3races_umaban_tenkai_all_plus_standardized
+    - rank_diff_all_xxx_race_grade_multi_mean_3races_tenkai_com_standardized
+    - rank_diff_all_xxx_race_grade_multi_mean_3races_tenkai_all_com_standardized
+    - rank_diff_all_xxx_race_grade_multi_mean_3races_umaban_com_standardized
+    - rank_diff_all_xxx_race_grade_multi_mean_3races_umaban_tenkai_com_standardized
+    - rank_diff_all_xxx_race_grade_multi_mean_3races_umaban_tenkai_all_com_standardized
+    - rank_diff_position_xxx_race_grade_sum_mean_3races_tenkai_plus_standardized
+    - rank_diff_position_xxx_race_grade_sum_mean_3races_tenkai_all_plus_standardized
+    - rank_diff_position_xxx_race_grade_sum_mean_3races_umaban_plus_standardized
+    - rank_diff_position_xxx_race_grade_sum_mean_3races_umaban_tenkai_plus_standardized
+    - rank_diff_position_xxx_race_grade_sum_mean_3races_umaban_tenkai_all_plus_standardized
+    - rank_diff_position_xxx_race_grade_sum_mean_3races_tenkai_com_standardized
+    - rank_diff_position_xxx_race_grade_sum_mean_3races_tenkai_all_com_standardized
+    - rank_diff_position_xxx_race_grade_sum_mean_3races_umaban_com_standardized
+    - rank_diff_position_xxx_race_grade_sum_mean_3races_umaban_tenkai_com_standardized
+    - rank_diff_position_xxx_race_grade_sum_mean_3races_umaban_tenkai_all_com_standardized
+    - rank_diff_all_xxx_race_grade_sum_mean_3races_tenkai_plus_standardized
+    - rank_diff_all_xxx_race_grade_sum_mean_3races_tenkai_all_plus_standardized
+    - rank_diff_all_xxx_race_grade_sum_mean_3races_umaban_plus_standardized
+    - rank_diff_all_xxx_race_grade_sum_mean_3races_umaban_tenkai_plus_standardized
+    - rank_diff_all_xxx_race_grade_sum_mean_3races_umaban_tenkai_all_plus_standardized
+    - rank_diff_all_xxx_race_grade_sum_mean_3races_tenkai_com_standardized
+    - rank_diff_all_xxx_race_grade_sum_mean_3races_tenkai_all_com_standardized
+    - rank_diff_all_xxx_race_grade_sum_mean_3races_umaban_com_standardized
+    - rank_diff_all_xxx_race_grade_sum_mean_3races_umaban_tenkai_com_standardized
+    - rank_diff_all_xxx_race_grade_sum_mean_3races_umaban_tenkai_all_com_standardized
+    - rank_diff_position_xxx_race_grade_multi_mean_5races_tenkai_plus_standardized
+    - rank_diff_position_xxx_race_grade_multi_mean_5races_tenkai_all_plus_standardized
+    - rank_diff_position_xxx_race_grade_multi_mean_5races_umaban_plus_standardized
+    - rank_diff_position_xxx_race_grade_multi_mean_5races_umaban_tenkai_plus_standardized
+    - rank_diff_position_xxx_race_grade_multi_mean_5races_umaban_tenkai_all_plus_standardized
+    - rank_diff_position_xxx_race_grade_multi_mean_5races_tenkai_com_standardized
+    - rank_diff_position_xxx_race_grade_multi_mean_5races_tenkai_all_com_standardized
+    - rank_diff_position_xxx_race_grade_multi_mean_5races_umaban_com_standardized
+    - rank_diff_position_xxx_race_grade_multi_mean_5races_umaban_tenkai_com_standardized
+    - rank_diff_position_xxx_race_grade_multi_mean_5races_umaban_tenkai_all_com_standardized
+    - rank_diff_all_xxx_race_grade_multi_mean_5races_tenkai_plus_standardized
+    - rank_diff_all_xxx_race_grade_multi_mean_5races_tenkai_all_plus_standardized
+    - rank_diff_all_xxx_race_grade_multi_mean_5races_umaban_plus_standardized
+    - rank_diff_all_xxx_race_grade_multi_mean_5races_umaban_tenkai_plus_standardized
+    - rank_diff_all_xxx_race_grade_multi_mean_5races_umaban_tenkai_all_plus_standardized
+    - rank_diff_all_xxx_race_grade_multi_mean_5races_tenkai_com_standardized
+    - rank_diff_all_xxx_race_grade_multi_mean_5races_tenkai_all_com_standardized
+    - rank_diff_all_xxx_race_grade_multi_mean_5races_umaban_com_standardized
+    - rank_diff_all_xxx_race_grade_multi_mean_5races_umaban_tenkai_com_standardized
+    - rank_diff_all_xxx_race_grade_multi_mean_5races_umaban_tenkai_all_com_standardized
+    - rank_diff_position_xxx_race_grade_sum_mean_5races_tenkai_plus_standardized
+    - rank_diff_position_xxx_race_grade_sum_mean_5races_tenkai_all_plus_standardized
+    - rank_diff_position_xxx_race_grade_sum_mean_5races_umaban_plus_standardized
+    - rank_diff_position_xxx_race_grade_sum_mean_5races_umaban_tenkai_plus_standardized
+    - rank_diff_position_xxx_race_grade_sum_mean_5races_umaban_tenkai_all_plus_standardized
+    - rank_diff_position_xxx_race_grade_sum_mean_5races_tenkai_com_standardized
+    - rank_diff_position_xxx_race_grade_sum_mean_5races_tenkai_all_com_standardized
+    - rank_diff_position_xxx_race_grade_sum_mean_5races_umaban_com_standardized
+    - rank_diff_position_xxx_race_grade_sum_mean_5races_umaban_tenkai_com_standardized
+    - rank_diff_position_xxx_race_grade_sum_mean_5races_umaban_tenkai_all_com_standardized
+    - rank_diff_all_xxx_race_grade_sum_mean_5races_tenkai_plus_standardized
+    - rank_diff_all_xxx_race_grade_sum_mean_5races_tenkai_all_plus_standardized
+    - rank_diff_all_xxx_race_grade_sum_mean_5races_umaban_plus_standardized
+    - rank_diff_all_xxx_race_grade_sum_mean_5races_umaban_tenkai_plus_standardized
+    - rank_diff_all_xxx_race_grade_sum_mean_5races_umaban_tenkai_all_plus_standardized
+    - rank_diff_all_xxx_race_grade_sum_mean_5races_tenkai_com_standardized
+    - rank_diff_all_xxx_race_grade_sum_mean_5races_tenkai_all_com_standardized
+    - rank_diff_all_xxx_race_grade_sum_mean_5races_umaban_com_standardized
+    - rank_diff_all_xxx_race_grade_sum_mean_5races_umaban_tenkai_com_standardized
+    - rank_diff_all_xxx_race_grade_sum_mean_5races_umaban_tenkai_all_com_standardized
+    - rank_diff_position_xxx_race_grade_multi_mean_8races_tenkai_plus_standardized
+    - rank_diff_position_xxx_race_grade_multi_mean_8races_tenkai_all_plus_standardized
+    - rank_diff_position_xxx_race_grade_multi_mean_8races_umaban_plus_standardized
+    - rank_diff_position_xxx_race_grade_multi_mean_8races_umaban_tenkai_plus_standardized
+    - rank_diff_position_xxx_race_grade_multi_mean_8races_umaban_tenkai_all_plus_standardized
+    - rank_diff_position_xxx_race_grade_multi_mean_8races_tenkai_com_standardized
+    - rank_diff_position_xxx_race_grade_multi_mean_8races_tenkai_all_com_standardized
+    - rank_diff_position_xxx_race_grade_multi_mean_8races_umaban_com_standardized
+    - rank_diff_position_xxx_race_grade_multi_mean_8races_umaban_tenkai_com_standardized
+    - rank_diff_position_xxx_race_grade_multi_mean_8races_umaban_tenkai_all_com_standardized
+    - rank_diff_all_xxx_race_grade_multi_mean_8races_tenkai_plus_standardized
+    - rank_diff_all_xxx_race_grade_multi_mean_8races_tenkai_all_plus_standardized
+    - rank_diff_all_xxx_race_grade_multi_mean_8races_umaban_plus_standardized
+    - rank_diff_all_xxx_race_grade_multi_mean_8races_umaban_tenkai_plus_standardized
+    - rank_diff_all_xxx_race_grade_multi_mean_8races_umaban_tenkai_all_plus_standardized
+    - rank_diff_all_xxx_race_grade_multi_mean_8races_tenkai_com_standardized
+    - rank_diff_all_xxx_race_grade_multi_mean_8races_tenkai_all_com_standardized
+    - rank_diff_all_xxx_race_grade_multi_mean_8races_umaban_com_standardized
+    - rank_diff_all_xxx_race_grade_multi_mean_8races_umaban_tenkai_com_standardized
+    - rank_diff_all_xxx_race_grade_multi_mean_8races_umaban_tenkai_all_com_standardized
+    - rank_diff_position_xxx_race_grade_sum_mean_8races_tenkai_plus_standardized
+    - rank_diff_position_xxx_race_grade_sum_mean_8races_tenkai_all_plus_standardized
+    - rank_diff_position_xxx_race_grade_sum_mean_8races_umaban_plus_standardized
+    - rank_diff_position_xxx_race_grade_sum_mean_8races_umaban_tenkai_plus_standardized
+    - rank_diff_position_xxx_race_grade_sum_mean_8races_umaban_tenkai_all_plus_standardized
+    - rank_diff_position_xxx_race_grade_sum_mean_8races_tenkai_com_standardized
+    - rank_diff_position_xxx_race_grade_sum_mean_8races_tenkai_all_com_standardized
+    - rank_diff_position_xxx_race_grade_sum_mean_8races_umaban_com_standardized
+    - rank_diff_position_xxx_race_grade_sum_mean_8races_umaban_tenkai_com_standardized
+    - rank_diff_position_xxx_race_grade_sum_mean_8races_umaban_tenkai_all_com_standardized
+    - rank_diff_all_xxx_race_grade_sum_mean_8races_tenkai_plus_standardized
+    - rank_diff_all_xxx_race_grade_sum_mean_8races_tenkai_all_plus_standardized
+    - rank_diff_all_xxx_race_grade_sum_mean_8races_umaban_plus_standardized
+    - rank_diff_all_xxx_race_grade_sum_mean_8races_umaban_tenkai_plus_standardized
+    - rank_diff_all_xxx_race_grade_sum_mean_8races_umaban_tenkai_all_plus_standardized
+    - rank_diff_all_xxx_race_grade_sum_mean_8races_tenkai_com_standardized
+    - rank_diff_all_xxx_race_grade_sum_mean_8races_tenkai_all_com_standardized
+    - rank_diff_all_xxx_race_grade_sum_mean_8races_umaban_com_standardized
+    - rank_diff_all_xxx_race_grade_sum_mean_8races_umaban_tenkai_com_standardized
+    - rank_diff_all_xxx_race_grade_sum_mean_8races_umaban_tenkai_all_com_standardized
+    - rank_diff_position_xxx_race_grade_multi_min_1races_tenkai_plus_standardized
+    - rank_diff_position_xxx_race_grade_multi_min_1races_tenkai_all_plus_standardized
+    - rank_diff_position_xxx_race_grade_multi_min_1races_umaban_plus_standardized
+    - rank_diff_position_xxx_race_grade_multi_min_1races_umaban_tenkai_plus_standardized
+    - rank_diff_position_xxx_race_grade_multi_min_1races_umaban_tenkai_all_plus_standardized
+    - rank_diff_position_xxx_race_grade_multi_min_1races_tenkai_com_standardized
+    - rank_diff_position_xxx_race_grade_multi_min_1races_tenkai_all_com_standardized
+    - rank_diff_position_xxx_race_grade_multi_min_1races_umaban_com_standardized
+    - rank_diff_position_xxx_race_grade_multi_min_1races_umaban_tenkai_com_standardized
+    - rank_diff_position_xxx_race_grade_multi_min_1races_umaban_tenkai_all_com_standardized
+    - rank_diff_all_xxx_race_grade_multi_min_1races_tenkai_plus_standardized
+    - rank_diff_all_xxx_race_grade_multi_min_1races_tenkai_all_plus_standardized
+    - rank_diff_all_xxx_race_grade_multi_min_1races_umaban_plus_standardized
+    - rank_diff_all_xxx_race_grade_multi_min_1races_umaban_tenkai_plus_standardized
+    - rank_diff_all_xxx_race_grade_multi_min_1races_umaban_tenkai_all_plus_standardized
+    - rank_diff_all_xxx_race_grade_multi_min_1races_tenkai_com_standardized
+    - rank_diff_all_xxx_race_grade_multi_min_1races_tenkai_all_com_standardized
+    - rank_diff_all_xxx_race_grade_multi_min_1races_umaban_com_standardized
+    - rank_diff_all_xxx_race_grade_multi_min_1races_umaban_tenkai_com_standardized
+    - rank_diff_all_xxx_race_grade_multi_min_1races_umaban_tenkai_all_com_standardized
+    - rank_diff_position_xxx_race_grade_sum_min_1races_tenkai_plus_standardized
+    - rank_diff_position_xxx_race_grade_sum_min_1races_tenkai_all_plus_standardized
+    - rank_diff_position_xxx_race_grade_sum_min_1races_umaban_plus_standardized
+    - rank_diff_position_xxx_race_grade_sum_min_1races_umaban_tenkai_plus_standardized
+    - rank_diff_position_xxx_race_grade_sum_min_1races_umaban_tenkai_all_plus_standardized
+    - rank_diff_position_xxx_race_grade_sum_min_1races_tenkai_com_standardized
+    - rank_diff_position_xxx_race_grade_sum_min_1races_tenkai_all_com_standardized
+    - rank_diff_position_xxx_race_grade_sum_min_1races_umaban_com_standardized
+    - rank_diff_position_xxx_race_grade_sum_min_1races_umaban_tenkai_com_standardized
+    - rank_diff_position_xxx_race_grade_sum_min_1races_umaban_tenkai_all_com_standardized
+    - rank_diff_all_xxx_race_grade_sum_min_1races_tenkai_plus_standardized
+    - rank_diff_all_xxx_race_grade_sum_min_1races_tenkai_all_plus_standardized
+    - rank_diff_all_xxx_race_grade_sum_min_1races_umaban_plus_standardized
+    - rank_diff_all_xxx_race_grade_sum_min_1races_umaban_tenkai_plus_standardized
+    - rank_diff_all_xxx_race_grade_sum_min_1races_umaban_tenkai_all_plus_standardized
+    - rank_diff_all_xxx_race_grade_sum_min_1races_tenkai_com_standardized
+    - rank_diff_all_xxx_race_grade_sum_min_1races_tenkai_all_com_standardized
+    - rank_diff_all_xxx_race_grade_sum_min_1races_umaban_com_standardized
+    - rank_diff_all_xxx_race_grade_sum_min_1races_umaban_tenkai_com_standardized
+    - rank_diff_all_xxx_race_grade_sum_min_1races_umaban_tenkai_all_com_standardized
+    - rank_diff_position_xxx_race_grade_multi_min_3races_tenkai_plus_standardized
+    - rank_diff_position_xxx_race_grade_multi_min_3races_tenkai_all_plus_standardized
+    - rank_diff_position_xxx_race_grade_multi_min_3races_umaban_plus_standardized
+    - rank_diff_position_xxx_race_grade_multi_min_3races_umaban_tenkai_plus_standardized
+    - rank_diff_position_xxx_race_grade_multi_min_3races_umaban_tenkai_all_plus_standardized
+    - rank_diff_position_xxx_race_grade_multi_min_3races_tenkai_com_standardized
+    - rank_diff_position_xxx_race_grade_multi_min_3races_tenkai_all_com_standardized
+    - rank_diff_position_xxx_race_grade_multi_min_3races_umaban_com_standardized
+    - rank_diff_position_xxx_race_grade_multi_min_3races_umaban_tenkai_com_standardized
+    - rank_diff_position_xxx_race_grade_multi_min_3races_umaban_tenkai_all_com_standardized
+    - rank_diff_all_xxx_race_grade_multi_min_3races_tenkai_plus_standardized
+    - rank_diff_all_xxx_race_grade_multi_min_3races_tenkai_all_plus_standardized
+    - rank_diff_all_xxx_race_grade_multi_min_3races_umaban_plus_standardized
+    - rank_diff_all_xxx_race_grade_multi_min_3races_umaban_tenkai_plus_standardized
+    - rank_diff_all_xxx_race_grade_multi_min_3races_umaban_tenkai_all_plus_standardized
+    - rank_diff_all_xxx_race_grade_multi_min_3races_tenkai_com_standardized
+    - rank_diff_all_xxx_race_grade_multi_min_3races_tenkai_all_com_standardized
+    - rank_diff_all_xxx_race_grade_multi_min_3races_umaban_com_standardized
+    - rank_diff_all_xxx_race_grade_multi_min_3races_umaban_tenkai_com_standardized
+    - rank_diff_all_xxx_race_grade_multi_min_3races_umaban_tenkai_all_com_standardized
+    - rank_diff_position_xxx_race_grade_sum_min_3races_tenkai_plus_standardized
+    - rank_diff_position_xxx_race_grade_sum_min_3races_tenkai_all_plus_standardized
+    - rank_diff_position_xxx_race_grade_sum_min_3races_umaban_plus_standardized
+    - rank_diff_position_xxx_race_grade_sum_min_3races_umaban_tenkai_plus_standardized
+    - rank_diff_position_xxx_race_grade_sum_min_3races_umaban_tenkai_all_plus_standardized
+    - rank_diff_position_xxx_race_grade_sum_min_3races_tenkai_com_standardized
+    - rank_diff_position_xxx_race_grade_sum_min_3races_tenkai_all_com_standardized
+    - rank_diff_position_xxx_race_grade_sum_min_3races_umaban_com_standardized
+    - rank_diff_position_xxx_race_grade_sum_min_3races_umaban_tenkai_com_standardized
+    - rank_diff_position_xxx_race_grade_sum_min_3races_umaban_tenkai_all_com_standardized
+    - rank_diff_all_xxx_race_grade_sum_min_3races_tenkai_plus_standardized
+    - rank_diff_all_xxx_race_grade_sum_min_3races_tenkai_all_plus_standardized
+    - rank_diff_all_xxx_race_grade_sum_min_3races_umaban_plus_standardized
+    - rank_diff_all_xxx_race_grade_sum_min_3races_umaban_tenkai_plus_standardized
+    - rank_diff_all_xxx_race_grade_sum_min_3races_umaban_tenkai_all_plus_standardized
+    - rank_diff_all_xxx_race_grade_sum_min_3races_tenkai_com_standardized
+    - rank_diff_all_xxx_race_grade_sum_min_3races_tenkai_all_com_standardized
+    - rank_diff_all_xxx_race_grade_sum_min_3races_umaban_com_standardized
+    - rank_diff_all_xxx_race_grade_sum_min_3races_umaban_tenkai_com_standardized
+    - rank_diff_all_xxx_race_grade_sum_min_3races_umaban_tenkai_all_com_standardized
+    - rank_diff_position_xxx_race_grade_multi_min_5races_tenkai_plus_standardized
+    - rank_diff_position_xxx_race_grade_multi_min_5races_tenkai_all_plus_standardized
+    - rank_diff_position_xxx_race_grade_multi_min_5races_umaban_plus_standardized
+    - rank_diff_position_xxx_race_grade_multi_min_5races_umaban_tenkai_plus_standardized
+    - rank_diff_position_xxx_race_grade_multi_min_5races_umaban_tenkai_all_plus_standardized
+    - rank_diff_position_xxx_race_grade_multi_min_5races_tenkai_com_standardized
+    - rank_diff_position_xxx_race_grade_multi_min_5races_tenkai_all_com_standardized
+    - rank_diff_position_xxx_race_grade_multi_min_5races_umaban_com_standardized
+    - rank_diff_position_xxx_race_grade_multi_min_5races_umaban_tenkai_com_standardized
+    - rank_diff_position_xxx_race_grade_multi_min_5races_umaban_tenkai_all_com_standardized
+    - rank_diff_all_xxx_race_grade_multi_min_5races_tenkai_plus_standardized
+    - rank_diff_all_xxx_race_grade_multi_min_5races_tenkai_all_plus_standardized
+    - rank_diff_all_xxx_race_grade_multi_min_5races_umaban_plus_standardized
+    - rank_diff_all_xxx_race_grade_multi_min_5races_umaban_tenkai_plus_standardized
+    - rank_diff_all_xxx_race_grade_multi_min_5races_umaban_tenkai_all_plus_standardized
+    - rank_diff_all_xxx_race_grade_multi_min_5races_tenkai_com_standardized
+    - rank_diff_all_xxx_race_grade_multi_min_5races_tenkai_all_com_standardized
+    - rank_diff_all_xxx_race_grade_multi_min_5races_umaban_com_standardized
+    - rank_diff_all_xxx_race_grade_multi_min_5races_umaban_tenkai_com_standardized
+    - rank_diff_all_xxx_race_grade_multi_min_5races_umaban_tenkai_all_com_standardized
+    - rank_diff_position_xxx_race_grade_sum_min_5races_tenkai_plus_standardized
+    - rank_diff_position_xxx_race_grade_sum_min_5races_tenkai_all_plus_standardized
+    - rank_diff_position_xxx_race_grade_sum_min_5races_umaban_plus_standardized
+    - rank_diff_position_xxx_race_grade_sum_min_5races_umaban_tenkai_plus_standardized
+    - rank_diff_position_xxx_race_grade_sum_min_5races_umaban_tenkai_all_plus_standardized
+    - rank_diff_position_xxx_race_grade_sum_min_5races_tenkai_com_standardized
+    - rank_diff_position_xxx_race_grade_sum_min_5races_tenkai_all_com_standardized
+    - rank_diff_position_xxx_race_grade_sum_min_5races_umaban_com_standardized
+    - rank_diff_position_xxx_race_grade_sum_min_5races_umaban_tenkai_com_standardized
+    - rank_diff_position_xxx_race_grade_sum_min_5races_umaban_tenkai_all_com_standardized
+    - rank_diff_all_xxx_race_grade_sum_min_5races_tenkai_plus_standardized
+    - rank_diff_all_xxx_race_grade_sum_min_5races_tenkai_all_plus_standardized
+    - rank_diff_all_xxx_race_grade_sum_min_5races_umaban_plus_standardized
+    - rank_diff_all_xxx_race_grade_sum_min_5races_umaban_tenkai_plus_standardized
+    - rank_diff_all_xxx_race_grade_sum_min_5races_umaban_tenkai_all_plus_standardized
+    - rank_diff_all_xxx_race_grade_sum_min_5races_tenkai_com_standardized
+    - rank_diff_all_xxx_race_grade_sum_min_5races_tenkai_all_com_standardized
+    - rank_diff_all_xxx_race_grade_sum_min_5races_umaban_com_standardized
+    - rank_diff_all_xxx_race_grade_sum_min_5races_umaban_tenkai_com_standardized
+    - rank_diff_all_xxx_race_grade_sum_min_5races_umaban_tenkai_all_com_standardized
+    - rank_diff_position_xxx_race_grade_multi_min_8races_tenkai_plus_standardized
+    - rank_diff_position_xxx_race_grade_multi_min_8races_tenkai_all_plus_standardized
+    - rank_diff_position_xxx_race_grade_multi_min_8races_umaban_plus_standardized
+    - rank_diff_position_xxx_race_grade_multi_min_8races_umaban_tenkai_plus_standardized
+    - rank_diff_position_xxx_race_grade_multi_min_8races_umaban_tenkai_all_plus_standardized
+    - rank_diff_position_xxx_race_grade_multi_min_8races_tenkai_com_standardized
+    - rank_diff_position_xxx_race_grade_multi_min_8races_tenkai_all_com_standardized
+    - rank_diff_position_xxx_race_grade_multi_min_8races_umaban_com_standardized
+    - rank_diff_position_xxx_race_grade_multi_min_8races_umaban_tenkai_com_standardized
+    - rank_diff_position_xxx_race_grade_multi_min_8races_umaban_tenkai_all_com_standardized
+    - rank_diff_all_xxx_race_grade_multi_min_8races_tenkai_plus_standardized
+    - rank_diff_all_xxx_race_grade_multi_min_8races_tenkai_all_plus_standardized
+    - rank_diff_all_xxx_race_grade_multi_min_8races_umaban_plus_standardized
+    - rank_diff_all_xxx_race_grade_multi_min_8races_umaban_tenkai_plus_standardized
+    - rank_diff_all_xxx_race_grade_multi_min_8races_umaban_tenkai_all_plus_standardized
+    - rank_diff_all_xxx_race_grade_multi_min_8races_tenkai_com_standardized
+    - rank_diff_all_xxx_race_grade_multi_min_8races_tenkai_all_com_standardized
+    - rank_diff_all_xxx_race_grade_multi_min_8races_umaban_com_standardized
+    - rank_diff_all_xxx_race_grade_multi_min_8races_umaban_tenkai_com_standardized
+    - rank_diff_all_xxx_race_grade_multi_min_8races_umaban_tenkai_all_com_standardized
+    - rank_diff_position_xxx_race_grade_sum_min_8races_tenkai_plus_standardized
+    - rank_diff_position_xxx_race_grade_sum_min_8races_tenkai_all_plus_standardized
+    - rank_diff_position_xxx_race_grade_sum_min_8races_umaban_plus_standardized
+    - rank_diff_position_xxx_race_grade_sum_min_8races_umaban_tenkai_plus_standardized
+    - rank_diff_position_xxx_race_grade_sum_min_8races_umaban_tenkai_all_plus_standardized
+    - rank_diff_position_xxx_race_grade_sum_min_8races_tenkai_com_standardized
+    - rank_diff_position_xxx_race_grade_sum_min_8races_tenkai_all_com_standardized
+    - rank_diff_position_xxx_race_grade_sum_min_8races_umaban_com_standardized
+    - rank_diff_position_xxx_race_grade_sum_min_8races_umaban_tenkai_com_standardized
+    - rank_diff_position_xxx_race_grade_sum_min_8races_umaban_tenkai_all_com_standardized
+    - rank_diff_all_xxx_race_grade_sum_min_8races_tenkai_plus_standardized
+    - rank_diff_all_xxx_race_grade_sum_min_8races_tenkai_all_plus_standardized
+    - rank_diff_all_xxx_race_grade_sum_min_8races_umaban_plus_standardized
+    - rank_diff_all_xxx_race_grade_sum_min_8races_umaban_tenkai_plus_standardized
+    - rank_diff_all_xxx_race_grade_sum_min_8races_umaban_tenkai_all_plus_standardized
+    - rank_diff_all_xxx_race_grade_sum_min_8races_tenkai_com_standardized
+    - rank_diff_all_xxx_race_grade_sum_min_8races_tenkai_all_com_standardized
+    - rank_diff_all_xxx_race_grade_sum_min_8races_umaban_com_standardized
+    - rank_diff_all_xxx_race_grade_sum_min_8races_umaban_tenkai_com_standardized
+    - rank_diff_all_xxx_race_grade_sum_min_8races_umaban_tenkai_all_com_standardized
+    - rank_diff_position_xxx_race_grade_multi_max_1races_tenkai_plus_standardized
+    - rank_diff_position_xxx_race_grade_multi_max_1races_tenkai_all_plus_standardized
+    - rank_diff_position_xxx_race_grade_multi_max_1races_umaban_plus_standardized
+    - rank_diff_position_xxx_race_grade_multi_max_1races_umaban_tenkai_plus_standardized
+    - rank_diff_position_xxx_race_grade_multi_max_1races_umaban_tenkai_all_plus_standardized
+    - rank_diff_position_xxx_race_grade_multi_max_1races_tenkai_com_standardized
+    - rank_diff_position_xxx_race_grade_multi_max_1races_tenkai_all_com_standardized
+    - rank_diff_position_xxx_race_grade_multi_max_1races_umaban_com_standardized
+    - rank_diff_position_xxx_race_grade_multi_max_1races_umaban_tenkai_com_standardized
+    - rank_diff_position_xxx_race_grade_multi_max_1races_umaban_tenkai_all_com_standardized
+    - rank_diff_all_xxx_race_grade_multi_max_1races_tenkai_plus_standardized
+    - rank_diff_all_xxx_race_grade_multi_max_1races_tenkai_all_plus_standardized
+    - rank_diff_all_xxx_race_grade_multi_max_1races_umaban_plus_standardized
+    - rank_diff_all_xxx_race_grade_multi_max_1races_umaban_tenkai_plus_standardized
+    - rank_diff_all_xxx_race_grade_multi_max_1races_umaban_tenkai_all_plus_standardized
+    - rank_diff_all_xxx_race_grade_multi_max_1races_tenkai_com_standardized
+    - rank_diff_all_xxx_race_grade_multi_max_1races_tenkai_all_com_standardized
+    - rank_diff_all_xxx_race_grade_multi_max_1races_umaban_com_standardized
+    - rank_diff_all_xxx_race_grade_multi_max_1races_umaban_tenkai_com_standardized
+    - rank_diff_all_xxx_race_grade_multi_max_1races_umaban_tenkai_all_com_standardized
+    - rank_diff_position_xxx_race_grade_sum_max_1races_tenkai_plus_standardized
+    - rank_diff_position_xxx_race_grade_sum_max_1races_tenkai_all_plus_standardized
+    - rank_diff_position_xxx_race_grade_sum_max_1races_umaban_plus_standardized
+    - rank_diff_position_xxx_race_grade_sum_max_1races_umaban_tenkai_plus_standardized
+    - rank_diff_position_xxx_race_grade_sum_max_1races_umaban_tenkai_all_plus_standardized
+    - rank_diff_position_xxx_race_grade_sum_max_1races_tenkai_com_standardized
+    - rank_diff_position_xxx_race_grade_sum_max_1races_tenkai_all_com_standardized
+    - rank_diff_position_xxx_race_grade_sum_max_1races_umaban_com_standardized
+    - rank_diff_position_xxx_race_grade_sum_max_1races_umaban_tenkai_com_standardized
+    - rank_diff_position_xxx_race_grade_sum_max_1races_umaban_tenkai_all_com_standardized
+    - rank_diff_all_xxx_race_grade_sum_max_1races_tenkai_plus_standardized
+    - rank_diff_all_xxx_race_grade_sum_max_1races_tenkai_all_plus_standardized
+    - rank_diff_all_xxx_race_grade_sum_max_1races_umaban_plus_standardized
+    - rank_diff_all_xxx_race_grade_sum_max_1races_umaban_tenkai_plus_standardized
+    - rank_diff_all_xxx_race_grade_sum_max_1races_umaban_tenkai_all_plus_standardized
+    - rank_diff_all_xxx_race_grade_sum_max_1races_tenkai_com_standardized
+    - rank_diff_all_xxx_race_grade_sum_max_1races_tenkai_all_com_standardized
+    - rank_diff_all_xxx_race_grade_sum_max_1races_umaban_com_standardized
+    - rank_diff_all_xxx_race_grade_sum_max_1races_umaban_tenkai_com_standardized
+    - rank_diff_all_xxx_race_grade_sum_max_1races_umaban_tenkai_all_com_standardized
+    - rank_diff_position_xxx_race_grade_multi_max_3races_tenkai_plus_standardized
+    - rank_diff_position_xxx_race_grade_multi_max_3races_tenkai_all_plus_standardized
+    - rank_diff_position_xxx_race_grade_multi_max_3races_umaban_plus_standardized
+    - rank_diff_position_xxx_race_grade_multi_max_3races_umaban_tenkai_plus_standardized
+    - rank_diff_position_xxx_race_grade_multi_max_3races_umaban_tenkai_all_plus_standardized
+    - rank_diff_position_xxx_race_grade_multi_max_3races_tenkai_com_standardized
+    - rank_diff_position_xxx_race_grade_multi_max_3races_tenkai_all_com_standardized
+    - rank_diff_position_xxx_race_grade_multi_max_3races_umaban_com_standardized
+    - rank_diff_position_xxx_race_grade_multi_max_3races_umaban_tenkai_com_standardized
+    - rank_diff_position_xxx_race_grade_multi_max_3races_umaban_tenkai_all_com_standardized
+    - rank_diff_all_xxx_race_grade_multi_max_3races_tenkai_plus_standardized
+    - rank_diff_all_xxx_race_grade_multi_max_3races_tenkai_all_plus_standardized
+    - rank_diff_all_xxx_race_grade_multi_max_3races_umaban_plus_standardized
+    - rank_diff_all_xxx_race_grade_multi_max_3races_umaban_tenkai_plus_standardized
+    - rank_diff_all_xxx_race_grade_multi_max_3races_umaban_tenkai_all_plus_standardized
+    - rank_diff_all_xxx_race_grade_multi_max_3races_tenkai_com_standardized
+    - rank_diff_all_xxx_race_grade_multi_max_3races_tenkai_all_com_standardized
+    - rank_diff_all_xxx_race_grade_multi_max_3races_umaban_com_standardized
+    - rank_diff_all_xxx_race_grade_multi_max_3races_umaban_tenkai_com_standardized
+    - rank_diff_all_xxx_race_grade_multi_max_3races_umaban_tenkai_all_com_standardized
+    - rank_diff_position_xxx_race_grade_sum_max_3races_tenkai_plus_standardized
+    - rank_diff_position_xxx_race_grade_sum_max_3races_tenkai_all_plus_standardized
+    - rank_diff_position_xxx_race_grade_sum_max_3races_umaban_plus_standardized
+    - rank_diff_position_xxx_race_grade_sum_max_3races_umaban_tenkai_plus_standardized
+    - rank_diff_position_xxx_race_grade_sum_max_3races_umaban_tenkai_all_plus_standardized
+    - rank_diff_position_xxx_race_grade_sum_max_3races_tenkai_com_standardized
+    - rank_diff_position_xxx_race_grade_sum_max_3races_tenkai_all_com_standardized
+    - rank_diff_position_xxx_race_grade_sum_max_3races_umaban_com_standardized
+    - rank_diff_position_xxx_race_grade_sum_max_3races_umaban_tenkai_com_standardized
+    - rank_diff_position_xxx_race_grade_sum_max_3races_umaban_tenkai_all_com_standardized
+    - rank_diff_all_xxx_race_grade_sum_max_3races_tenkai_plus_standardized
+    - rank_diff_all_xxx_race_grade_sum_max_3races_tenkai_all_plus_standardized
+    - rank_diff_all_xxx_race_grade_sum_max_3races_umaban_plus_standardized
+    - rank_diff_all_xxx_race_grade_sum_max_3races_umaban_tenkai_plus_standardized
+    - rank_diff_all_xxx_race_grade_sum_max_3races_umaban_tenkai_all_plus_standardized
+    - rank_diff_all_xxx_race_grade_sum_max_3races_tenkai_com_standardized
+    - rank_diff_all_xxx_race_grade_sum_max_3races_tenkai_all_com_standardized
+    - rank_diff_all_xxx_race_grade_sum_max_3races_umaban_com_standardized
+    - rank_diff_all_xxx_race_grade_sum_max_3races_umaban_tenkai_com_standardized
+    - rank_diff_all_xxx_race_grade_sum_max_3races_umaban_tenkai_all_com_standardized
+    - rank_diff_position_xxx_race_grade_multi_max_5races_tenkai_plus_standardized
+    - rank_diff_position_xxx_race_grade_multi_max_5races_tenkai_all_plus_standardized
+    - rank_diff_position_xxx_race_grade_multi_max_5races_umaban_plus_standardized
+    - rank_diff_position_xxx_race_grade_multi_max_5races_umaban_tenkai_plus_standardized
+    - rank_diff_position_xxx_race_grade_multi_max_5races_umaban_tenkai_all_plus_standardized
+    - rank_diff_position_xxx_race_grade_multi_max_5races_tenkai_com_standardized
+    - rank_diff_position_xxx_race_grade_multi_max_5races_tenkai_all_com_standardized
+    - rank_diff_position_xxx_race_grade_multi_max_5races_umaban_com_standardized
+    - rank_diff_position_xxx_race_grade_multi_max_5races_umaban_tenkai_com_standardized
+    - rank_diff_position_xxx_race_grade_multi_max_5races_umaban_tenkai_all_com_standardized
+    - rank_diff_all_xxx_race_grade_multi_max_5races_tenkai_plus_standardized
+    - rank_diff_all_xxx_race_grade_multi_max_5races_tenkai_all_plus_standardized
+    - rank_diff_all_xxx_race_grade_multi_max_5races_umaban_plus_standardized
+    - rank_diff_all_xxx_race_grade_multi_max_5races_umaban_tenkai_plus_standardized
+    - rank_diff_all_xxx_race_grade_multi_max_5races_umaban_tenkai_all_plus_standardized
+    - rank_diff_all_xxx_race_grade_multi_max_5races_tenkai_com_standardized
+    - rank_diff_all_xxx_race_grade_multi_max_5races_tenkai_all_com_standardized
+    - rank_diff_all_xxx_race_grade_multi_max_5races_umaban_com_standardized
+    - rank_diff_all_xxx_race_grade_multi_max_5races_umaban_tenkai_com_standardized
+    - rank_diff_all_xxx_race_grade_multi_max_5races_umaban_tenkai_all_com_standardized
+    - rank_diff_position_xxx_race_grade_sum_max_5races_tenkai_plus_standardized
+    - rank_diff_position_xxx_race_grade_sum_max_5races_tenkai_all_plus_standardized
+    - rank_diff_position_xxx_race_grade_sum_max_5races_umaban_plus_standardized
+    - rank_diff_position_xxx_race_grade_sum_max_5races_umaban_tenkai_plus_standardized
+    - rank_diff_position_xxx_race_grade_sum_max_5races_umaban_tenkai_all_plus_standardized
+    - rank_diff_position_xxx_race_grade_sum_max_5races_tenkai_com_standardized
+    - rank_diff_position_xxx_race_grade_sum_max_5races_tenkai_all_com_standardized
+    - rank_diff_position_xxx_race_grade_sum_max_5races_umaban_com_standardized
+    - rank_diff_position_xxx_race_grade_sum_max_5races_umaban_tenkai_com_standardized
+    - rank_diff_position_xxx_race_grade_sum_max_5races_umaban_tenkai_all_com_standardized
+    - rank_diff_all_xxx_race_grade_sum_max_5races_tenkai_plus_standardized
+    - rank_diff_all_xxx_race_grade_sum_max_5races_tenkai_all_plus_standardized
+    - rank_diff_all_xxx_race_grade_sum_max_5races_umaban_plus_standardized
+    - rank_diff_all_xxx_race_grade_sum_max_5races_umaban_tenkai_plus_standardized
+    - rank_diff_all_xxx_race_grade_sum_max_5races_umaban_tenkai_all_plus_standardized
+    - rank_diff_all_xxx_race_grade_sum_max_5races_tenkai_com_standardized
+    - rank_diff_all_xxx_race_grade_sum_max_5races_tenkai_all_com_standardized
+    - rank_diff_all_xxx_race_grade_sum_max_5races_umaban_com_standardized
+    - rank_diff_all_xxx_race_grade_sum_max_5races_umaban_tenkai_com_standardized
+    - rank_diff_all_xxx_race_grade_sum_max_5races_umaban_tenkai_all_com_standardized
+    - rank_diff_position_xxx_race_grade_multi_max_8races_tenkai_plus_standardized
+    - rank_diff_position_xxx_race_grade_multi_max_8races_tenkai_all_plus_standardized
+    - rank_diff_position_xxx_race_grade_multi_max_8races_umaban_plus_standardized
+    - rank_diff_position_xxx_race_grade_multi_max_8races_umaban_tenkai_plus_standardized
+    - rank_diff_position_xxx_race_grade_multi_max_8races_umaban_tenkai_all_plus_standardized
+    - rank_diff_position_xxx_race_grade_multi_max_8races_tenkai_com_standardized
+    - rank_diff_position_xxx_race_grade_multi_max_8races_tenkai_all_com_standardized
+    - rank_diff_position_xxx_race_grade_multi_max_8races_umaban_com_standardized
+    - rank_diff_position_xxx_race_grade_multi_max_8races_umaban_tenkai_com_standardized
+    - rank_diff_position_xxx_race_grade_multi_max_8races_umaban_tenkai_all_com_standardized
+    - rank_diff_all_xxx_race_grade_multi_max_8races_tenkai_plus_standardized
+    - rank_diff_all_xxx_race_grade_multi_max_8races_tenkai_all_plus_standardized
+    - rank_diff_all_xxx_race_grade_multi_max_8races_umaban_plus_standardized
+    - rank_diff_all_xxx_race_grade_multi_max_8races_umaban_tenkai_plus_standardized
+    - rank_diff_all_xxx_race_grade_multi_max_8races_umaban_tenkai_all_plus_standardized
+    - rank_diff_all_xxx_race_grade_multi_max_8races_tenkai_com_standardized
+    - rank_diff_all_xxx_race_grade_multi_max_8races_tenkai_all_com_standardized
+    - rank_diff_all_xxx_race_grade_multi_max_8races_umaban_com_standardized
+    - rank_diff_all_xxx_race_grade_multi_max_8races_umaban_tenkai_com_standardized
+    - rank_diff_all_xxx_race_grade_multi_max_8races_umaban_tenkai_all_com_standardized
+    - rank_diff_position_xxx_race_grade_sum_max_8races_tenkai_plus_standardized
+    - rank_diff_position_xxx_race_grade_sum_max_8races_tenkai_all_plus_standardized
+    - rank_diff_position_xxx_race_grade_sum_max_8races_umaban_plus_standardized
+    - rank_diff_position_xxx_race_grade_sum_max_8races_umaban_tenkai_plus_standardized
+    - rank_diff_position_xxx_race_grade_sum_max_8races_umaban_tenkai_all_plus_standardized
+    - rank_diff_position_xxx_race_grade_sum_max_8races_tenkai_com_standardized
+    - rank_diff_position_xxx_race_grade_sum_max_8races_tenkai_all_com_standardized
+    - rank_diff_position_xxx_race_grade_sum_max_8races_umaban_com_standardized
+    - rank_diff_position_xxx_race_grade_sum_max_8races_umaban_tenkai_com_standardized
+    - rank_diff_position_xxx_race_grade_sum_max_8races_umaban_tenkai_all_com_standardized
+    - rank_diff_all_xxx_race_grade_sum_max_8races_tenkai_plus_standardized
+    - rank_diff_all_xxx_race_grade_sum_max_8races_tenkai_all_plus_standardized
+    - rank_diff_all_xxx_race_grade_sum_max_8races_umaban_plus_standardized
+    - rank_diff_all_xxx_race_grade_sum_max_8races_umaban_tenkai_plus_standardized
+    - rank_diff_all_xxx_race_grade_sum_max_8races_umaban_tenkai_all_plus_standardized
+    - rank_diff_all_xxx_race_grade_sum_max_8races_tenkai_com_standardized
+    - rank_diff_all_xxx_race_grade_sum_max_8races_tenkai_all_com_standardized
+    - rank_diff_all_xxx_race_grade_sum_max_8races_umaban_com_standardized
+    - rank_diff_all_xxx_race_grade_sum_max_8races_umaban_tenkai_com_standardized
+    - rank_diff_all_xxx_race_grade_sum_max_8races_umaban_tenkai_all_com_standardized
+    # - nobori_pace_diff_slope_range_groundstate_position_mean_1races_relative
+    # - nobori_pace_diff_slope_range_groundstate_position_max_1races_relative
+    # - nobori_pace_diff_slope_range_groundstate_position_min_1races_relative
+    # - nobori_pace_diff_slope_range_groundstate_position_umaban_mean_1races_relative
+    # - nobori_pace_diff_slope_range_groundstate_position_umaban_max_1races_relative
+    # - nobori_pace_diff_slope_range_groundstate_position_umaban_min_1races_relative
+    # - course_len_allfix_diff_mean_1races_relative
+    # - course_len_allfix_diff_max_1races_relative
+    # - course_len_allfix_diff_min_1races_relative
+    # - course_len_allfix_normal_diff_mean_1races_relative
+    # - course_len_allfix_normal_diff_max_1races_relative
+    # - course_len_allfix_normal_diff_min_1races_relative
+    # - course_len_allfix_horse_mean_1races_relative
+    # - course_len_allfix_horse_max_1races_relative
+    # - course_len_allfix_horse_min_1races_relative
+    # - nobori_pace_diff_slope_range_groundstate_position_mean_1races
+    # - nobori_pace_diff_slope_range_groundstate_position_max_1races
+    # - nobori_pace_diff_slope_range_groundstate_position_min_1races
+    # - nobori_pace_diff_slope_range_groundstate_position_umaban_mean_1races
+    # - nobori_pace_diff_slope_range_groundstate_position_umaban_max_1races
+    # - nobori_pace_diff_slope_range_groundstate_position_umaban_min_1races
+    # - course_len_allfix_diff_mean_1races
+    # - course_len_allfix_diff_max_1races
+    # - course_len_allfix_diff_min_1races
+    # - course_len_allfix_normal_diff_mean_1races
+    # - course_len_allfix_normal_diff_max_1races
+    # - course_len_allfix_normal_diff_min_1races
+    # - course_len_allfix_horse_mean_1races
+    # - course_len_allfix_horse_max_1races
+    # - course_len_allfix_horse_min_1races
+    # - nobori_pace_diff_slope_range_groundstate_position_mean_3races_relative
+    # - nobori_pace_diff_slope_range_groundstate_position_max_3races_relative
+    # - nobori_pace_diff_slope_range_groundstate_position_min_3races_relative
+    # - nobori_pace_diff_slope_range_groundstate_position_umaban_mean_3races_relative
+    # - nobori_pace_diff_slope_range_groundstate_position_umaban_max_3races_relative
+    # - nobori_pace_diff_slope_range_groundstate_position_umaban_min_3races_relative
+    # - course_len_allfix_diff_mean_3races_relative
+    # - course_len_allfix_diff_max_3races_relative
+    # - course_len_allfix_diff_min_3races_relative
+    # - course_len_allfix_normal_diff_mean_3races_relative
+    # - course_len_allfix_normal_diff_max_3races_relative
+    # - course_len_allfix_normal_diff_min_3races_relative
+    # - course_len_allfix_horse_mean_3races_relative
+    # - course_len_allfix_horse_max_3races_relative
+    # - course_len_allfix_horse_min_3races_relative
+    # - nobori_pace_diff_slope_range_groundstate_position_mean_3races
+    # - nobori_pace_diff_slope_range_groundstate_position_max_3races
+    # - nobori_pace_diff_slope_range_groundstate_position_min_3races
+    # - nobori_pace_diff_slope_range_groundstate_position_umaban_mean_3races
+    # - nobori_pace_diff_slope_range_groundstate_position_umaban_max_3races
+    # - nobori_pace_diff_slope_range_groundstate_position_umaban_min_3races
+    # - course_len_allfix_diff_mean_3races
+    # - course_len_allfix_diff_max_3races
+    # - course_len_allfix_diff_min_3races
+    # - course_len_allfix_normal_diff_mean_3races
+    # - course_len_allfix_normal_diff_max_3races
+    # - course_len_allfix_normal_diff_min_3races
+    # - course_len_allfix_horse_mean_3races
+    # - course_len_allfix_horse_max_3races
+    # - course_len_allfix_horse_min_3races
+    # - nobori_pace_diff_slope_range_groundstate_position_mean_5races_relative
+    # - nobori_pace_diff_slope_range_groundstate_position_max_5races_relative
+    # - nobori_pace_diff_slope_range_groundstate_position_min_5races_relative
+    # - nobori_pace_diff_slope_range_groundstate_position_umaban_mean_5races_relative
+    # - nobori_pace_diff_slope_range_groundstate_position_umaban_max_5races_relative
+    # - nobori_pace_diff_slope_range_groundstate_position_umaban_min_5races_relative
+    # - course_len_allfix_diff_mean_5races_relative
+    # - course_len_allfix_diff_max_5races_relative
+    # - course_len_allfix_diff_min_5races_relative
+    # - course_len_allfix_normal_diff_mean_5races_relative
+    # - course_len_allfix_normal_diff_max_5races_relative
+    # - course_len_allfix_normal_diff_min_5races_relative
+    # - course_len_allfix_horse_mean_5races_relative
+    # - course_len_allfix_horse_max_5races_relative
+    # - course_len_allfix_horse_min_5races_relative
+    # - nobori_pace_diff_slope_range_groundstate_position_mean_5races
+    # - nobori_pace_diff_slope_range_groundstate_position_max_5races
+    # - nobori_pace_diff_slope_range_groundstate_position_min_5races
+    # - nobori_pace_diff_slope_range_groundstate_position_umaban_mean_5races
+    # - nobori_pace_diff_slope_range_groundstate_position_umaban_max_5races
+    # - nobori_pace_diff_slope_range_groundstate_position_umaban_min_5races
+    # - course_len_allfix_diff_mean_5races
+    # - course_len_allfix_diff_max_5races
+    # - course_len_allfix_diff_min_5races
+    # - course_len_allfix_normal_diff_mean_5races
+    # - course_len_allfix_normal_diff_max_5races
+    # - course_len_allfix_normal_diff_min_5races
+    # - course_len_allfix_horse_mean_5races
+    # - course_len_allfix_horse_max_5races
+    # - course_len_allfix_horse_min_5races
+    # - nobori_pace_diff_slope_range_groundstate_position_mean_8races_relative
+    # - nobori_pace_diff_slope_range_groundstate_position_max_8races_relative
+    # - nobori_pace_diff_slope_range_groundstate_position_min_8races_relative
+    # - nobori_pace_diff_slope_range_groundstate_position_umaban_mean_8races_relative
+    # - nobori_pace_diff_slope_range_groundstate_position_umaban_max_8races_relative
+    # - nobori_pace_diff_slope_range_groundstate_position_umaban_min_8races_relative
+    # - course_len_allfix_diff_mean_8races_relative
+    # - course_len_allfix_diff_max_8races_relative
+    # - course_len_allfix_diff_min_8races_relative
+    # - course_len_allfix_normal_diff_mean_8races_relative
+    # - course_len_allfix_normal_diff_max_8races_relative
+    # - course_len_allfix_normal_diff_min_8races_relative
+    # - course_len_allfix_horse_mean_8races_relative
+    # - course_len_allfix_horse_max_8races_relative
+    # - course_len_allfix_horse_min_8races_relative
+    # - nobori_pace_diff_slope_range_groundstate_position_mean_8races
+    # - nobori_pace_diff_slope_range_groundstate_position_max_8races
+    # - nobori_pace_diff_slope_range_groundstate_position_min_8races
+    # - nobori_pace_diff_slope_range_groundstate_position_umaban_mean_8races
+    # - nobori_pace_diff_slope_range_groundstate_position_umaban_max_8races
+    # - nobori_pace_diff_slope_range_groundstate_position_umaban_min_8races
+    # - course_len_allfix_diff_mean_8races
+    # - course_len_allfix_diff_max_8races
+    # - course_len_allfix_diff_min_8races
+    # - course_len_allfix_normal_diff_mean_8races
+    # - course_len_allfix_normal_diff_max_8races
+    # - course_len_allfix_normal_diff_min_8races
+    # - course_len_allfix_horse_mean_8races
+    # - course_len_allfix_horse_max_8races
+    # - course_len_allfix_horse_min_8races
+    # - cross_nobori_range
+    # - cross_nobori_slope
+    # - cross_nobori_corner
+    # - cross_nobori_all
+    - course_len_shorter
+    # - cross_nobori_range_standardized
+    # - cross_nobori_slope_standardized
+    # - cross_nobori_corner_standardized
+    - cross_nobori_all_standardized
+    # - course_len_shorter_standardized
+    # - time_pace_diff_slope_range_groundstate_position_min_1races_relative
+    # - time_pace_diff_slope_range_groundstate_position_max_1races_relative
+    # - time_pace_diff_slope_range_groundstate_position_mean_1races_relative
+    # - time_correction_min_1races_relative
+    # - time_correction_max_1races_relative
+    # - time_correction_mean_1races_relative
+    # - time_pace_diff_slope_range_groundstate_position_min_3races_relative
+    # - time_pace_diff_slope_range_groundstate_position_max_3races_relative
+    # - time_pace_diff_slope_range_groundstate_position_mean_3races_relative
+    # - time_correction_min_3races_relative
+    # - time_correction_max_3races_relative
+    # - time_correction_mean_3races_relative
+    # - time_pace_diff_slope_range_groundstate_position_min_5races_relative
+    # - time_pace_diff_slope_range_groundstate_position_max_5races_relative
+    # - time_pace_diff_slope_range_groundstate_position_mean_5races_relative
+    # - time_correction_min_5races_relative
+    # - time_correction_max_5races_relative
+    # - time_correction_mean_5races_relative
+    # - time_pace_diff_slope_range_groundstate_position_min_8races_relative
+    # - time_pace_diff_slope_range_groundstate_position_max_8races_relative
+    # - time_pace_diff_slope_range_groundstate_position_mean_8races_relative
+    # - time_correction_min_8races_relative
+    # - time_correction_max_8races_relative
+    # - time_correction_mean_8races_relative

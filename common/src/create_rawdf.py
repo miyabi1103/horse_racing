@@ -44,7 +44,7 @@ def create_results(
                 jockey_id_list = []
                 a_list = soup.find_all("a", href=re.compile(r"^/jockey/"))
                 for a in a_list:
-                    jockey_id = re.findall(r"\d{5}", a["href"])[0]
+                    jockey_id = re.findall(r"[A-Za-z\d]{5}", a["href"])[0]
                     jockey_id_list.append(jockey_id)
                 df["jockey_id"] = jockey_id_list
 
@@ -52,7 +52,7 @@ def create_results(
                 trainer_id_list = []
                 a_list = soup.find_all("a", href=re.compile(r"^/trainer/"))
                 for a in a_list:
-                    trainer_id = re.findall(r"\d{5}", a["href"])[0]
+                    trainer_id = re.findall(r"[A-Za-z\d]{5}", a["href"])[0]
                     trainer_id_list.append(trainer_id)
                 df["trainer_id"] = trainer_id_list
 
@@ -60,7 +60,7 @@ def create_results(
                 owner_id_list = []
                 a_list = soup.find_all("a", href=re.compile(r"^/owner/"))
                 for a in a_list:
-                    owner_id = re.findall(r"\d{6}", a["href"])[0]
+                    owner_id = re.findall(r"[A-Za-z\d]{6}", a["href"])[0]
                     owner_id_list.append(owner_id)
                 df["owner_id"] = owner_id_list
 
@@ -401,7 +401,7 @@ def create_jockey_leading(
                 jockey_id_list = []
                 a_list = soup.find_all("a", href=re.compile(r"^/jockey/"))
                 for a in a_list:
-                    jockey_id = re.findall(r"\d{5}", a["href"])[0]
+                    jockey_id = re.findall(r"[A-Za-z\d]{5}", a["href"])[0]
                     jockey_id_list.append(jockey_id)
                 df.insert(0, "jockey_id", jockey_id_list)
                 # 最初の列にkey列を挿入
@@ -446,7 +446,7 @@ def create_trainer_leading(
                 trainer_id_list = []
                 a_list = soup.find_all("a", href=re.compile(r"^/trainer/"))
                 for a in a_list:
-                    trainer_id = re.findall(r"\d{5}", a["href"])[0]
+                    trainer_id = re.findall(r"[A-Za-z\d]{5}", a["href"])[0]
                     trainer_id_list.append(trainer_id)
                 df.insert(0, "trainer_id", trainer_id_list)
                 # 最初の列にkey列を挿入

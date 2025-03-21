@@ -7,7 +7,7 @@ params:
     "bagging_fraction": 0.8
     "learning_rate": 0.01
     "bagging_freq": 1
-    'min_child_samples': 80
+    'min_child_samples': 83
     # "colsample_bytree": 0.7
 
 
@@ -33,6 +33,28 @@ features:
     - wakuban
     # - tansho_odds
     # - popularity
+    - umaban_odd
+    - course_type
+    - course_len_type
+    - start_point_umaban
+    - curve_amount
+    - start_point
+    - start_range
+    - straight_total
+    - curve_total
+    - curve_R12
+    - curve_R34
+    - height_diff
+    - width
+    - start_slope
+    - flont_slope
+    - first_curve_slope
+    - last_curve_slope
+    - weight_weather_relative
+    - course_type_ground_position
+    - mean_fukusho_rate_position
+    - all_umaban_odd_processed
+    - all_umaban_processed
     - impost
     - sex
     - age
@@ -121,7 +143,7 @@ features:
     - course_len_diff_min_1races_relative
     - course_len_diff_min_3races_relative
     - course_len_diff_min_5races_relative
-    - course_len_diff_min_10races_relative    
+    - course_len_diff_min_10races_relative   
     # - n_horses_diff_mean_1races
     # - n_horses_diff_mean_3races
     # - n_horses_diff_mean_5races
@@ -158,7 +180,7 @@ features:
     #     - rank_diff_mean_1races_relative
     #     - rank_diff_max_1races_relative
     #     - rank_diff_min_1races_relative
-    - course_len_mean_1races_relative
+    # - course_len_mean_1races_relative
     # - course_len_max_1races_relative
     # - course_len_min_1races_relative
     # - race_grade_mean_1races_relative
@@ -200,7 +222,7 @@ features:
     #     - rank_diff_mean_3races_relative
     #     - rank_diff_max_3races_relative
     #     - rank_diff_min_3races_relative
-    - course_len_mean_3races_relative
+    # - course_len_mean_3races_relative
     # - course_len_max_3races_relative
     # - course_len_min_3races_relative
     # - race_grade_mean_3races_relative
@@ -242,7 +264,7 @@ features:
     #     - rank_diff_mean_5races_relative
     #     - rank_diff_max_5races_relative
     #     - rank_diff_min_5races_relative
-    - course_len_mean_5races_relative
+    # - course_len_mean_5races_relative
     # - course_len_max_5races_relative
     # - course_len_min_5races_relative
     # - race_grade_mean_5races_relative
@@ -284,7 +306,7 @@ features:
     #     - rank_diff_mean_10races_relative
     #     - rank_diff_max_10races_relative
     #     - rank_diff_min_10races_relative
-    - course_len_mean_10races_relative
+    # - course_len_mean_10races_relative
     # - course_len_max_10races_relative
     # - course_len_min_10races_relative
     # - race_grade_mean_10races_relative
@@ -346,603 +368,603 @@ features:
 #     - trainer_placerate_relative
 #     - trainer_showrate_relative
 #     - trainer_prize_relative
-    #     - rank_mean_1races_per_course_len_relative
-    #     - rank_min_1races_per_course_len_relative
-    #     - rank_per_horse_mean_1races_per_course_len_relative
-    #     - rank_per_horse_min_1races_per_course_len_relative
-#     #     - prize_mean_1races_per_course_len_relative
-#     #     - prize_min_1races_per_course_len_relative
-    #     - rank_diff_mean_1races_per_course_len_relative
-    #     - rank_diff_min_1races_per_course_len_relative
-    # - time_mean_1races_per_course_len_relative
-    # - time_min_1races_per_course_len_relative
-    # - time_courselen_mean_1races_per_course_len_relative
-    # - time_courselen_min_1races_per_course_len_relative
-    - nobori_mean_1races_per_course_len_relative
-    - nobori_min_1races_per_course_len_relative
-    # - corner_1_per_horse_mean_1races_per_course_len_relative
-    # - corner_1_per_horse_min_1races_per_course_len_relative
-    # - corner_2_per_horse_mean_1races_per_course_len_relative
-    # - corner_2_per_horse_min_1races_per_course_len_relative
-    # - corner_3_per_horse_mean_1races_per_course_len_relative
-    # - corner_3_per_horse_min_1races_per_course_len_relative
-    # - corner_4_per_horse_mean_1races_per_course_len_relative
-    # - corner_4_per_horse_min_1races_per_course_len_relative
-#    - pace_1_mean_1races_per_course_len_relative
-#    # - pace_1_min_1races_per_course_len_relative
-#    - pace_2_mean_1races_per_course_len_relative
-#    # - pace_2_min_1races_per_course_len_relative
-    #     - win_mean_1races_per_course_len_relative
-    #     - win_min_1races_per_course_len_relative
-    #     - show_mean_1races_per_course_len_relative
-    #     - show_min_1races_per_course_len_relative
-    #     - rank_mean_3races_per_course_len_relative
-    #     - rank_min_3races_per_course_len_relative
-    #     - rank_per_horse_mean_3races_per_course_len_relative
-    #     - rank_per_horse_min_3races_per_course_len_relative
-#     #     - prize_mean_3races_per_course_len_relative
-#     #     - prize_min_3races_per_course_len_relative
-    #     - rank_diff_mean_3races_per_course_len_relative
-    #     - rank_diff_min_3races_per_course_len_relative
-    - time_mean_3races_per_course_len_relative
-    - time_min_3races_per_course_len_relative
-    # - time_courselen_mean_3races_per_course_len_relative
-    # - time_courselen_min_3races_per_course_len_relative
-    - nobori_mean_3races_per_course_len_relative
-    - nobori_min_3races_per_course_len_relative
-    # - corner_1_per_horse_mean_3races_per_course_len_relative
-    # - corner_1_per_horse_min_3races_per_course_len_relative
-    # - corner_2_per_horse_mean_3races_per_course_len_relative
-    # - corner_2_per_horse_min_3races_per_course_len_relative
-    # - corner_3_per_horse_mean_3races_per_course_len_relative
-    # - corner_3_per_horse_min_3races_per_course_len_relative
-    # - corner_4_per_horse_mean_3races_per_course_len_relative
-    # - corner_4_per_horse_min_3races_per_course_len_relative
-#    - pace_1_mean_3races_per_course_len_relative
-#    # - pace_1_min_3races_per_course_len_relative
-#    - pace_2_mean_3races_per_course_len_relative
-#    # - pace_2_min_3races_per_course_len_relative
-    #     - win_mean_3races_per_course_len_relative
-    #     - win_min_3races_per_course_len_relative
-    #     - show_mean_3races_per_course_len_relative
-    #     - show_min_3races_per_course_len_relative
-    #     - rank_mean_5races_per_course_len_relative
-    #     - rank_min_5races_per_course_len_relative
-    #     - rank_per_horse_mean_5races_per_course_len_relative
-    #     - rank_per_horse_min_5races_per_course_len_relative
-#     #     - prize_mean_5races_per_course_len_relative
-#     #     - prize_min_5races_per_course_len_relative
-    #     - rank_diff_mean_5races_per_course_len_relative
-    #     - rank_diff_min_5races_per_course_len_relative
-    - time_mean_5races_per_course_len_relative
-    - time_min_5races_per_course_len_relative
-    # - time_courselen_mean_5races_per_course_len_relative
-    # - time_courselen_min_5races_per_course_len_relative
-    - nobori_mean_5races_per_course_len_relative
-    - nobori_min_5races_per_course_len_relative
-    # - corner_1_per_horse_mean_5races_per_course_len_relative
-    # - corner_1_per_horse_min_5races_per_course_len_relative
-    # - corner_2_per_horse_mean_5races_per_course_len_relative
-    # - corner_2_per_horse_min_5races_per_course_len_relative
-    # - corner_3_per_horse_mean_5races_per_course_len_relative
-    # - corner_3_per_horse_min_5races_per_course_len_relative
-    # - corner_4_per_horse_mean_5races_per_course_len_relative
-    # - corner_4_per_horse_min_5races_per_course_len_relative
-#    - pace_1_mean_5races_per_course_len_relative
-#    # - pace_1_min_5races_per_course_len_relative
-#    - pace_2_mean_5races_per_course_len_relative
-#    # - pace_2_min_5races_per_course_len_relative
-    #     - win_mean_5races_per_course_len_relative
-    #     - win_min_5races_per_course_len_relative
-    #     - show_mean_5races_per_course_len_relative
-    #     - show_min_5races_per_course_len_relative
-    #     - rank_mean_10races_per_course_len_relative
-    #     - rank_min_10races_per_course_len_relative
-    #     - rank_per_horse_mean_10races_per_course_len_relative
-    #     - rank_per_horse_min_10races_per_course_len_relative
-#     #     - prize_mean_10races_per_course_len_relative
-#     #     - prize_min_10races_per_course_len_relative
-    #     - rank_diff_mean_10races_per_course_len_relative
-    #     - rank_diff_min_10races_per_course_len_relative
-    - time_mean_10races_per_course_len_relative
-    - time_min_10races_per_course_len_relative
-    # - time_courselen_mean_10races_per_course_len_relative
-    # - time_courselen_min_10races_per_course_len_relative
-    - nobori_mean_10races_per_course_len_relative
-    - nobori_min_10races_per_course_len_relative
-    # - corner_1_per_horse_mean_10races_per_course_len_relative
-    # - corner_1_per_horse_min_10races_per_course_len_relative
-    # - corner_2_per_horse_mean_10races_per_course_len_relative
-    # - corner_2_per_horse_min_10races_per_course_len_relative
-    # - corner_3_per_horse_mean_10races_per_course_len_relative
-    # - corner_3_per_horse_min_10races_per_course_len_relative
-    # - corner_4_per_horse_mean_10races_per_course_len_relative
-    # - corner_4_per_horse_min_10races_per_course_len_relative
-#    - pace_1_mean_10races_per_course_len_relative
-#    # - pace_1_min_10races_per_course_len_relative
-#    - pace_2_mean_10races_per_course_len_relative
-#    # - pace_2_min_10races_per_course_len_relative
-    #     - win_mean_10races_per_course_len_relative
-    #     - win_min_10races_per_course_len_relative
-    #     - show_mean_10races_per_course_len_relative
-    #     - show_min_10races_per_course_len_relative
-    #     - rank_per_horse_mean_1races_per_ground_state_race_type_relative
-    #     - rank_per_horse_max_1races_per_ground_state_race_type_relative
-    #     - rank_per_horse_min_1races_per_ground_state_race_type_relative
-#     # - prize_mean_1races_per_ground_state_race_type_relative
-#     # - prize_max_1races_per_ground_state_race_type_relative
-#     # - prize_min_1races_per_ground_state_race_type_relative
-    #     - rank_diff_mean_1races_per_ground_state_race_type_relative
-    #     - rank_diff_max_1races_per_ground_state_race_type_relative
-    #     - rank_diff_min_1races_per_ground_state_race_type_relative
-    # - time_mean_1races_per_ground_state_race_type_relative
-    # - time_max_1races_per_ground_state_race_type_relative
-    # - time_min_1races_per_ground_state_race_type_relative
-    - nobori_mean_1races_per_ground_state_race_type_relative
-    - nobori_max_1races_per_ground_state_race_type_relative
-    - nobori_min_1races_per_ground_state_race_type_relative
-    # - corner_1_per_horse_mean_1races_per_ground_state_race_type_relative
-    # - corner_1_per_horse_max_1races_per_ground_state_race_type_relative
-    # - corner_1_per_horse_min_1races_per_ground_state_race_type_relative
-    # - corner_2_per_horse_mean_1races_per_ground_state_race_type_relative
-    # - corner_2_per_horse_max_1races_per_ground_state_race_type_relative
-    # - corner_2_per_horse_min_1races_per_ground_state_race_type_relative
-    # - corner_3_per_horse_mean_1races_per_ground_state_race_type_relative
-    # - corner_3_per_horse_max_1races_per_ground_state_race_type_relative
-    # - corner_3_per_horse_min_1races_per_ground_state_race_type_relative
-    # - corner_4_per_horse_mean_1races_per_ground_state_race_type_relative
-    # - corner_4_per_horse_max_1races_per_ground_state_race_type_relative
-    # - corner_4_per_horse_min_1races_per_ground_state_race_type_relative
-#    - pace_1_mean_1races_per_ground_state_race_type_relative
-#    # - pace_1_max_1races_per_ground_state_race_type_relative
-#    # - pace_1_min_1races_per_ground_state_race_type_relative
-#    - pace_2_mean_1races_per_ground_state_race_type_relative
-#    # - pace_2_max_1races_per_ground_state_race_type_relative
-#    # - pace_2_min_1races_per_ground_state_race_type_relative
-    #     - win_mean_1races_per_ground_state_race_type_relative
-    #     - win_max_1races_per_ground_state_race_type_relative
-    #     - win_min_1races_per_ground_state_race_type_relative
-    #     - show_mean_1races_per_ground_state_race_type_relative
-    #     - show_max_1races_per_ground_state_race_type_relative
-    #     - show_min_1races_per_ground_state_race_type_relative
-    #     - rank_per_horse_mean_3races_per_ground_state_race_type_relative
-    #     - rank_per_horse_max_3races_per_ground_state_race_type_relative
-    #     - rank_per_horse_min_3races_per_ground_state_race_type_relative
-#     # - prize_mean_3races_per_ground_state_race_type_relative
-#     # - prize_max_3races_per_ground_state_race_type_relative
-#     # - prize_min_3races_per_ground_state_race_type_relative
-    #     - rank_diff_mean_3races_per_ground_state_race_type_relative
-    #     - rank_diff_max_3races_per_ground_state_race_type_relative
-    #     - rank_diff_min_3races_per_ground_state_race_type_relative
-    # - time_mean_3races_per_ground_state_race_type_relative
-    # - time_max_3races_per_ground_state_race_type_relative
-    # - time_min_3races_per_ground_state_race_type_relative
-    - nobori_mean_3races_per_ground_state_race_type_relative
-    - nobori_max_3races_per_ground_state_race_type_relative
-    - nobori_min_3races_per_ground_state_race_type_relative
-    # - corner_1_per_horse_mean_3races_per_ground_state_race_type_relative
-    # - corner_1_per_horse_max_3races_per_ground_state_race_type_relative
-    # - corner_1_per_horse_min_3races_per_ground_state_race_type_relative
-    # - corner_2_per_horse_mean_3races_per_ground_state_race_type_relative
-    # - corner_2_per_horse_max_3races_per_ground_state_race_type_relative
-    # - corner_2_per_horse_min_3races_per_ground_state_race_type_relative
-    # - corner_3_per_horse_mean_3races_per_ground_state_race_type_relative
-    # - corner_3_per_horse_max_3races_per_ground_state_race_type_relative
-    # - corner_3_per_horse_min_3races_per_ground_state_race_type_relative
-    # - corner_4_per_horse_mean_3races_per_ground_state_race_type_relative
-    # - corner_4_per_horse_max_3races_per_ground_state_race_type_relative
-    # - corner_4_per_horse_min_3races_per_ground_state_race_type_relative
-#    - pace_1_mean_3races_per_ground_state_race_type_relative
-#    # - pace_1_max_3races_per_ground_state_race_type_relative
-#    # - pace_1_min_3races_per_ground_state_race_type_relative
-#    - pace_2_mean_3races_per_ground_state_race_type_relative
-#    # - pace_2_max_3races_per_ground_state_race_type_relative
-#    # - pace_2_min_3races_per_ground_state_race_type_relative
-    #     - win_mean_3races_per_ground_state_race_type_relative
-    #     - win_max_3races_per_ground_state_race_type_relative
-    #     - win_min_3races_per_ground_state_race_type_relative
-    #     - show_mean_3races_per_ground_state_race_type_relative
-    #     - show_max_3races_per_ground_state_race_type_relative
-    #     - show_min_3races_per_ground_state_race_type_relative
-    #     - rank_per_horse_mean_5races_per_ground_state_race_type_relative
-    #     - rank_per_horse_max_5races_per_ground_state_race_type_relative
-    #     - rank_per_horse_min_5races_per_ground_state_race_type_relative
-#     # - prize_mean_5races_per_ground_state_race_type_relative
-#     # - prize_max_5races_per_ground_state_race_type_relative
-#     # - prize_min_5races_per_ground_state_race_type_relative
-    #     - rank_diff_mean_5races_per_ground_state_race_type_relative
-    #     - rank_diff_max_5races_per_ground_state_race_type_relative
-    #     - rank_diff_min_5races_per_ground_state_race_type_relative
-    # - time_mean_5races_per_ground_state_race_type_relative
-    # - time_max_5races_per_ground_state_race_type_relative
-    # - time_min_5races_per_ground_state_race_type_relative
-    - nobori_mean_5races_per_ground_state_race_type_relative
-    - nobori_max_5races_per_ground_state_race_type_relative
-    - nobori_min_5races_per_ground_state_race_type_relative
-    # - corner_1_per_horse_mean_5races_per_ground_state_race_type_relative
-    # - corner_1_per_horse_max_5races_per_ground_state_race_type_relative
-    # - corner_1_per_horse_min_5races_per_ground_state_race_type_relative
-    # - corner_2_per_horse_mean_5races_per_ground_state_race_type_relative
-    # - corner_2_per_horse_max_5races_per_ground_state_race_type_relative
-    # - corner_2_per_horse_min_5races_per_ground_state_race_type_relative
-    # - corner_3_per_horse_mean_5races_per_ground_state_race_type_relative
-    # - corner_3_per_horse_max_5races_per_ground_state_race_type_relative
-    # - corner_3_per_horse_min_5races_per_ground_state_race_type_relative
-    # - corner_4_per_horse_mean_5races_per_ground_state_race_type_relative
-    # - corner_4_per_horse_max_5races_per_ground_state_race_type_relative
-    # - corner_4_per_horse_min_5races_per_ground_state_race_type_relative
-#    - pace_1_mean_5races_per_ground_state_race_type_relative
-#    # - pace_1_max_5races_per_ground_state_race_type_relative
-#    # - pace_1_min_5races_per_ground_state_race_type_relative
-#    - pace_2_mean_5races_per_ground_state_race_type_relative
-#    # - pace_2_max_5races_per_ground_state_race_type_relative
-#    # - pace_2_min_5races_per_ground_state_race_type_relative
-    #     - win_mean_5races_per_ground_state_race_type_relative
-    #     - win_max_5races_per_ground_state_race_type_relative
-    #     - win_min_5races_per_ground_state_race_type_relative
-    #     - show_mean_5races_per_ground_state_race_type_relative
-    #     - show_max_5races_per_ground_state_race_type_relative
-    #     - show_min_5races_per_ground_state_race_type_relative
-    #     - rank_per_horse_mean_10races_per_ground_state_race_type_relative
-    #     - rank_per_horse_max_10races_per_ground_state_race_type_relative
-    #     - rank_per_horse_min_10races_per_ground_state_race_type_relative
-#     # - prize_mean_10races_per_ground_state_race_type_relative
-#     # - prize_max_10races_per_ground_state_race_type_relative
-#     # - prize_min_10races_per_ground_state_race_type_relative
-    #     - rank_diff_mean_10races_per_ground_state_race_type_relative
-    #     - rank_diff_max_10races_per_ground_state_race_type_relative
-    #     - rank_diff_min_10races_per_ground_state_race_type_relative
-    # - time_mean_10races_per_ground_state_race_type_relative
-    # - time_max_10races_per_ground_state_race_type_relative
-    # - time_min_10races_per_ground_state_race_type_relative
-    - nobori_mean_10races_per_ground_state_race_type_relative
-    - nobori_max_10races_per_ground_state_race_type_relative
-    - nobori_min_10races_per_ground_state_race_type_relative
-    # - corner_1_per_horse_mean_10races_per_ground_state_race_type_relative
-    # - corner_1_per_horse_max_10races_per_ground_state_race_type_relative
-    # - corner_1_per_horse_min_10races_per_ground_state_race_type_relative
-    # - corner_2_per_horse_mean_10races_per_ground_state_race_type_relative
-    # - corner_2_per_horse_max_10races_per_ground_state_race_type_relative
-    # - corner_2_per_horse_min_10races_per_ground_state_race_type_relative
-    # - corner_3_per_horse_mean_10races_per_ground_state_race_type_relative
-    # - corner_3_per_horse_max_10races_per_ground_state_race_type_relative
-    # - corner_3_per_horse_min_10races_per_ground_state_race_type_relative
-    # - corner_4_per_horse_mean_10races_per_ground_state_race_type_relative
-    # - corner_4_per_horse_max_10races_per_ground_state_race_type_relative
-    # - corner_4_per_horse_min_10races_per_ground_state_race_type_relative
-#    - pace_1_mean_10races_per_ground_state_race_type_relative
-#    # - pace_1_max_10races_per_ground_state_race_type_relative
-#    # - pace_1_min_10races_per_ground_state_race_type_relative
-#    - pace_2_mean_10races_per_ground_state_race_type_relative
-#    # - pace_2_max_10races_per_ground_state_race_type_relative
-#    # - pace_2_min_10races_per_ground_state_race_type_relative
-    #     - win_mean_10races_per_ground_state_race_type_relative
-    #     - win_max_10races_per_ground_state_race_type_relative
-    #     - win_min_10races_per_ground_state_race_type_relative
-    #     - show_mean_10races_per_ground_state_race_type_relative
-    #     - show_max_10races_per_ground_state_race_type_relative
-    #     - show_min_10races_per_ground_state_race_type_relative
-    #     - rank_per_horse_mean_1races_per_race_grade_relative
-    #     - rank_per_horse_max_1races_per_race_grade_relative
-    #     - rank_per_horse_min_1races_per_race_grade_relative
-#     #     - prize_mean_1races_per_race_grade_relative
-#     #     - prize_max_1races_per_race_grade_relative
-#     #     - prize_min_1races_per_race_grade_relative
-    #     - rank_diff_mean_1races_per_race_grade_relative
-    #     - rank_diff_max_1races_per_race_grade_relative
-    #     - rank_diff_min_1races_per_race_grade_relative
-    # - time_mean_1races_per_race_grade_relative
-    # - time_max_1races_per_race_grade_relative
-    # - time_min_1races_per_race_grade_relative
-    # - nobori_mean_1races_per_race_grade_relative
-    # - nobori_max_1races_per_race_grade_relative
-    # - nobori_min_1races_per_race_grade_relative
-    # - corner_1_per_horse_mean_1races_per_race_grade_relative
-    # - corner_1_per_horse_max_1races_per_race_grade_relative
-    # - corner_1_per_horse_min_1races_per_race_grade_relative
-    # - corner_2_per_horse_mean_1races_per_race_grade_relative
-    # - corner_2_per_horse_max_1races_per_race_grade_relative
-    # - corner_2_per_horse_min_1races_per_race_grade_relative
-    # - corner_3_per_horse_mean_1races_per_race_grade_relative
-    # - corner_3_per_horse_max_1races_per_race_grade_relative
-    # - corner_3_per_horse_min_1races_per_race_grade_relative
-    # - corner_4_per_horse_mean_1races_per_race_grade_relative
-    # - corner_4_per_horse_max_1races_per_race_grade_relative
-    # - corner_4_per_horse_min_1races_per_race_grade_relative
-#    # - pace_1_mean_1races_per_race_grade_relative
-#    # - pace_1_max_1races_per_race_grade_relative
-#    # - pace_1_min_1races_per_race_grade_relative
-#    # - pace_2_mean_1races_per_race_grade_relative
-#    # - pace_2_max_1races_per_race_grade_relative
-#    # - pace_2_min_1races_per_race_grade_relative
-    #     - win_mean_1races_per_race_grade_relative
-    #     - win_max_1races_per_race_grade_relative
-    #     - win_min_1races_per_race_grade_relative
-    #     - show_mean_1races_per_race_grade_relative
-    #     - show_max_1races_per_race_grade_relative
-    #     - show_min_1races_per_race_grade_relative
-    #     - rank_per_horse_mean_3races_per_race_grade_relative
-    #     - rank_per_horse_max_3races_per_race_grade_relative
-    #     - rank_per_horse_min_3races_per_race_grade_relative
-#     #     - prize_mean_3races_per_race_grade_relative
-#     #     - prize_max_3races_per_race_grade_relative
-#     #     - prize_min_3races_per_race_grade_relative
-    #     - rank_diff_mean_3races_per_race_grade_relative
-    #     - rank_diff_max_3races_per_race_grade_relative
-    #     - rank_diff_min_3races_per_race_grade_relative
-    # - time_mean_3races_per_race_grade_relative
-    # - time_max_3races_per_race_grade_relative
-    # - time_min_3races_per_race_grade_relative
-    # - nobori_mean_3races_per_race_grade_relative
-    # - nobori_max_3races_per_race_grade_relative
-    # - nobori_min_3races_per_race_grade_relative
-    # - corner_1_per_horse_mean_3races_per_race_grade_relative
-    # - corner_1_per_horse_max_3races_per_race_grade_relative
-    # - corner_1_per_horse_min_3races_per_race_grade_relative
-    # - corner_2_per_horse_mean_3races_per_race_grade_relative
-    # - corner_2_per_horse_max_3races_per_race_grade_relative
-    # - corner_2_per_horse_min_3races_per_race_grade_relative
-    # - corner_3_per_horse_mean_3races_per_race_grade_relative
-    # - corner_3_per_horse_max_3races_per_race_grade_relative
-    # - corner_3_per_horse_min_3races_per_race_grade_relative
-    # - corner_4_per_horse_mean_3races_per_race_grade_relative
-    # - corner_4_per_horse_max_3races_per_race_grade_relative
-    # - corner_4_per_horse_min_3races_per_race_grade_relative
-#    # - pace_1_mean_3races_per_race_grade_relative
-#    # - pace_1_max_3races_per_race_grade_relative
-#    # - pace_1_min_3races_per_race_grade_relative
-#    # - pace_2_mean_3races_per_race_grade_relative
-#    # - pace_2_max_3races_per_race_grade_relative
-#    # - pace_2_min_3races_per_race_grade_relative
-    #     - win_mean_3races_per_race_grade_relative
-    #     - win_max_3races_per_race_grade_relative
-    #     - win_min_3races_per_race_grade_relative
-    #     - show_mean_3races_per_race_grade_relative
-    #     - show_max_3races_per_race_grade_relative
-    #     - show_min_3races_per_race_grade_relative
-    #     - rank_per_horse_mean_5races_per_race_grade_relative
-    #     - rank_per_horse_max_5races_per_race_grade_relative
-    #     - rank_per_horse_min_5races_per_race_grade_relative
-#     #     - prize_mean_5races_per_race_grade_relative
-#     #     - prize_max_5races_per_race_grade_relative
-#     #     - prize_min_5races_per_race_grade_relative
-    #     - rank_diff_mean_5races_per_race_grade_relative
-    #     - rank_diff_max_5races_per_race_grade_relative
-    #     - rank_diff_min_5races_per_race_grade_relative
-    # - time_mean_5races_per_race_grade_relative
-    # - time_max_5races_per_race_grade_relative
-    # - time_min_5races_per_race_grade_relative
-    # - nobori_mean_5races_per_race_grade_relative
-    # - nobori_max_5races_per_race_grade_relative
-    # - nobori_min_5races_per_race_grade_relative
-    # - corner_1_per_horse_mean_5races_per_race_grade_relative
-    # - corner_1_per_horse_max_5races_per_race_grade_relative
-    # - corner_1_per_horse_min_5races_per_race_grade_relative
-    # - corner_2_per_horse_mean_5races_per_race_grade_relative
-    # - corner_2_per_horse_max_5races_per_race_grade_relative
-    # - corner_2_per_horse_min_5races_per_race_grade_relative
-    # - corner_3_per_horse_mean_5races_per_race_grade_relative
-    # - corner_3_per_horse_max_5races_per_race_grade_relative
-    # - corner_3_per_horse_min_5races_per_race_grade_relative
-    # - corner_4_per_horse_mean_5races_per_race_grade_relative
-    # - corner_4_per_horse_max_5races_per_race_grade_relative
-    # - corner_4_per_horse_min_5races_per_race_grade_relative
-#    # - pace_1_mean_5races_per_race_grade_relative
-#    # - pace_1_max_5races_per_race_grade_relative
-#    # - pace_1_min_5races_per_race_grade_relative
-#    # - pace_2_mean_5races_per_race_grade_relative
-#    # - pace_2_max_5races_per_race_grade_relative
-#    # - pace_2_min_5races_per_race_grade_relative
-    #     - win_mean_5races_per_race_grade_relative
-    #     - win_max_5races_per_race_grade_relative
-    #     - win_min_5races_per_race_grade_relative
-    #     - show_mean_5races_per_race_grade_relative
-    #     - show_max_5races_per_race_grade_relative
-    #     - show_min_5races_per_race_grade_relative
-    #     - rank_per_horse_mean_10races_per_race_grade_relative
-    #     - rank_per_horse_max_10races_per_race_grade_relative
-    #     - rank_per_horse_min_10races_per_race_grade_relative
-#     #     - prize_mean_10races_per_race_grade_relative
-#     #     - prize_max_10races_per_race_grade_relative
-#     #     - prize_min_10races_per_race_grade_relative
-    #     - rank_diff_mean_10races_per_race_grade_relative
-    #     - rank_diff_max_10races_per_race_grade_relative
-    #     - rank_diff_min_10races_per_race_grade_relative
-    # - time_mean_10races_per_race_grade_relative
-    # - time_max_10races_per_race_grade_relative
-    # - time_min_10races_per_race_grade_relative
-    # - nobori_mean_10races_per_race_grade_relative
-    # - nobori_max_10races_per_race_grade_relative
-    # - nobori_min_10races_per_race_grade_relative
-    # - corner_1_per_horse_mean_10races_per_race_grade_relative
-    # - corner_1_per_horse_max_10races_per_race_grade_relative
-    # - corner_1_per_horse_min_10races_per_race_grade_relative
-    # - corner_2_per_horse_mean_10races_per_race_grade_relative
-    # - corner_2_per_horse_max_10races_per_race_grade_relative
-    # - corner_2_per_horse_min_10races_per_race_grade_relative
-    # - corner_3_per_horse_mean_10races_per_race_grade_relative
-    # - corner_3_per_horse_max_10races_per_race_grade_relative
-    # - corner_3_per_horse_min_10races_per_race_grade_relative
-    # - corner_4_per_horse_mean_10races_per_race_grade_relative
-    # - corner_4_per_horse_max_10races_per_race_grade_relative
-    # - corner_4_per_horse_min_10races_per_race_grade_relative
-#    # - pace_1_mean_10races_per_race_grade_relative
-#    # - pace_1_max_10races_per_race_grade_relative
-#    # - pace_1_min_10races_per_race_grade_relative
-#    # - pace_2_mean_10races_per_race_grade_relative
-#    # - pace_2_max_10races_per_race_grade_relative
-#    # - pace_2_min_10races_per_race_grade_relative
-    #     - win_mean_10races_per_race_grade_relative
-    #     - win_max_10races_per_race_grade_relative
-    #     - win_min_10races_per_race_grade_relative
-    #     - show_mean_10races_per_race_grade_relative
-    #     - show_max_10races_per_race_grade_relative
-    #     - show_min_10races_per_race_grade_relative
-    #     - rank_per_horse_mean_1races_per_race_type_relative
-    #     - rank_per_horse_max_1races_per_race_type_relative
-    #     - rank_per_horse_min_1races_per_race_type_relative
-#     - prize_mean_1races_per_race_type_relative
-#     - prize_max_1races_per_race_type_relative
-#     - prize_min_1races_per_race_type_relative
-    #     - rank_diff_mean_1races_per_race_type_relative
-    #     - rank_diff_max_1races_per_race_type_relative
-    #     - rank_diff_min_1races_per_race_type_relative
-    # - time_mean_1races_per_race_type_relative
-    # - time_max_1races_per_race_type_relative
-    # - time_min_1races_per_race_type_relative
-    - nobori_mean_1races_per_race_type_relative
-    - nobori_max_1races_per_race_type_relative
-    - nobori_min_1races_per_race_type_relative
-    # - corner_1_per_horse_mean_1races_per_race_type_relative
-    # - corner_1_per_horse_max_1races_per_race_type_relative
-    # - corner_1_per_horse_min_1races_per_race_type_relative
-    # - corner_2_per_horse_mean_1races_per_race_type_relative
-    # - corner_2_per_horse_max_1races_per_race_type_relative
-    # - corner_2_per_horse_min_1races_per_race_type_relative
-    # - corner_3_per_horse_mean_1races_per_race_type_relative
-    # - corner_3_per_horse_max_1races_per_race_type_relative
-    # - corner_3_per_horse_min_1races_per_race_type_relative
-    # - corner_4_per_horse_mean_1races_per_race_type_relative
-    # - corner_4_per_horse_max_1races_per_race_type_relative
-    # - corner_4_per_horse_min_1races_per_race_type_relative
-#    - pace_1_mean_1races_per_race_type_relative
-#    # - pace_1_max_1races_per_race_type_relative
-#    # - pace_1_min_1races_per_race_type_relative
-#    - pace_2_mean_1races_per_race_type_relative
-#    # - pace_2_max_1races_per_race_type_relative
-#    # - pace_2_min_1races_per_race_type_relative
-    #     - win_mean_1races_per_race_type_relative
-    #     - win_max_1races_per_race_type_relative
-    #     - win_min_1races_per_race_type_relative
-    #     - show_mean_1races_per_race_type_relative
-    #     - show_max_1races_per_race_type_relative
-    #     - show_min_1races_per_race_type_relative
-    #     - rank_per_horse_mean_3races_per_race_type_relative
-    #     - rank_per_horse_max_3races_per_race_type_relative
-    #     - rank_per_horse_min_3races_per_race_type_relative
-#     - prize_mean_3races_per_race_type_relative
-#     - prize_max_3races_per_race_type_relative
-#     - prize_min_3races_per_race_type_relative
-    #     - rank_diff_mean_3races_per_race_type_relative
-    #     - rank_diff_max_3races_per_race_type_relative
-    #     - rank_diff_min_3races_per_race_type_relative
-    # - time_mean_3races_per_race_type_relative
-    # - time_max_3races_per_race_type_relative
-    # - time_min_3races_per_race_type_relative
-    - nobori_mean_3races_per_race_type_relative
-    - nobori_max_3races_per_race_type_relative
-    - nobori_min_3races_per_race_type_relative
-    # # - corner_1_per_horse_mean_3races_per_race_type_relative
-    # # - corner_1_per_horse_max_3races_per_race_type_relative
-    # # - corner_1_per_horse_min_3races_per_race_type_relative
-    # # - corner_2_per_horse_mean_3races_per_race_type_relative
-    # # - corner_2_per_horse_max_3races_per_race_type_relative
-    # # - corner_2_per_horse_min_3races_per_race_type_relative
-    # # - corner_3_per_horse_mean_3races_per_race_type_relative
-    # # - corner_3_per_horse_max_3races_per_race_type_relative
-    # # - corner_3_per_horse_min_3races_per_race_type_relative
-    # # - corner_4_per_horse_mean_3races_per_race_type_relative
-    # # - corner_4_per_horse_max_3races_per_race_type_relative
-    # # - corner_4_per_horse_min_3races_per_race_type_relative
-#    - pace_1_mean_3races_per_race_type_relative
-#    # # - pace_1_max_3races_per_race_type_relative
-#    # # - pace_1_min_3races_per_race_type_relative
-#    - pace_2_mean_3races_per_race_type_relative
-#    # # - pace_2_max_3races_per_race_type_relative
-#    # # - pace_2_min_3races_per_race_type_relative
-    #     - win_mean_3races_per_race_type_relative
-    #     - win_max_3races_per_race_type_relative
-    #     - win_min_3races_per_race_type_relative
-    #     - show_mean_3races_per_race_type_relative
-    #     - show_max_3races_per_race_type_relative
-    #     - show_min_3races_per_race_type_relative
-    #     - rank_per_horse_mean_5races_per_race_type_relative
-    #     - rank_per_horse_max_5races_per_race_type_relative
-    #     - rank_per_horse_min_5races_per_race_type_relative
-#     - prize_mean_5races_per_race_type_relative
-#     - prize_max_5races_per_race_type_relative
-#     - prize_min_5races_per_race_type_relative
-    #     - rank_diff_mean_5races_per_race_type_relative
-    #     - rank_diff_max_5races_per_race_type_relative
-    #     - rank_diff_min_5races_per_race_type_relative
-    # - time_mean_5races_per_race_type_relative
-    # - time_max_5races_per_race_type_relative
-    # - time_min_5races_per_race_type_relative
-    - nobori_mean_5races_per_race_type_relative
-    - nobori_max_5races_per_race_type_relative
-    - nobori_min_5races_per_race_type_relative
-    # # - corner_1_per_horse_mean_5races_per_race_type_relative
-    # # - corner_1_per_horse_max_5races_per_race_type_relative
-    # # - corner_1_per_horse_min_5races_per_race_type_relative
-    # # - corner_2_per_horse_mean_5races_per_race_type_relative
-    # # - corner_2_per_horse_max_5races_per_race_type_relative
-    # # - corner_2_per_horse_min_5races_per_race_type_relative
-    # # - corner_3_per_horse_mean_5races_per_race_type_relative
-    # # - corner_3_per_horse_max_5races_per_race_type_relative
-    # # - corner_3_per_horse_min_5races_per_race_type_relative
-    # # - corner_4_per_horse_mean_5races_per_race_type_relative
-    # # - corner_4_per_horse_max_5races_per_race_type_relative
-    # # - corner_4_per_horse_min_5races_per_race_type_relative
-#    - pace_1_mean_5races_per_race_type_relative
-#    # # - pace_1_max_5races_per_race_type_relative
-#    # # - pace_1_min_5races_per_race_type_relative
-#    - pace_2_mean_5races_per_race_type_relative
-#    # # - pace_2_max_5races_per_race_type_relative
-#    # # - pace_2_min_5races_per_race_type_relative
-    #     - win_mean_5races_per_race_type_relative
-    #     - win_max_5races_per_race_type_relative
-    #     - win_min_5races_per_race_type_relative
-    #     - show_mean_5races_per_race_type_relative
-    #     - show_max_5races_per_race_type_relative
-    #     - show_min_5races_per_race_type_relative
-    #     - rank_per_horse_mean_10races_per_race_type_relative
-    #     - rank_per_horse_max_10races_per_race_type_relative
-    #     - rank_per_horse_min_10races_per_race_type_relative
-#     - prize_mean_10races_per_race_type_relative
-#     - prize_max_10races_per_race_type_relative
-#     - prize_min_10races_per_race_type_relative
-    #     - rank_diff_mean_10races_per_race_type_relative
-    #     - rank_diff_max_10races_per_race_type_relative
-    #     - rank_diff_min_10races_per_race_type_relative
-    # - time_mean_10races_per_race_type_relative
-    # - time_max_10races_per_race_type_relative
-    # - time_min_10races_per_race_type_relative
-    - nobori_mean_10races_per_race_type_relative
-    - nobori_max_10races_per_race_type_relative
-    - nobori_min_10races_per_race_type_relative
-    # # - corner_1_per_horse_mean_10races_per_race_type_relative
-    # # - corner_1_per_horse_max_10races_per_race_type_relative
-    # # - corner_1_per_horse_min_10races_per_race_type_relative
-    # # - corner_2_per_horse_mean_10races_per_race_type_relative
-    # # - corner_2_per_horse_max_10races_per_race_type_relative
-    # # - corner_2_per_horse_min_10races_per_race_type_relative
-    # # - corner_3_per_horse_mean_10races_per_race_type_relative
-    # # - corner_3_per_horse_max_10races_per_race_type_relative
-    # # - corner_3_per_horse_min_10races_per_race_type_relative
-    # # - corner_4_per_horse_mean_10races_per_race_type_relative
-    # # - corner_4_per_horse_max_10races_per_race_type_relative
-    # # - corner_4_per_horse_min_10races_per_race_type_relative
-#    - pace_1_mean_10races_per_race_type_relative
-#    # # - pace_1_max_10races_per_race_type_relative
-#    # # - pace_1_min_10races_per_race_type_relative
-#    - pace_2_mean_10races_per_race_type_relative
-#    # # - pace_2_max_10races_per_race_type_relative
-#    # # - pace_2_min_10races_per_race_type_relative
-    #     - win_mean_10races_per_race_type_relative
-    #     - win_max_10races_per_race_type_relative
-    #     - win_min_10races_per_race_type_relative
-    #     - show_mean_10races_per_race_type_relative
-    #     - show_max_10races_per_race_type_relative
-    #     - show_min_10races_per_race_type_relative
-    #     - rank_per_horse_mean_1races_per_race_place_len_relative
-    #     - rank_per_horse_max_1races_per_race_place_len_relative
-    #     - rank_per_horse_min_1races_per_race_place_len_relative
-#     #     - prize_mean_1races_per_race_place_len_relative
-#     #     - prize_max_1races_per_race_place_len_relative
-#     #     - prize_min_1races_per_race_place_len_relative
-    #     - rank_diff_mean_1races_per_race_place_len_relative
-    #     - rank_diff_max_1races_per_race_place_len_relative
-    #     - rank_diff_min_1races_per_race_place_len_relative
+#     #     - rank_mean_1races_per_course_len_relative
+#     #     - rank_min_1races_per_course_len_relative
+#     #     - rank_per_horse_mean_1races_per_course_len_relative
+#     #     - rank_per_horse_min_1races_per_course_len_relative
+# #     #     - prize_mean_1races_per_course_len_relative
+# #     #     - prize_min_1races_per_course_len_relative
+#     #     - rank_diff_mean_1races_per_course_len_relative
+#     #     - rank_diff_min_1races_per_course_len_relative
+#     # - time_mean_1races_per_course_len_relative
+#     # - time_min_1races_per_course_len_relative
+#     # - time_courselen_mean_1races_per_course_len_relative
+#     # - time_courselen_min_1races_per_course_len_relative
+#     - nobori_mean_1races_per_course_len_relative
+#     - nobori_min_1races_per_course_len_relative
+#     # - corner_1_per_horse_mean_1races_per_course_len_relative
+#     # - corner_1_per_horse_min_1races_per_course_len_relative
+#     # - corner_2_per_horse_mean_1races_per_course_len_relative
+#     # - corner_2_per_horse_min_1races_per_course_len_relative
+#     # - corner_3_per_horse_mean_1races_per_course_len_relative
+#     # - corner_3_per_horse_min_1races_per_course_len_relative
+#     # - corner_4_per_horse_mean_1races_per_course_len_relative
+#     # - corner_4_per_horse_min_1races_per_course_len_relative
+# #    - pace_1_mean_1races_per_course_len_relative
+# #    # - pace_1_min_1races_per_course_len_relative
+# #    - pace_2_mean_1races_per_course_len_relative
+# #    # - pace_2_min_1races_per_course_len_relative
+#     #     - win_mean_1races_per_course_len_relative
+#     #     - win_min_1races_per_course_len_relative
+#     #     - show_mean_1races_per_course_len_relative
+#     #     - show_min_1races_per_course_len_relative
+#     #     - rank_mean_3races_per_course_len_relative
+#     #     - rank_min_3races_per_course_len_relative
+#     #     - rank_per_horse_mean_3races_per_course_len_relative
+#     #     - rank_per_horse_min_3races_per_course_len_relative
+# #     #     - prize_mean_3races_per_course_len_relative
+# #     #     - prize_min_3races_per_course_len_relative
+#     #     - rank_diff_mean_3races_per_course_len_relative
+#     #     - rank_diff_min_3races_per_course_len_relative
+#     - time_mean_3races_per_course_len_relative
+#     - time_min_3races_per_course_len_relative
+#     # - time_courselen_mean_3races_per_course_len_relative
+#     # - time_courselen_min_3races_per_course_len_relative
+#     - nobori_mean_3races_per_course_len_relative
+#     - nobori_min_3races_per_course_len_relative
+#     # - corner_1_per_horse_mean_3races_per_course_len_relative
+#     # - corner_1_per_horse_min_3races_per_course_len_relative
+#     # - corner_2_per_horse_mean_3races_per_course_len_relative
+#     # - corner_2_per_horse_min_3races_per_course_len_relative
+#     # - corner_3_per_horse_mean_3races_per_course_len_relative
+#     # - corner_3_per_horse_min_3races_per_course_len_relative
+#     # - corner_4_per_horse_mean_3races_per_course_len_relative
+#     # - corner_4_per_horse_min_3races_per_course_len_relative
+# #    - pace_1_mean_3races_per_course_len_relative
+# #    # - pace_1_min_3races_per_course_len_relative
+# #    - pace_2_mean_3races_per_course_len_relative
+# #    # - pace_2_min_3races_per_course_len_relative
+#     #     - win_mean_3races_per_course_len_relative
+#     #     - win_min_3races_per_course_len_relative
+#     #     - show_mean_3races_per_course_len_relative
+#     #     - show_min_3races_per_course_len_relative
+#     #     - rank_mean_5races_per_course_len_relative
+#     #     - rank_min_5races_per_course_len_relative
+#     #     - rank_per_horse_mean_5races_per_course_len_relative
+#     #     - rank_per_horse_min_5races_per_course_len_relative
+# #     #     - prize_mean_5races_per_course_len_relative
+# #     #     - prize_min_5races_per_course_len_relative
+#     #     - rank_diff_mean_5races_per_course_len_relative
+#     #     - rank_diff_min_5races_per_course_len_relative
+#     - time_mean_5races_per_course_len_relative
+#     - time_min_5races_per_course_len_relative
+#     # - time_courselen_mean_5races_per_course_len_relative
+#     # - time_courselen_min_5races_per_course_len_relative
+#     - nobori_mean_5races_per_course_len_relative
+#     - nobori_min_5races_per_course_len_relative
+#     # - corner_1_per_horse_mean_5races_per_course_len_relative
+#     # - corner_1_per_horse_min_5races_per_course_len_relative
+#     # - corner_2_per_horse_mean_5races_per_course_len_relative
+#     # - corner_2_per_horse_min_5races_per_course_len_relative
+#     # - corner_3_per_horse_mean_5races_per_course_len_relative
+#     # - corner_3_per_horse_min_5races_per_course_len_relative
+#     # - corner_4_per_horse_mean_5races_per_course_len_relative
+#     # - corner_4_per_horse_min_5races_per_course_len_relative
+# #    - pace_1_mean_5races_per_course_len_relative
+# #    # - pace_1_min_5races_per_course_len_relative
+# #    - pace_2_mean_5races_per_course_len_relative
+# #    # - pace_2_min_5races_per_course_len_relative
+#     #     - win_mean_5races_per_course_len_relative
+#     #     - win_min_5races_per_course_len_relative
+#     #     - show_mean_5races_per_course_len_relative
+#     #     - show_min_5races_per_course_len_relative
+#     #     - rank_mean_10races_per_course_len_relative
+#     #     - rank_min_10races_per_course_len_relative
+#     #     - rank_per_horse_mean_10races_per_course_len_relative
+#     #     - rank_per_horse_min_10races_per_course_len_relative
+# #     #     - prize_mean_10races_per_course_len_relative
+# #     #     - prize_min_10races_per_course_len_relative
+#     #     - rank_diff_mean_10races_per_course_len_relative
+#     #     - rank_diff_min_10races_per_course_len_relative
+#     - time_mean_10races_per_course_len_relative
+#     - time_min_10races_per_course_len_relative
+#     # - time_courselen_mean_10races_per_course_len_relative
+#     # - time_courselen_min_10races_per_course_len_relative
+#     - nobori_mean_10races_per_course_len_relative
+#     - nobori_min_10races_per_course_len_relative
+#     # - corner_1_per_horse_mean_10races_per_course_len_relative
+#     # - corner_1_per_horse_min_10races_per_course_len_relative
+#     # - corner_2_per_horse_mean_10races_per_course_len_relative
+#     # - corner_2_per_horse_min_10races_per_course_len_relative
+#     # - corner_3_per_horse_mean_10races_per_course_len_relative
+#     # - corner_3_per_horse_min_10races_per_course_len_relative
+#     # - corner_4_per_horse_mean_10races_per_course_len_relative
+#     # - corner_4_per_horse_min_10races_per_course_len_relative
+# #    - pace_1_mean_10races_per_course_len_relative
+# #    # - pace_1_min_10races_per_course_len_relative
+# #    - pace_2_mean_10races_per_course_len_relative
+# #    # - pace_2_min_10races_per_course_len_relative
+#     #     - win_mean_10races_per_course_len_relative
+#     #     - win_min_10races_per_course_len_relative
+#     #     - show_mean_10races_per_course_len_relative
+#     #     - show_min_10races_per_course_len_relative
+#     #     - rank_per_horse_mean_1races_per_ground_state_race_type_relative
+#     #     - rank_per_horse_max_1races_per_ground_state_race_type_relative
+#     #     - rank_per_horse_min_1races_per_ground_state_race_type_relative
+# #     # - prize_mean_1races_per_ground_state_race_type_relative
+# #     # - prize_max_1races_per_ground_state_race_type_relative
+# #     # - prize_min_1races_per_ground_state_race_type_relative
+#     #     - rank_diff_mean_1races_per_ground_state_race_type_relative
+#     #     - rank_diff_max_1races_per_ground_state_race_type_relative
+#     #     - rank_diff_min_1races_per_ground_state_race_type_relative
+#     # - time_mean_1races_per_ground_state_race_type_relative
+#     # - time_max_1races_per_ground_state_race_type_relative
+#     # - time_min_1races_per_ground_state_race_type_relative
+#     - nobori_mean_1races_per_ground_state_race_type_relative
+#     - nobori_max_1races_per_ground_state_race_type_relative
+#     - nobori_min_1races_per_ground_state_race_type_relative
+#     # - corner_1_per_horse_mean_1races_per_ground_state_race_type_relative
+#     # - corner_1_per_horse_max_1races_per_ground_state_race_type_relative
+#     # - corner_1_per_horse_min_1races_per_ground_state_race_type_relative
+#     # - corner_2_per_horse_mean_1races_per_ground_state_race_type_relative
+#     # - corner_2_per_horse_max_1races_per_ground_state_race_type_relative
+#     # - corner_2_per_horse_min_1races_per_ground_state_race_type_relative
+#     # - corner_3_per_horse_mean_1races_per_ground_state_race_type_relative
+#     # - corner_3_per_horse_max_1races_per_ground_state_race_type_relative
+#     # - corner_3_per_horse_min_1races_per_ground_state_race_type_relative
+#     # - corner_4_per_horse_mean_1races_per_ground_state_race_type_relative
+#     # - corner_4_per_horse_max_1races_per_ground_state_race_type_relative
+#     # - corner_4_per_horse_min_1races_per_ground_state_race_type_relative
+# #    - pace_1_mean_1races_per_ground_state_race_type_relative
+# #    # - pace_1_max_1races_per_ground_state_race_type_relative
+# #    # - pace_1_min_1races_per_ground_state_race_type_relative
+# #    - pace_2_mean_1races_per_ground_state_race_type_relative
+# #    # - pace_2_max_1races_per_ground_state_race_type_relative
+# #    # - pace_2_min_1races_per_ground_state_race_type_relative
+#     #     - win_mean_1races_per_ground_state_race_type_relative
+#     #     - win_max_1races_per_ground_state_race_type_relative
+#     #     - win_min_1races_per_ground_state_race_type_relative
+#     #     - show_mean_1races_per_ground_state_race_type_relative
+#     #     - show_max_1races_per_ground_state_race_type_relative
+#     #     - show_min_1races_per_ground_state_race_type_relative
+#     #     - rank_per_horse_mean_3races_per_ground_state_race_type_relative
+#     #     - rank_per_horse_max_3races_per_ground_state_race_type_relative
+#     #     - rank_per_horse_min_3races_per_ground_state_race_type_relative
+# #     # - prize_mean_3races_per_ground_state_race_type_relative
+# #     # - prize_max_3races_per_ground_state_race_type_relative
+# #     # - prize_min_3races_per_ground_state_race_type_relative
+#     #     - rank_diff_mean_3races_per_ground_state_race_type_relative
+#     #     - rank_diff_max_3races_per_ground_state_race_type_relative
+#     #     - rank_diff_min_3races_per_ground_state_race_type_relative
+#     # - time_mean_3races_per_ground_state_race_type_relative
+#     # - time_max_3races_per_ground_state_race_type_relative
+#     # - time_min_3races_per_ground_state_race_type_relative
+#     - nobori_mean_3races_per_ground_state_race_type_relative
+#     - nobori_max_3races_per_ground_state_race_type_relative
+#     - nobori_min_3races_per_ground_state_race_type_relative
+#     # - corner_1_per_horse_mean_3races_per_ground_state_race_type_relative
+#     # - corner_1_per_horse_max_3races_per_ground_state_race_type_relative
+#     # - corner_1_per_horse_min_3races_per_ground_state_race_type_relative
+#     # - corner_2_per_horse_mean_3races_per_ground_state_race_type_relative
+#     # - corner_2_per_horse_max_3races_per_ground_state_race_type_relative
+#     # - corner_2_per_horse_min_3races_per_ground_state_race_type_relative
+#     # - corner_3_per_horse_mean_3races_per_ground_state_race_type_relative
+#     # - corner_3_per_horse_max_3races_per_ground_state_race_type_relative
+#     # - corner_3_per_horse_min_3races_per_ground_state_race_type_relative
+#     # - corner_4_per_horse_mean_3races_per_ground_state_race_type_relative
+#     # - corner_4_per_horse_max_3races_per_ground_state_race_type_relative
+#     # - corner_4_per_horse_min_3races_per_ground_state_race_type_relative
+# #    - pace_1_mean_3races_per_ground_state_race_type_relative
+# #    # - pace_1_max_3races_per_ground_state_race_type_relative
+# #    # - pace_1_min_3races_per_ground_state_race_type_relative
+# #    - pace_2_mean_3races_per_ground_state_race_type_relative
+# #    # - pace_2_max_3races_per_ground_state_race_type_relative
+# #    # - pace_2_min_3races_per_ground_state_race_type_relative
+#     #     - win_mean_3races_per_ground_state_race_type_relative
+#     #     - win_max_3races_per_ground_state_race_type_relative
+#     #     - win_min_3races_per_ground_state_race_type_relative
+#     #     - show_mean_3races_per_ground_state_race_type_relative
+#     #     - show_max_3races_per_ground_state_race_type_relative
+#     #     - show_min_3races_per_ground_state_race_type_relative
+#     #     - rank_per_horse_mean_5races_per_ground_state_race_type_relative
+#     #     - rank_per_horse_max_5races_per_ground_state_race_type_relative
+#     #     - rank_per_horse_min_5races_per_ground_state_race_type_relative
+# #     # - prize_mean_5races_per_ground_state_race_type_relative
+# #     # - prize_max_5races_per_ground_state_race_type_relative
+# #     # - prize_min_5races_per_ground_state_race_type_relative
+#     #     - rank_diff_mean_5races_per_ground_state_race_type_relative
+#     #     - rank_diff_max_5races_per_ground_state_race_type_relative
+#     #     - rank_diff_min_5races_per_ground_state_race_type_relative
+#     # - time_mean_5races_per_ground_state_race_type_relative
+#     # - time_max_5races_per_ground_state_race_type_relative
+#     # - time_min_5races_per_ground_state_race_type_relative
+#     - nobori_mean_5races_per_ground_state_race_type_relative
+#     - nobori_max_5races_per_ground_state_race_type_relative
+#     - nobori_min_5races_per_ground_state_race_type_relative
+#     # - corner_1_per_horse_mean_5races_per_ground_state_race_type_relative
+#     # - corner_1_per_horse_max_5races_per_ground_state_race_type_relative
+#     # - corner_1_per_horse_min_5races_per_ground_state_race_type_relative
+#     # - corner_2_per_horse_mean_5races_per_ground_state_race_type_relative
+#     # - corner_2_per_horse_max_5races_per_ground_state_race_type_relative
+#     # - corner_2_per_horse_min_5races_per_ground_state_race_type_relative
+#     # - corner_3_per_horse_mean_5races_per_ground_state_race_type_relative
+#     # - corner_3_per_horse_max_5races_per_ground_state_race_type_relative
+#     # - corner_3_per_horse_min_5races_per_ground_state_race_type_relative
+#     # - corner_4_per_horse_mean_5races_per_ground_state_race_type_relative
+#     # - corner_4_per_horse_max_5races_per_ground_state_race_type_relative
+#     # - corner_4_per_horse_min_5races_per_ground_state_race_type_relative
+# #    - pace_1_mean_5races_per_ground_state_race_type_relative
+# #    # - pace_1_max_5races_per_ground_state_race_type_relative
+# #    # - pace_1_min_5races_per_ground_state_race_type_relative
+# #    - pace_2_mean_5races_per_ground_state_race_type_relative
+# #    # - pace_2_max_5races_per_ground_state_race_type_relative
+# #    # - pace_2_min_5races_per_ground_state_race_type_relative
+#     #     - win_mean_5races_per_ground_state_race_type_relative
+#     #     - win_max_5races_per_ground_state_race_type_relative
+#     #     - win_min_5races_per_ground_state_race_type_relative
+#     #     - show_mean_5races_per_ground_state_race_type_relative
+#     #     - show_max_5races_per_ground_state_race_type_relative
+#     #     - show_min_5races_per_ground_state_race_type_relative
+#     #     - rank_per_horse_mean_10races_per_ground_state_race_type_relative
+#     #     - rank_per_horse_max_10races_per_ground_state_race_type_relative
+#     #     - rank_per_horse_min_10races_per_ground_state_race_type_relative
+# #     # - prize_mean_10races_per_ground_state_race_type_relative
+# #     # - prize_max_10races_per_ground_state_race_type_relative
+# #     # - prize_min_10races_per_ground_state_race_type_relative
+#     #     - rank_diff_mean_10races_per_ground_state_race_type_relative
+#     #     - rank_diff_max_10races_per_ground_state_race_type_relative
+#     #     - rank_diff_min_10races_per_ground_state_race_type_relative
+#     # - time_mean_10races_per_ground_state_race_type_relative
+#     # - time_max_10races_per_ground_state_race_type_relative
+#     # - time_min_10races_per_ground_state_race_type_relative
+#     - nobori_mean_10races_per_ground_state_race_type_relative
+#     - nobori_max_10races_per_ground_state_race_type_relative
+#     - nobori_min_10races_per_ground_state_race_type_relative
+#     # - corner_1_per_horse_mean_10races_per_ground_state_race_type_relative
+#     # - corner_1_per_horse_max_10races_per_ground_state_race_type_relative
+#     # - corner_1_per_horse_min_10races_per_ground_state_race_type_relative
+#     # - corner_2_per_horse_mean_10races_per_ground_state_race_type_relative
+#     # - corner_2_per_horse_max_10races_per_ground_state_race_type_relative
+#     # - corner_2_per_horse_min_10races_per_ground_state_race_type_relative
+#     # - corner_3_per_horse_mean_10races_per_ground_state_race_type_relative
+#     # - corner_3_per_horse_max_10races_per_ground_state_race_type_relative
+#     # - corner_3_per_horse_min_10races_per_ground_state_race_type_relative
+#     # - corner_4_per_horse_mean_10races_per_ground_state_race_type_relative
+#     # - corner_4_per_horse_max_10races_per_ground_state_race_type_relative
+#     # - corner_4_per_horse_min_10races_per_ground_state_race_type_relative
+# #    - pace_1_mean_10races_per_ground_state_race_type_relative
+# #    # - pace_1_max_10races_per_ground_state_race_type_relative
+# #    # - pace_1_min_10races_per_ground_state_race_type_relative
+# #    - pace_2_mean_10races_per_ground_state_race_type_relative
+# #    # - pace_2_max_10races_per_ground_state_race_type_relative
+# #    # - pace_2_min_10races_per_ground_state_race_type_relative
+#     #     - win_mean_10races_per_ground_state_race_type_relative
+#     #     - win_max_10races_per_ground_state_race_type_relative
+#     #     - win_min_10races_per_ground_state_race_type_relative
+#     #     - show_mean_10races_per_ground_state_race_type_relative
+#     #     - show_max_10races_per_ground_state_race_type_relative
+#     #     - show_min_10races_per_ground_state_race_type_relative
+#     #     - rank_per_horse_mean_1races_per_race_grade_relative
+#     #     - rank_per_horse_max_1races_per_race_grade_relative
+#     #     - rank_per_horse_min_1races_per_race_grade_relative
+# #     #     - prize_mean_1races_per_race_grade_relative
+# #     #     - prize_max_1races_per_race_grade_relative
+# #     #     - prize_min_1races_per_race_grade_relative
+#     #     - rank_diff_mean_1races_per_race_grade_relative
+#     #     - rank_diff_max_1races_per_race_grade_relative
+#     #     - rank_diff_min_1races_per_race_grade_relative
+#     # - time_mean_1races_per_race_grade_relative
+#     # - time_max_1races_per_race_grade_relative
+#     # - time_min_1races_per_race_grade_relative
+#     # - nobori_mean_1races_per_race_grade_relative
+#     # - nobori_max_1races_per_race_grade_relative
+#     # - nobori_min_1races_per_race_grade_relative
+#     # - corner_1_per_horse_mean_1races_per_race_grade_relative
+#     # - corner_1_per_horse_max_1races_per_race_grade_relative
+#     # - corner_1_per_horse_min_1races_per_race_grade_relative
+#     # - corner_2_per_horse_mean_1races_per_race_grade_relative
+#     # - corner_2_per_horse_max_1races_per_race_grade_relative
+#     # - corner_2_per_horse_min_1races_per_race_grade_relative
+#     # - corner_3_per_horse_mean_1races_per_race_grade_relative
+#     # - corner_3_per_horse_max_1races_per_race_grade_relative
+#     # - corner_3_per_horse_min_1races_per_race_grade_relative
+#     # - corner_4_per_horse_mean_1races_per_race_grade_relative
+#     # - corner_4_per_horse_max_1races_per_race_grade_relative
+#     # - corner_4_per_horse_min_1races_per_race_grade_relative
+# #    # - pace_1_mean_1races_per_race_grade_relative
+# #    # - pace_1_max_1races_per_race_grade_relative
+# #    # - pace_1_min_1races_per_race_grade_relative
+# #    # - pace_2_mean_1races_per_race_grade_relative
+# #    # - pace_2_max_1races_per_race_grade_relative
+# #    # - pace_2_min_1races_per_race_grade_relative
+#     #     - win_mean_1races_per_race_grade_relative
+#     #     - win_max_1races_per_race_grade_relative
+#     #     - win_min_1races_per_race_grade_relative
+#     #     - show_mean_1races_per_race_grade_relative
+#     #     - show_max_1races_per_race_grade_relative
+#     #     - show_min_1races_per_race_grade_relative
+#     #     - rank_per_horse_mean_3races_per_race_grade_relative
+#     #     - rank_per_horse_max_3races_per_race_grade_relative
+#     #     - rank_per_horse_min_3races_per_race_grade_relative
+# #     #     - prize_mean_3races_per_race_grade_relative
+# #     #     - prize_max_3races_per_race_grade_relative
+# #     #     - prize_min_3races_per_race_grade_relative
+#     #     - rank_diff_mean_3races_per_race_grade_relative
+#     #     - rank_diff_max_3races_per_race_grade_relative
+#     #     - rank_diff_min_3races_per_race_grade_relative
+#     # - time_mean_3races_per_race_grade_relative
+#     # - time_max_3races_per_race_grade_relative
+#     # - time_min_3races_per_race_grade_relative
+#     # - nobori_mean_3races_per_race_grade_relative
+#     # - nobori_max_3races_per_race_grade_relative
+#     # - nobori_min_3races_per_race_grade_relative
+#     # - corner_1_per_horse_mean_3races_per_race_grade_relative
+#     # - corner_1_per_horse_max_3races_per_race_grade_relative
+#     # - corner_1_per_horse_min_3races_per_race_grade_relative
+#     # - corner_2_per_horse_mean_3races_per_race_grade_relative
+#     # - corner_2_per_horse_max_3races_per_race_grade_relative
+#     # - corner_2_per_horse_min_3races_per_race_grade_relative
+#     # - corner_3_per_horse_mean_3races_per_race_grade_relative
+#     # - corner_3_per_horse_max_3races_per_race_grade_relative
+#     # - corner_3_per_horse_min_3races_per_race_grade_relative
+#     # - corner_4_per_horse_mean_3races_per_race_grade_relative
+#     # - corner_4_per_horse_max_3races_per_race_grade_relative
+#     # - corner_4_per_horse_min_3races_per_race_grade_relative
+# #    # - pace_1_mean_3races_per_race_grade_relative
+# #    # - pace_1_max_3races_per_race_grade_relative
+# #    # - pace_1_min_3races_per_race_grade_relative
+# #    # - pace_2_mean_3races_per_race_grade_relative
+# #    # - pace_2_max_3races_per_race_grade_relative
+# #    # - pace_2_min_3races_per_race_grade_relative
+#     #     - win_mean_3races_per_race_grade_relative
+#     #     - win_max_3races_per_race_grade_relative
+#     #     - win_min_3races_per_race_grade_relative
+#     #     - show_mean_3races_per_race_grade_relative
+#     #     - show_max_3races_per_race_grade_relative
+#     #     - show_min_3races_per_race_grade_relative
+#     #     - rank_per_horse_mean_5races_per_race_grade_relative
+#     #     - rank_per_horse_max_5races_per_race_grade_relative
+#     #     - rank_per_horse_min_5races_per_race_grade_relative
+# #     #     - prize_mean_5races_per_race_grade_relative
+# #     #     - prize_max_5races_per_race_grade_relative
+# #     #     - prize_min_5races_per_race_grade_relative
+#     #     - rank_diff_mean_5races_per_race_grade_relative
+#     #     - rank_diff_max_5races_per_race_grade_relative
+#     #     - rank_diff_min_5races_per_race_grade_relative
+#     # - time_mean_5races_per_race_grade_relative
+#     # - time_max_5races_per_race_grade_relative
+#     # - time_min_5races_per_race_grade_relative
+#     # - nobori_mean_5races_per_race_grade_relative
+#     # - nobori_max_5races_per_race_grade_relative
+#     # - nobori_min_5races_per_race_grade_relative
+#     # - corner_1_per_horse_mean_5races_per_race_grade_relative
+#     # - corner_1_per_horse_max_5races_per_race_grade_relative
+#     # - corner_1_per_horse_min_5races_per_race_grade_relative
+#     # - corner_2_per_horse_mean_5races_per_race_grade_relative
+#     # - corner_2_per_horse_max_5races_per_race_grade_relative
+#     # - corner_2_per_horse_min_5races_per_race_grade_relative
+#     # - corner_3_per_horse_mean_5races_per_race_grade_relative
+#     # - corner_3_per_horse_max_5races_per_race_grade_relative
+#     # - corner_3_per_horse_min_5races_per_race_grade_relative
+#     # - corner_4_per_horse_mean_5races_per_race_grade_relative
+#     # - corner_4_per_horse_max_5races_per_race_grade_relative
+#     # - corner_4_per_horse_min_5races_per_race_grade_relative
+# #    # - pace_1_mean_5races_per_race_grade_relative
+# #    # - pace_1_max_5races_per_race_grade_relative
+# #    # - pace_1_min_5races_per_race_grade_relative
+# #    # - pace_2_mean_5races_per_race_grade_relative
+# #    # - pace_2_max_5races_per_race_grade_relative
+# #    # - pace_2_min_5races_per_race_grade_relative
+#     #     - win_mean_5races_per_race_grade_relative
+#     #     - win_max_5races_per_race_grade_relative
+#     #     - win_min_5races_per_race_grade_relative
+#     #     - show_mean_5races_per_race_grade_relative
+#     #     - show_max_5races_per_race_grade_relative
+#     #     - show_min_5races_per_race_grade_relative
+#     #     - rank_per_horse_mean_10races_per_race_grade_relative
+#     #     - rank_per_horse_max_10races_per_race_grade_relative
+#     #     - rank_per_horse_min_10races_per_race_grade_relative
+# #     #     - prize_mean_10races_per_race_grade_relative
+# #     #     - prize_max_10races_per_race_grade_relative
+# #     #     - prize_min_10races_per_race_grade_relative
+#     #     - rank_diff_mean_10races_per_race_grade_relative
+#     #     - rank_diff_max_10races_per_race_grade_relative
+#     #     - rank_diff_min_10races_per_race_grade_relative
+#     # - time_mean_10races_per_race_grade_relative
+#     # - time_max_10races_per_race_grade_relative
+#     # - time_min_10races_per_race_grade_relative
+#     # - nobori_mean_10races_per_race_grade_relative
+#     # - nobori_max_10races_per_race_grade_relative
+#     # - nobori_min_10races_per_race_grade_relative
+#     # - corner_1_per_horse_mean_10races_per_race_grade_relative
+#     # - corner_1_per_horse_max_10races_per_race_grade_relative
+#     # - corner_1_per_horse_min_10races_per_race_grade_relative
+#     # - corner_2_per_horse_mean_10races_per_race_grade_relative
+#     # - corner_2_per_horse_max_10races_per_race_grade_relative
+#     # - corner_2_per_horse_min_10races_per_race_grade_relative
+#     # - corner_3_per_horse_mean_10races_per_race_grade_relative
+#     # - corner_3_per_horse_max_10races_per_race_grade_relative
+#     # - corner_3_per_horse_min_10races_per_race_grade_relative
+#     # - corner_4_per_horse_mean_10races_per_race_grade_relative
+#     # - corner_4_per_horse_max_10races_per_race_grade_relative
+#     # - corner_4_per_horse_min_10races_per_race_grade_relative
+# #    # - pace_1_mean_10races_per_race_grade_relative
+# #    # - pace_1_max_10races_per_race_grade_relative
+# #    # - pace_1_min_10races_per_race_grade_relative
+# #    # - pace_2_mean_10races_per_race_grade_relative
+# #    # - pace_2_max_10races_per_race_grade_relative
+# #    # - pace_2_min_10races_per_race_grade_relative
+#     #     - win_mean_10races_per_race_grade_relative
+#     #     - win_max_10races_per_race_grade_relative
+#     #     - win_min_10races_per_race_grade_relative
+#     #     - show_mean_10races_per_race_grade_relative
+#     #     - show_max_10races_per_race_grade_relative
+#     #     - show_min_10races_per_race_grade_relative
+#     #     - rank_per_horse_mean_1races_per_race_type_relative
+#     #     - rank_per_horse_max_1races_per_race_type_relative
+#     #     - rank_per_horse_min_1races_per_race_type_relative
+# #     - prize_mean_1races_per_race_type_relative
+# #     - prize_max_1races_per_race_type_relative
+# #     - prize_min_1races_per_race_type_relative
+#     #     - rank_diff_mean_1races_per_race_type_relative
+#     #     - rank_diff_max_1races_per_race_type_relative
+#     #     - rank_diff_min_1races_per_race_type_relative
+#     # - time_mean_1races_per_race_type_relative
+#     # - time_max_1races_per_race_type_relative
+#     # - time_min_1races_per_race_type_relative
+#     - nobori_mean_1races_per_race_type_relative
+#     - nobori_max_1races_per_race_type_relative
+#     - nobori_min_1races_per_race_type_relative
+#     # - corner_1_per_horse_mean_1races_per_race_type_relative
+#     # - corner_1_per_horse_max_1races_per_race_type_relative
+#     # - corner_1_per_horse_min_1races_per_race_type_relative
+#     # - corner_2_per_horse_mean_1races_per_race_type_relative
+#     # - corner_2_per_horse_max_1races_per_race_type_relative
+#     # - corner_2_per_horse_min_1races_per_race_type_relative
+#     # - corner_3_per_horse_mean_1races_per_race_type_relative
+#     # - corner_3_per_horse_max_1races_per_race_type_relative
+#     # - corner_3_per_horse_min_1races_per_race_type_relative
+#     # - corner_4_per_horse_mean_1races_per_race_type_relative
+#     # - corner_4_per_horse_max_1races_per_race_type_relative
+#     # - corner_4_per_horse_min_1races_per_race_type_relative
+# #    - pace_1_mean_1races_per_race_type_relative
+# #    # - pace_1_max_1races_per_race_type_relative
+# #    # - pace_1_min_1races_per_race_type_relative
+# #    - pace_2_mean_1races_per_race_type_relative
+# #    # - pace_2_max_1races_per_race_type_relative
+# #    # - pace_2_min_1races_per_race_type_relative
+#     #     - win_mean_1races_per_race_type_relative
+#     #     - win_max_1races_per_race_type_relative
+#     #     - win_min_1races_per_race_type_relative
+#     #     - show_mean_1races_per_race_type_relative
+#     #     - show_max_1races_per_race_type_relative
+#     #     - show_min_1races_per_race_type_relative
+#     #     - rank_per_horse_mean_3races_per_race_type_relative
+#     #     - rank_per_horse_max_3races_per_race_type_relative
+#     #     - rank_per_horse_min_3races_per_race_type_relative
+# #     - prize_mean_3races_per_race_type_relative
+# #     - prize_max_3races_per_race_type_relative
+# #     - prize_min_3races_per_race_type_relative
+#     #     - rank_diff_mean_3races_per_race_type_relative
+#     #     - rank_diff_max_3races_per_race_type_relative
+#     #     - rank_diff_min_3races_per_race_type_relative
+#     # - time_mean_3races_per_race_type_relative
+#     # - time_max_3races_per_race_type_relative
+#     # - time_min_3races_per_race_type_relative
+#     - nobori_mean_3races_per_race_type_relative
+#     - nobori_max_3races_per_race_type_relative
+#     - nobori_min_3races_per_race_type_relative
+#     # # - corner_1_per_horse_mean_3races_per_race_type_relative
+#     # # - corner_1_per_horse_max_3races_per_race_type_relative
+#     # # - corner_1_per_horse_min_3races_per_race_type_relative
+#     # # - corner_2_per_horse_mean_3races_per_race_type_relative
+#     # # - corner_2_per_horse_max_3races_per_race_type_relative
+#     # # - corner_2_per_horse_min_3races_per_race_type_relative
+#     # # - corner_3_per_horse_mean_3races_per_race_type_relative
+#     # # - corner_3_per_horse_max_3races_per_race_type_relative
+#     # # - corner_3_per_horse_min_3races_per_race_type_relative
+#     # # - corner_4_per_horse_mean_3races_per_race_type_relative
+#     # # - corner_4_per_horse_max_3races_per_race_type_relative
+#     # # - corner_4_per_horse_min_3races_per_race_type_relative
+# #    - pace_1_mean_3races_per_race_type_relative
+# #    # # - pace_1_max_3races_per_race_type_relative
+# #    # # - pace_1_min_3races_per_race_type_relative
+# #    - pace_2_mean_3races_per_race_type_relative
+# #    # # - pace_2_max_3races_per_race_type_relative
+# #    # # - pace_2_min_3races_per_race_type_relative
+#     #     - win_mean_3races_per_race_type_relative
+#     #     - win_max_3races_per_race_type_relative
+#     #     - win_min_3races_per_race_type_relative
+#     #     - show_mean_3races_per_race_type_relative
+#     #     - show_max_3races_per_race_type_relative
+#     #     - show_min_3races_per_race_type_relative
+#     #     - rank_per_horse_mean_5races_per_race_type_relative
+#     #     - rank_per_horse_max_5races_per_race_type_relative
+#     #     - rank_per_horse_min_5races_per_race_type_relative
+# #     - prize_mean_5races_per_race_type_relative
+# #     - prize_max_5races_per_race_type_relative
+# #     - prize_min_5races_per_race_type_relative
+#     #     - rank_diff_mean_5races_per_race_type_relative
+#     #     - rank_diff_max_5races_per_race_type_relative
+#     #     - rank_diff_min_5races_per_race_type_relative
+#     # - time_mean_5races_per_race_type_relative
+#     # - time_max_5races_per_race_type_relative
+#     # - time_min_5races_per_race_type_relative
+#     - nobori_mean_5races_per_race_type_relative
+#     - nobori_max_5races_per_race_type_relative
+#     - nobori_min_5races_per_race_type_relative
+#     # # - corner_1_per_horse_mean_5races_per_race_type_relative
+#     # # - corner_1_per_horse_max_5races_per_race_type_relative
+#     # # - corner_1_per_horse_min_5races_per_race_type_relative
+#     # # - corner_2_per_horse_mean_5races_per_race_type_relative
+#     # # - corner_2_per_horse_max_5races_per_race_type_relative
+#     # # - corner_2_per_horse_min_5races_per_race_type_relative
+#     # # - corner_3_per_horse_mean_5races_per_race_type_relative
+#     # # - corner_3_per_horse_max_5races_per_race_type_relative
+#     # # - corner_3_per_horse_min_5races_per_race_type_relative
+#     # # - corner_4_per_horse_mean_5races_per_race_type_relative
+#     # # - corner_4_per_horse_max_5races_per_race_type_relative
+#     # # - corner_4_per_horse_min_5races_per_race_type_relative
+# #    - pace_1_mean_5races_per_race_type_relative
+# #    # # - pace_1_max_5races_per_race_type_relative
+# #    # # - pace_1_min_5races_per_race_type_relative
+# #    - pace_2_mean_5races_per_race_type_relative
+# #    # # - pace_2_max_5races_per_race_type_relative
+# #    # # - pace_2_min_5races_per_race_type_relative
+#     #     - win_mean_5races_per_race_type_relative
+#     #     - win_max_5races_per_race_type_relative
+#     #     - win_min_5races_per_race_type_relative
+#     #     - show_mean_5races_per_race_type_relative
+#     #     - show_max_5races_per_race_type_relative
+#     #     - show_min_5races_per_race_type_relative
+#     #     - rank_per_horse_mean_10races_per_race_type_relative
+#     #     - rank_per_horse_max_10races_per_race_type_relative
+#     #     - rank_per_horse_min_10races_per_race_type_relative
+# #     - prize_mean_10races_per_race_type_relative
+# #     - prize_max_10races_per_race_type_relative
+# #     - prize_min_10races_per_race_type_relative
+#     #     - rank_diff_mean_10races_per_race_type_relative
+#     #     - rank_diff_max_10races_per_race_type_relative
+#     #     - rank_diff_min_10races_per_race_type_relative
+#     # - time_mean_10races_per_race_type_relative
+#     # - time_max_10races_per_race_type_relative
+#     # - time_min_10races_per_race_type_relative
+#     - nobori_mean_10races_per_race_type_relative
+#     - nobori_max_10races_per_race_type_relative
+#     - nobori_min_10races_per_race_type_relative
+#     # # - corner_1_per_horse_mean_10races_per_race_type_relative
+#     # # - corner_1_per_horse_max_10races_per_race_type_relative
+#     # # - corner_1_per_horse_min_10races_per_race_type_relative
+#     # # - corner_2_per_horse_mean_10races_per_race_type_relative
+#     # # - corner_2_per_horse_max_10races_per_race_type_relative
+#     # # - corner_2_per_horse_min_10races_per_race_type_relative
+#     # # - corner_3_per_horse_mean_10races_per_race_type_relative
+#     # # - corner_3_per_horse_max_10races_per_race_type_relative
+#     # # - corner_3_per_horse_min_10races_per_race_type_relative
+#     # # - corner_4_per_horse_mean_10races_per_race_type_relative
+#     # # - corner_4_per_horse_max_10races_per_race_type_relative
+#     # # - corner_4_per_horse_min_10races_per_race_type_relative
+# #    - pace_1_mean_10races_per_race_type_relative
+# #    # # - pace_1_max_10races_per_race_type_relative
+# #    # # - pace_1_min_10races_per_race_type_relative
+# #    - pace_2_mean_10races_per_race_type_relative
+# #    # # - pace_2_max_10races_per_race_type_relative
+# #    # # - pace_2_min_10races_per_race_type_relative
+#     #     - win_mean_10races_per_race_type_relative
+#     #     - win_max_10races_per_race_type_relative
+#     #     - win_min_10races_per_race_type_relative
+#     #     - show_mean_10races_per_race_type_relative
+#     #     - show_max_10races_per_race_type_relative
+#     #     - show_min_10races_per_race_type_relative
+#     #     - rank_per_horse_mean_1races_per_race_place_len_relative
+#     #     - rank_per_horse_max_1races_per_race_place_len_relative
+#     #     - rank_per_horse_min_1races_per_race_place_len_relative
+# #     #     - prize_mean_1races_per_race_place_len_relative
+# #     #     - prize_max_1races_per_race_place_len_relative
+# #     #     - prize_min_1races_per_race_place_len_relative
+#     #     - rank_diff_mean_1races_per_race_place_len_relative
+#     #     - rank_diff_max_1races_per_race_place_len_relative
+#     #     - rank_diff_min_1races_per_race_place_len_relative
     - time_mean_1races_per_race_place_len_relative
     - time_max_1races_per_race_place_len_relative
     - time_min_1races_per_race_place_len_relative
@@ -961,27 +983,27 @@ features:
     - corner_4_per_horse_mean_1races_per_race_place_len_relative
     - corner_4_per_horse_max_1races_per_race_place_len_relative
     - corner_4_per_horse_min_1races_per_race_place_len_relative
-#    - pace_1_mean_1races_per_race_place_len_relative
-#    - pace_1_max_1races_per_race_place_len_relative
-#    - pace_1_min_1races_per_race_place_len_relative
-#    - pace_2_mean_1races_per_race_place_len_relative
-#    - pace_2_max_1races_per_race_place_len_relative
-#    - pace_2_min_1races_per_race_place_len_relative
-    #     - win_mean_1races_per_race_place_len_relative
-    #     - win_max_1races_per_race_place_len_relative
-    #     - win_min_1races_per_race_place_len_relative
-    #     - show_mean_1races_per_race_place_len_relative
-    #     - show_max_1races_per_race_place_len_relative
-    #     - show_min_1races_per_race_place_len_relative
-    #     - rank_per_horse_mean_3races_per_race_place_len_relative
-    #     - rank_per_horse_max_3races_per_race_place_len_relative
-    #     - rank_per_horse_min_3races_per_race_place_len_relative
-#     #     - prize_mean_3races_per_race_place_len_relative
-#     #     - prize_max_3races_per_race_place_len_relative
-#     #     - prize_min_3races_per_race_place_len_relative
-    #     - rank_diff_mean_3races_per_race_place_len_relative
-    #     - rank_diff_max_3races_per_race_place_len_relative
-    #     - rank_diff_min_3races_per_race_place_len_relative
+# #    - pace_1_mean_1races_per_race_place_len_relative
+# #    - pace_1_max_1races_per_race_place_len_relative
+# #    - pace_1_min_1races_per_race_place_len_relative
+# #    - pace_2_mean_1races_per_race_place_len_relative
+# #    - pace_2_max_1races_per_race_place_len_relative
+# #    - pace_2_min_1races_per_race_place_len_relative
+#     #     - win_mean_1races_per_race_place_len_relative
+#     #     - win_max_1races_per_race_place_len_relative
+#     #     - win_min_1races_per_race_place_len_relative
+#     #     - show_mean_1races_per_race_place_len_relative
+#     #     - show_max_1races_per_race_place_len_relative
+#     #     - show_min_1races_per_race_place_len_relative
+#     #     - rank_per_horse_mean_3races_per_race_place_len_relative
+#     #     - rank_per_horse_max_3races_per_race_place_len_relative
+#     #     - rank_per_horse_min_3races_per_race_place_len_relative
+# #     #     - prize_mean_3races_per_race_place_len_relative
+# #     #     - prize_max_3races_per_race_place_len_relative
+# #     #     - prize_min_3races_per_race_place_len_relative
+#     #     - rank_diff_mean_3races_per_race_place_len_relative
+#     #     - rank_diff_max_3races_per_race_place_len_relative
+#     #     - rank_diff_min_3races_per_race_place_len_relative
     - time_mean_3races_per_race_place_len_relative
     - time_max_3races_per_race_place_len_relative
     - time_min_3races_per_race_place_len_relative
@@ -1000,27 +1022,27 @@ features:
     - corner_4_per_horse_mean_3races_per_race_place_len_relative
     - corner_4_per_horse_max_3races_per_race_place_len_relative
     - corner_4_per_horse_min_3races_per_race_place_len_relative
-#    - pace_1_mean_3races_per_race_place_len_relative
-#    - pace_1_max_3races_per_race_place_len_relative
-#    - pace_1_min_3races_per_race_place_len_relative
-#    - pace_2_mean_3races_per_race_place_len_relative
-#    - pace_2_max_3races_per_race_place_len_relative
-#    - pace_2_min_3races_per_race_place_len_relative
-    #     - win_mean_3races_per_race_place_len_relative
-    #     - win_max_3races_per_race_place_len_relative
-    #     - win_min_3races_per_race_place_len_relative
-    #     - show_mean_3races_per_race_place_len_relative
-    #     - show_max_3races_per_race_place_len_relative
-    #     - show_min_3races_per_race_place_len_relative
-    #     - rank_per_horse_mean_5races_per_race_place_len_relative
-    #     - rank_per_horse_max_5races_per_race_place_len_relative
-    #     - rank_per_horse_min_5races_per_race_place_len_relative
-#     #     - prize_mean_5races_per_race_place_len_relative
-#     #     - prize_max_5races_per_race_place_len_relative
-#     #     - prize_min_5races_per_race_place_len_relative
-    #     - rank_diff_mean_5races_per_race_place_len_relative
-    #     - rank_diff_max_5races_per_race_place_len_relative
-    #     - rank_diff_min_5races_per_race_place_len_relative
+# #    - pace_1_mean_3races_per_race_place_len_relative
+# #    - pace_1_max_3races_per_race_place_len_relative
+# #    - pace_1_min_3races_per_race_place_len_relative
+# #    - pace_2_mean_3races_per_race_place_len_relative
+# #    - pace_2_max_3races_per_race_place_len_relative
+# #    - pace_2_min_3races_per_race_place_len_relative
+#     #     - win_mean_3races_per_race_place_len_relative
+#     #     - win_max_3races_per_race_place_len_relative
+#     #     - win_min_3races_per_race_place_len_relative
+#     #     - show_mean_3races_per_race_place_len_relative
+#     #     - show_max_3races_per_race_place_len_relative
+#     #     - show_min_3races_per_race_place_len_relative
+#     #     - rank_per_horse_mean_5races_per_race_place_len_relative
+#     #     - rank_per_horse_max_5races_per_race_place_len_relative
+#     #     - rank_per_horse_min_5races_per_race_place_len_relative
+# #     #     - prize_mean_5races_per_race_place_len_relative
+# #     #     - prize_max_5races_per_race_place_len_relative
+# #     #     - prize_min_5races_per_race_place_len_relative
+#     #     - rank_diff_mean_5races_per_race_place_len_relative
+#     #     - rank_diff_max_5races_per_race_place_len_relative
+#     #     - rank_diff_min_5races_per_race_place_len_relative
     - time_mean_5races_per_race_place_len_relative
     - time_max_5races_per_race_place_len_relative
     - time_min_5races_per_race_place_len_relative
@@ -1039,27 +1061,27 @@ features:
     - corner_4_per_horse_mean_5races_per_race_place_len_relative
     - corner_4_per_horse_max_5races_per_race_place_len_relative
     - corner_4_per_horse_min_5races_per_race_place_len_relative
-#    - pace_1_mean_5races_per_race_place_len_relative
-#    - pace_1_max_5races_per_race_place_len_relative
-#    - pace_1_min_5races_per_race_place_len_relative
-#    - pace_2_mean_5races_per_race_place_len_relative
-#    - pace_2_max_5races_per_race_place_len_relative
-#    - pace_2_min_5races_per_race_place_len_relative
-    #     - win_mean_5races_per_race_place_len_relative
-    #     - win_max_5races_per_race_place_len_relative
-    #     - win_min_5races_per_race_place_len_relative
-    #     - show_mean_5races_per_race_place_len_relative
-    #     - show_max_5races_per_race_place_len_relative
-    #     - show_min_5races_per_race_place_len_relative
-    #     - rank_per_horse_mean_10races_per_race_place_len_relative
-    #     - rank_per_horse_max_10races_per_race_place_len_relative
-    #     - rank_per_horse_min_10races_per_race_place_len_relative
-#     #     - prize_mean_10races_per_race_place_len_relative
-#     #     - prize_max_10races_per_race_place_len_relative
-#     #     - prize_min_10races_per_race_place_len_relative
-    #     - rank_diff_mean_10races_per_race_place_len_relative
-    #     - rank_diff_max_10races_per_race_place_len_relative
-    #     - rank_diff_min_10races_per_race_place_len_relative
+# #    - pace_1_mean_5races_per_race_place_len_relative
+# #    - pace_1_max_5races_per_race_place_len_relative
+# #    - pace_1_min_5races_per_race_place_len_relative
+# #    - pace_2_mean_5races_per_race_place_len_relative
+# #    - pace_2_max_5races_per_race_place_len_relative
+# #    - pace_2_min_5races_per_race_place_len_relative
+#     #     - win_mean_5races_per_race_place_len_relative
+#     #     - win_max_5races_per_race_place_len_relative
+#     #     - win_min_5races_per_race_place_len_relative
+#     #     - show_mean_5races_per_race_place_len_relative
+#     #     - show_max_5races_per_race_place_len_relative
+#     #     - show_min_5races_per_race_place_len_relative
+#     #     - rank_per_horse_mean_10races_per_race_place_len_relative
+#     #     - rank_per_horse_max_10races_per_race_place_len_relative
+#     #     - rank_per_horse_min_10races_per_race_place_len_relative
+# #     #     - prize_mean_10races_per_race_place_len_relative
+# #     #     - prize_max_10races_per_race_place_len_relative
+# #     #     - prize_min_10races_per_race_place_len_relative
+#     #     - rank_diff_mean_10races_per_race_place_len_relative
+#     #     - rank_diff_max_10races_per_race_place_len_relative
+#     #     - rank_diff_min_10races_per_race_place_len_relative
     - time_mean_10races_per_race_place_len_relative
     - time_max_10races_per_race_place_len_relative
     - time_min_10races_per_race_place_len_relative
@@ -1138,39 +1160,39 @@ features:
     - distance_place_type_encoded
     - distance_place_type_race_grade_encoded
     - distance_place_type_wakuban_encoded
-    - distance_place_type_umaban_encoded
-    - distance_place_type_wakuban_race_grade_encoded
+    # - distance_place_type_umaban_encoded
+    # - distance_place_type_wakuban_race_grade_encoded
     # - distance_place_type_umaban_race_grade_encoded
-    - distance_place_type_wakuban_straight_encoded
+    # - distance_place_type_wakuban_straight_encoded
     # - distance_place_type_umaban_straight_encoded
-    - distance_place_type_wakuban_ground_state_encoded
+    # - distance_place_type_wakuban_ground_state_encoded
     # - distance_place_type_umaban_ground_state_encoded
-    - distance_place_type_wakuban_ground_state_straight_encoded
+    # - distance_place_type_wakuban_ground_state_straight_encoded
     # - distance_place_type_umaban_ground_state_straight_encoded
-    - distance_type_weather_encoded
+    # - distance_type_weather_encoded
     - distance_place_type_weather_encoded
-    - distance_place_type_race_grade_weather_encoded
-    - distance_type_ground_state_encoded
+    # - distance_place_type_race_grade_weather_encoded
+    # - distance_type_ground_state_encoded
     - distance_place_type_ground_state_encoded
     - distance_place_type_race_grade_ground_state_encoded
-    - distance_type_sex_encoded
+    # - distance_type_sex_encoded
     - distance_place_type_sex_encoded
-    - distance_place_type_race_grade_sex_encoded
-    - distance_type_sex_weather_encoded
-    - distance_place_type_sex_weather_encoded
-    - distance_place_type_race_grade_sex_weather_encoded
-    - distance_type_sex_ground_state_encoded
-    - distance_place_type_sex_ground_state_encoded
-    - distance_place_type_race_grade_sex_ground_state_encoded
-    - distance_type_straight_encoded
-    - distance_place_type_straight_encoded
-    - distance_place_type_race_grade_straight_encoded
-    - distance_type_straight_ground_state_encoded
-    - distance_place_type_straight_ground_state_encoded
-    - distance_place_type_race_grade_straight_ground_state_encoded
-    - distance_place_type_race_grade_around_weather_ground_state_encoded
+    # - distance_place_type_race_grade_sex_encoded
+    # - distance_type_sex_weather_encoded
+    # - distance_place_type_sex_weather_encoded
+    # - distance_place_type_race_grade_sex_weather_encoded
+    # - distance_type_sex_ground_state_encoded
+    # - distance_place_type_sex_ground_state_encoded
+    # - distance_place_type_race_grade_sex_ground_state_encoded
+    # - distance_type_straight_encoded
+    # - distance_place_type_straight_encoded
+    # - distance_place_type_race_grade_straight_encoded
+    # - distance_type_straight_ground_state_encoded
+    # - distance_place_type_straight_ground_state_encoded
+    # - distance_place_type_race_grade_straight_ground_state_encoded
+    # - distance_place_type_race_grade_around_weather_ground_state_encoded
     # - distance_place_type_umaban_race_grade_around_weather_ground_state_encoded
-    - distance_place_type_ground_state_weather_encoded
+    # - distance_place_type_ground_state_weather_encoded
     # - distance_place_type_umaban_race_grade_around_weather_ground_state_nobori_encoded
     - distance_place_type_race_grade_nobori_encoded
     - distance_place_type_ground_state_weather_nobori_encoded
@@ -2373,126 +2395,126 @@ features:
     - tenkai_goal_range_goal_slope_combined_standardized
     - tenkai_curve_goal_slope_combined_standardized
     - tenkai_all_combined_standardized
-    - race_grade_rank_diff_sum_mean_1races_grade_rankdiff_score_standardized
-    - race_grade_rank_diff_sum_max_1races_grade_rankdiff_score_standardized
-    - race_grade_rank_diff_sum_min_1races_grade_rankdiff_score_standardized
-    - race_grade_rank_diff_multi_mean_1races_grade_rankdiff_score_standardized
-    - race_grade_rank_diff_multi_max_1races_grade_rankdiff_score_standardized
-    - race_grade_rank_diff_multi_min_1races_grade_rankdiff_score_standardized
-    - race_grade_rank_diff_sum_mean_3races_grade_rankdiff_score_standardized
-    - race_grade_rank_diff_sum_max_3races_grade_rankdiff_score_standardized
-    - race_grade_rank_diff_sum_min_3races_grade_rankdiff_score_standardized
-    - race_grade_rank_diff_multi_mean_3races_grade_rankdiff_score_standardized
-    - race_grade_rank_diff_multi_max_3races_grade_rankdiff_score_standardized
-    - race_grade_rank_diff_multi_min_3races_grade_rankdiff_score_standardized
-    - race_grade_rank_diff_sum_mean_5races_grade_rankdiff_score_standardized
-    - race_grade_rank_diff_sum_max_5races_grade_rankdiff_score_standardized
-    - race_grade_rank_diff_sum_min_5races_grade_rankdiff_score_standardized
-    - race_grade_rank_diff_multi_mean_5races_grade_rankdiff_score_standardized
-    - race_grade_rank_diff_multi_max_5races_grade_rankdiff_score_standardized
-    - race_grade_rank_diff_multi_min_5races_grade_rankdiff_score_standardized
-    - race_grade_rank_diff_sum_mean_10races_grade_rankdiff_score_standardized
-    - race_grade_rank_diff_sum_max_10races_grade_rankdiff_score_standardized
-    - race_grade_rank_diff_sum_min_10races_grade_rankdiff_score_standardized
-    - race_grade_rank_diff_multi_mean_10races_grade_rankdiff_score_standardized
-    - race_grade_rank_diff_multi_max_10races_grade_rankdiff_score_standardized
-    - race_grade_rank_diff_multi_min_10races_grade_rankdiff_score_standardized
-    - race_grade_rank_diff_sum_mean_1races_grade_rankdiff_score_plus_tenkai_combined_standardized
-    - race_grade_rank_diff_sum_max_1races_grade_rankdiff_score_plus_tenkai_combined_standardized
-    - race_grade_rank_diff_sum_min_1races_grade_rankdiff_score_plus_tenkai_combined_standardized
-    - race_grade_rank_diff_sum_mean_3races_grade_rankdiff_score_plus_tenkai_combined_standardized
-    - race_grade_rank_diff_sum_max_3races_grade_rankdiff_score_plus_tenkai_combined_standardized
-    - race_grade_rank_diff_sum_min_3races_grade_rankdiff_score_plus_tenkai_combined_standardized
-    - race_grade_rank_diff_sum_mean_5races_grade_rankdiff_score_plus_tenkai_combined_standardized
-    - race_grade_rank_diff_sum_max_5races_grade_rankdiff_score_plus_tenkai_combined_standardized
-    - race_grade_rank_diff_sum_min_5races_grade_rankdiff_score_plus_tenkai_combined_standardized
-    - race_grade_rank_diff_sum_mean_10races_grade_rankdiff_score_plus_tenkai_combined_standardized
-    - race_grade_rank_diff_sum_max_10races_grade_rankdiff_score_plus_tenkai_combined_standardized
-    - race_grade_rank_diff_sum_min_10races_grade_rankdiff_score_plus_tenkai_combined_standardized
-    - race_grade_rank_diff_multi_mean_1races_grade_rankdiff_score_plus_tenkai_combined_standardized
-    - race_grade_rank_diff_multi_max_1races_grade_rankdiff_score_plus_tenkai_combined_standardized
-    - race_grade_rank_diff_multi_min_1races_grade_rankdiff_score_plus_tenkai_combined_standardized
-    - race_grade_rank_diff_multi_mean_3races_grade_rankdiff_score_plus_tenkai_combined_standardized
-    - race_grade_rank_diff_multi_max_3races_grade_rankdiff_score_plus_tenkai_combined_standardized
-    - race_grade_rank_diff_multi_min_3races_grade_rankdiff_score_plus_tenkai_combined_standardized
-    - race_grade_rank_diff_multi_mean_5races_grade_rankdiff_score_plus_tenkai_combined_standardized
-    - race_grade_rank_diff_multi_max_5races_grade_rankdiff_score_plus_tenkai_combined_standardized
-    - race_grade_rank_diff_multi_min_5races_grade_rankdiff_score_plus_tenkai_combined_standardized
-    - race_grade_rank_diff_multi_mean_10races_grade_rankdiff_score_plus_tenkai_combined_standardized
-    - race_grade_rank_diff_multi_max_10races_grade_rankdiff_score_plus_tenkai_combined_standardized
-    - race_grade_rank_diff_multi_min_10races_grade_rankdiff_score_plus_tenkai_combined_standardized
-    - race_grade_rank_diff_sum_mean_1races_grade_rankdiff_score_plus_tenkai_all_combined_standardized
-    - race_grade_rank_diff_sum_max_1races_grade_rankdiff_score_plus_tenkai_all_combined_standardized
-    - race_grade_rank_diff_sum_min_1races_grade_rankdiff_score_plus_tenkai_all_combined_standardized
-    - race_grade_rank_diff_sum_mean_3races_grade_rankdiff_score_plus_tenkai_all_combined_standardized
-    - race_grade_rank_diff_sum_max_3races_grade_rankdiff_score_plus_tenkai_all_combined_standardized
-    - race_grade_rank_diff_sum_min_3races_grade_rankdiff_score_plus_tenkai_all_combined_standardized
-    - race_grade_rank_diff_sum_mean_5races_grade_rankdiff_score_plus_tenkai_all_combined_standardized
-    - race_grade_rank_diff_sum_max_5races_grade_rankdiff_score_plus_tenkai_all_combined_standardized
-    - race_grade_rank_diff_sum_min_5races_grade_rankdiff_score_plus_tenkai_all_combined_standardized
-    - race_grade_rank_diff_sum_mean_10races_grade_rankdiff_score_plus_tenkai_all_combined_standardized
-    - race_grade_rank_diff_sum_max_10races_grade_rankdiff_score_plus_tenkai_all_combined_standardized
-    - race_grade_rank_diff_sum_min_10races_grade_rankdiff_score_plus_tenkai_all_combined_standardized
-    - race_grade_rank_diff_multi_mean_1races_grade_rankdiff_score_plus_tenkai_all_combined_standardized
-    - race_grade_rank_diff_multi_max_1races_grade_rankdiff_score_plus_tenkai_all_combined_standardized
-    - race_grade_rank_diff_multi_min_1races_grade_rankdiff_score_plus_tenkai_all_combined_standardized
-    - race_grade_rank_diff_multi_mean_3races_grade_rankdiff_score_plus_tenkai_all_combined_standardized
-    - race_grade_rank_diff_multi_max_3races_grade_rankdiff_score_plus_tenkai_all_combined_standardized
-    - race_grade_rank_diff_multi_min_3races_grade_rankdiff_score_plus_tenkai_all_combined_standardized
-    - race_grade_rank_diff_multi_mean_5races_grade_rankdiff_score_plus_tenkai_all_combined_standardized
-    - race_grade_rank_diff_multi_max_5races_grade_rankdiff_score_plus_tenkai_all_combined_standardized
-    - race_grade_rank_diff_multi_min_5races_grade_rankdiff_score_plus_tenkai_all_combined_standardized
-    - race_grade_rank_diff_multi_mean_10races_grade_rankdiff_score_plus_tenkai_all_combined_standardized
-    - race_grade_rank_diff_multi_max_10races_grade_rankdiff_score_plus_tenkai_all_combined_standardized
-    - race_grade_rank_diff_multi_min_10races_grade_rankdiff_score_plus_tenkai_all_combined_standardized
-    - race_grade_rank_diff_sum_mean_1races_grade_rankdiff_score_px_tenkai_combined_standardized
-    - race_grade_rank_diff_sum_max_1races_grade_rankdiff_score_px_tenkai_combined_standardized
-    - race_grade_rank_diff_sum_min_1races_grade_rankdiff_score_px_tenkai_combined_standardized
-    - race_grade_rank_diff_sum_mean_3races_grade_rankdiff_score_px_tenkai_combined_standardized
-    - race_grade_rank_diff_sum_max_3races_grade_rankdiff_score_px_tenkai_combined_standardized
-    - race_grade_rank_diff_sum_min_3races_grade_rankdiff_score_px_tenkai_combined_standardized
-    - race_grade_rank_diff_sum_mean_5races_grade_rankdiff_score_px_tenkai_combined_standardized
-    - race_grade_rank_diff_sum_max_5races_grade_rankdiff_score_px_tenkai_combined_standardized
-    - race_grade_rank_diff_sum_min_5races_grade_rankdiff_score_px_tenkai_combined_standardized
-    - race_grade_rank_diff_sum_mean_10races_grade_rankdiff_score_px_tenkai_combined_standardized
-    - race_grade_rank_diff_sum_max_10races_grade_rankdiff_score_px_tenkai_combined_standardized
-    - race_grade_rank_diff_sum_min_10races_grade_rankdiff_score_px_tenkai_combined_standardized
-    - race_grade_rank_diff_multi_mean_1races_grade_rankdiff_score_px_tenkai_combined_standardized
-    - race_grade_rank_diff_multi_max_1races_grade_rankdiff_score_px_tenkai_combined_standardized
-    - race_grade_rank_diff_multi_min_1races_grade_rankdiff_score_px_tenkai_combined_standardized
-    - race_grade_rank_diff_multi_mean_3races_grade_rankdiff_score_px_tenkai_combined_standardized
-    - race_grade_rank_diff_multi_max_3races_grade_rankdiff_score_px_tenkai_combined_standardized
-    - race_grade_rank_diff_multi_min_3races_grade_rankdiff_score_px_tenkai_combined_standardized
-    - race_grade_rank_diff_multi_mean_5races_grade_rankdiff_score_px_tenkai_combined_standardized
-    - race_grade_rank_diff_multi_max_5races_grade_rankdiff_score_px_tenkai_combined_standardized
-    - race_grade_rank_diff_multi_min_5races_grade_rankdiff_score_px_tenkai_combined_standardized
-    - race_grade_rank_diff_multi_mean_10races_grade_rankdiff_score_px_tenkai_combined_standardized
-    - race_grade_rank_diff_multi_max_10races_grade_rankdiff_score_px_tenkai_combined_standardized
-    - race_grade_rank_diff_multi_min_10races_grade_rankdiff_score_px_tenkai_combined_standardized
-    - race_grade_rank_diff_sum_mean_1races_grade_rankdiff_score_px_tenkai_all_combined_standardized
-    - race_grade_rank_diff_sum_max_1races_grade_rankdiff_score_px_tenkai_all_combined_standardized
-    - race_grade_rank_diff_sum_min_1races_grade_rankdiff_score_px_tenkai_all_combined_standardized
-    - race_grade_rank_diff_sum_mean_3races_grade_rankdiff_score_px_tenkai_all_combined_standardized
-    - race_grade_rank_diff_sum_max_3races_grade_rankdiff_score_px_tenkai_all_combined_standardized
-    - race_grade_rank_diff_sum_min_3races_grade_rankdiff_score_px_tenkai_all_combined_standardized
-    - race_grade_rank_diff_sum_mean_5races_grade_rankdiff_score_px_tenkai_all_combined_standardized
-    - race_grade_rank_diff_sum_max_5races_grade_rankdiff_score_px_tenkai_all_combined_standardized
-    - race_grade_rank_diff_sum_min_5races_grade_rankdiff_score_px_tenkai_all_combined_standardized
-    - race_grade_rank_diff_sum_mean_10races_grade_rankdiff_score_px_tenkai_all_combined_standardized
-    - race_grade_rank_diff_sum_max_10races_grade_rankdiff_score_px_tenkai_all_combined_standardized
-    - race_grade_rank_diff_sum_min_10races_grade_rankdiff_score_px_tenkai_all_combined_standardized
-    - race_grade_rank_diff_multi_mean_1races_grade_rankdiff_score_px_tenkai_all_combined_standardized
-    - race_grade_rank_diff_multi_max_1races_grade_rankdiff_score_px_tenkai_all_combined_standardized
-    - race_grade_rank_diff_multi_min_1races_grade_rankdiff_score_px_tenkai_all_combined_standardized
-    - race_grade_rank_diff_multi_mean_3races_grade_rankdiff_score_px_tenkai_all_combined_standardized
-    - race_grade_rank_diff_multi_max_3races_grade_rankdiff_score_px_tenkai_all_combined_standardized
-    - race_grade_rank_diff_multi_min_3races_grade_rankdiff_score_px_tenkai_all_combined_standardized
-    - race_grade_rank_diff_multi_mean_5races_grade_rankdiff_score_px_tenkai_all_combined_standardized
-    - race_grade_rank_diff_multi_max_5races_grade_rankdiff_score_px_tenkai_all_combined_standardized
-    - race_grade_rank_diff_multi_min_5races_grade_rankdiff_score_px_tenkai_all_combined_standardized
-    - race_grade_rank_diff_multi_mean_10races_grade_rankdiff_score_px_tenkai_all_combined_standardized
-    - race_grade_rank_diff_multi_max_10races_grade_rankdiff_score_px_tenkai_all_combined_standardized
-    - race_grade_rank_diff_multi_min_10races_grade_rankdiff_score_px_tenkai_all_combined_standardized   
+    # - race_grade_rank_diff_sum_mean_1races_grade_rankdiff_score_standardized
+    # - race_grade_rank_diff_sum_max_1races_grade_rankdiff_score_standardized
+    # - race_grade_rank_diff_sum_min_1races_grade_rankdiff_score_standardized
+    # - race_grade_rank_diff_multi_mean_1races_grade_rankdiff_score_standardized
+    # - race_grade_rank_diff_multi_max_1races_grade_rankdiff_score_standardized
+    # - race_grade_rank_diff_multi_min_1races_grade_rankdiff_score_standardized
+    # - race_grade_rank_diff_sum_mean_3races_grade_rankdiff_score_standardized
+    # - race_grade_rank_diff_sum_max_3races_grade_rankdiff_score_standardized
+    # - race_grade_rank_diff_sum_min_3races_grade_rankdiff_score_standardized
+    # - race_grade_rank_diff_multi_mean_3races_grade_rankdiff_score_standardized
+    # - race_grade_rank_diff_multi_max_3races_grade_rankdiff_score_standardized
+    # - race_grade_rank_diff_multi_min_3races_grade_rankdiff_score_standardized
+    # - race_grade_rank_diff_sum_mean_5races_grade_rankdiff_score_standardized
+    # - race_grade_rank_diff_sum_max_5races_grade_rankdiff_score_standardized
+    # - race_grade_rank_diff_sum_min_5races_grade_rankdiff_score_standardized
+    # - race_grade_rank_diff_multi_mean_5races_grade_rankdiff_score_standardized
+    # - race_grade_rank_diff_multi_max_5races_grade_rankdiff_score_standardized
+    # - race_grade_rank_diff_multi_min_5races_grade_rankdiff_score_standardized
+    # - race_grade_rank_diff_sum_mean_10races_grade_rankdiff_score_standardized
+    # - race_grade_rank_diff_sum_max_10races_grade_rankdiff_score_standardized
+    # - race_grade_rank_diff_sum_min_10races_grade_rankdiff_score_standardized
+    # - race_grade_rank_diff_multi_mean_10races_grade_rankdiff_score_standardized
+    # - race_grade_rank_diff_multi_max_10races_grade_rankdiff_score_standardized
+    # - race_grade_rank_diff_multi_min_10races_grade_rankdiff_score_standardized
+    # - race_grade_rank_diff_sum_mean_1races_grade_rankdiff_score_plus_tenkai_combined_standardized
+    # - race_grade_rank_diff_sum_max_1races_grade_rankdiff_score_plus_tenkai_combined_standardized
+    # - race_grade_rank_diff_sum_min_1races_grade_rankdiff_score_plus_tenkai_combined_standardized
+    # - race_grade_rank_diff_sum_mean_3races_grade_rankdiff_score_plus_tenkai_combined_standardized
+    # - race_grade_rank_diff_sum_max_3races_grade_rankdiff_score_plus_tenkai_combined_standardized
+    # - race_grade_rank_diff_sum_min_3races_grade_rankdiff_score_plus_tenkai_combined_standardized
+    # - race_grade_rank_diff_sum_mean_5races_grade_rankdiff_score_plus_tenkai_combined_standardized
+    # - race_grade_rank_diff_sum_max_5races_grade_rankdiff_score_plus_tenkai_combined_standardized
+    # - race_grade_rank_diff_sum_min_5races_grade_rankdiff_score_plus_tenkai_combined_standardized
+    # - race_grade_rank_diff_sum_mean_10races_grade_rankdiff_score_plus_tenkai_combined_standardized
+    # - race_grade_rank_diff_sum_max_10races_grade_rankdiff_score_plus_tenkai_combined_standardized
+    # - race_grade_rank_diff_sum_min_10races_grade_rankdiff_score_plus_tenkai_combined_standardized
+    # - race_grade_rank_diff_multi_mean_1races_grade_rankdiff_score_plus_tenkai_combined_standardized
+    # - race_grade_rank_diff_multi_max_1races_grade_rankdiff_score_plus_tenkai_combined_standardized
+    # - race_grade_rank_diff_multi_min_1races_grade_rankdiff_score_plus_tenkai_combined_standardized
+    # - race_grade_rank_diff_multi_mean_3races_grade_rankdiff_score_plus_tenkai_combined_standardized
+    # - race_grade_rank_diff_multi_max_3races_grade_rankdiff_score_plus_tenkai_combined_standardized
+    # - race_grade_rank_diff_multi_min_3races_grade_rankdiff_score_plus_tenkai_combined_standardized
+    # - race_grade_rank_diff_multi_mean_5races_grade_rankdiff_score_plus_tenkai_combined_standardized
+    # - race_grade_rank_diff_multi_max_5races_grade_rankdiff_score_plus_tenkai_combined_standardized
+    # - race_grade_rank_diff_multi_min_5races_grade_rankdiff_score_plus_tenkai_combined_standardized
+    # - race_grade_rank_diff_multi_mean_10races_grade_rankdiff_score_plus_tenkai_combined_standardized
+    # - race_grade_rank_diff_multi_max_10races_grade_rankdiff_score_plus_tenkai_combined_standardized
+    # - race_grade_rank_diff_multi_min_10races_grade_rankdiff_score_plus_tenkai_combined_standardized
+    # - race_grade_rank_diff_sum_mean_1races_grade_rankdiff_score_plus_tenkai_all_combined_standardized
+    # - race_grade_rank_diff_sum_max_1races_grade_rankdiff_score_plus_tenkai_all_combined_standardized
+    # - race_grade_rank_diff_sum_min_1races_grade_rankdiff_score_plus_tenkai_all_combined_standardized
+    # - race_grade_rank_diff_sum_mean_3races_grade_rankdiff_score_plus_tenkai_all_combined_standardized
+    # - race_grade_rank_diff_sum_max_3races_grade_rankdiff_score_plus_tenkai_all_combined_standardized
+    # - race_grade_rank_diff_sum_min_3races_grade_rankdiff_score_plus_tenkai_all_combined_standardized
+    # - race_grade_rank_diff_sum_mean_5races_grade_rankdiff_score_plus_tenkai_all_combined_standardized
+    # - race_grade_rank_diff_sum_max_5races_grade_rankdiff_score_plus_tenkai_all_combined_standardized
+    # - race_grade_rank_diff_sum_min_5races_grade_rankdiff_score_plus_tenkai_all_combined_standardized
+    # - race_grade_rank_diff_sum_mean_10races_grade_rankdiff_score_plus_tenkai_all_combined_standardized
+    # - race_grade_rank_diff_sum_max_10races_grade_rankdiff_score_plus_tenkai_all_combined_standardized
+    # - race_grade_rank_diff_sum_min_10races_grade_rankdiff_score_plus_tenkai_all_combined_standardized
+    # - race_grade_rank_diff_multi_mean_1races_grade_rankdiff_score_plus_tenkai_all_combined_standardized
+    # - race_grade_rank_diff_multi_max_1races_grade_rankdiff_score_plus_tenkai_all_combined_standardized
+    # - race_grade_rank_diff_multi_min_1races_grade_rankdiff_score_plus_tenkai_all_combined_standardized
+    # - race_grade_rank_diff_multi_mean_3races_grade_rankdiff_score_plus_tenkai_all_combined_standardized
+    # - race_grade_rank_diff_multi_max_3races_grade_rankdiff_score_plus_tenkai_all_combined_standardized
+    # - race_grade_rank_diff_multi_min_3races_grade_rankdiff_score_plus_tenkai_all_combined_standardized
+    # - race_grade_rank_diff_multi_mean_5races_grade_rankdiff_score_plus_tenkai_all_combined_standardized
+    # - race_grade_rank_diff_multi_max_5races_grade_rankdiff_score_plus_tenkai_all_combined_standardized
+    # - race_grade_rank_diff_multi_min_5races_grade_rankdiff_score_plus_tenkai_all_combined_standardized
+    # - race_grade_rank_diff_multi_mean_10races_grade_rankdiff_score_plus_tenkai_all_combined_standardized
+    # - race_grade_rank_diff_multi_max_10races_grade_rankdiff_score_plus_tenkai_all_combined_standardized
+    # - race_grade_rank_diff_multi_min_10races_grade_rankdiff_score_plus_tenkai_all_combined_standardized
+    # - race_grade_rank_diff_sum_mean_1races_grade_rankdiff_score_px_tenkai_combined_standardized
+    # - race_grade_rank_diff_sum_max_1races_grade_rankdiff_score_px_tenkai_combined_standardized
+    # - race_grade_rank_diff_sum_min_1races_grade_rankdiff_score_px_tenkai_combined_standardized
+    # - race_grade_rank_diff_sum_mean_3races_grade_rankdiff_score_px_tenkai_combined_standardized
+    # - race_grade_rank_diff_sum_max_3races_grade_rankdiff_score_px_tenkai_combined_standardized
+    # - race_grade_rank_diff_sum_min_3races_grade_rankdiff_score_px_tenkai_combined_standardized
+    # - race_grade_rank_diff_sum_mean_5races_grade_rankdiff_score_px_tenkai_combined_standardized
+    # - race_grade_rank_diff_sum_max_5races_grade_rankdiff_score_px_tenkai_combined_standardized
+    # - race_grade_rank_diff_sum_min_5races_grade_rankdiff_score_px_tenkai_combined_standardized
+    # - race_grade_rank_diff_sum_mean_10races_grade_rankdiff_score_px_tenkai_combined_standardized
+    # - race_grade_rank_diff_sum_max_10races_grade_rankdiff_score_px_tenkai_combined_standardized
+    # - race_grade_rank_diff_sum_min_10races_grade_rankdiff_score_px_tenkai_combined_standardized
+    # - race_grade_rank_diff_multi_mean_1races_grade_rankdiff_score_px_tenkai_combined_standardized
+    # - race_grade_rank_diff_multi_max_1races_grade_rankdiff_score_px_tenkai_combined_standardized
+    # - race_grade_rank_diff_multi_min_1races_grade_rankdiff_score_px_tenkai_combined_standardized
+    # - race_grade_rank_diff_multi_mean_3races_grade_rankdiff_score_px_tenkai_combined_standardized
+    # - race_grade_rank_diff_multi_max_3races_grade_rankdiff_score_px_tenkai_combined_standardized
+    # - race_grade_rank_diff_multi_min_3races_grade_rankdiff_score_px_tenkai_combined_standardized
+    # - race_grade_rank_diff_multi_mean_5races_grade_rankdiff_score_px_tenkai_combined_standardized
+    # - race_grade_rank_diff_multi_max_5races_grade_rankdiff_score_px_tenkai_combined_standardized
+    # - race_grade_rank_diff_multi_min_5races_grade_rankdiff_score_px_tenkai_combined_standardized
+    # - race_grade_rank_diff_multi_mean_10races_grade_rankdiff_score_px_tenkai_combined_standardized
+    # - race_grade_rank_diff_multi_max_10races_grade_rankdiff_score_px_tenkai_combined_standardized
+    # - race_grade_rank_diff_multi_min_10races_grade_rankdiff_score_px_tenkai_combined_standardized
+    # - race_grade_rank_diff_sum_mean_1races_grade_rankdiff_score_px_tenkai_all_combined_standardized
+    # - race_grade_rank_diff_sum_max_1races_grade_rankdiff_score_px_tenkai_all_combined_standardized
+    # - race_grade_rank_diff_sum_min_1races_grade_rankdiff_score_px_tenkai_all_combined_standardized
+    # - race_grade_rank_diff_sum_mean_3races_grade_rankdiff_score_px_tenkai_all_combined_standardized
+    # - race_grade_rank_diff_sum_max_3races_grade_rankdiff_score_px_tenkai_all_combined_standardized
+    # - race_grade_rank_diff_sum_min_3races_grade_rankdiff_score_px_tenkai_all_combined_standardized
+    # - race_grade_rank_diff_sum_mean_5races_grade_rankdiff_score_px_tenkai_all_combined_standardized
+    # - race_grade_rank_diff_sum_max_5races_grade_rankdiff_score_px_tenkai_all_combined_standardized
+    # - race_grade_rank_diff_sum_min_5races_grade_rankdiff_score_px_tenkai_all_combined_standardized
+    # - race_grade_rank_diff_sum_mean_10races_grade_rankdiff_score_px_tenkai_all_combined_standardized
+    # - race_grade_rank_diff_sum_max_10races_grade_rankdiff_score_px_tenkai_all_combined_standardized
+    # - race_grade_rank_diff_sum_min_10races_grade_rankdiff_score_px_tenkai_all_combined_standardized
+    # - race_grade_rank_diff_multi_mean_1races_grade_rankdiff_score_px_tenkai_all_combined_standardized
+    # - race_grade_rank_diff_multi_max_1races_grade_rankdiff_score_px_tenkai_all_combined_standardized
+    # - race_grade_rank_diff_multi_min_1races_grade_rankdiff_score_px_tenkai_all_combined_standardized
+    # - race_grade_rank_diff_multi_mean_3races_grade_rankdiff_score_px_tenkai_all_combined_standardized
+    # - race_grade_rank_diff_multi_max_3races_grade_rankdiff_score_px_tenkai_all_combined_standardized
+    # - race_grade_rank_diff_multi_min_3races_grade_rankdiff_score_px_tenkai_all_combined_standardized
+    # - race_grade_rank_diff_multi_mean_5races_grade_rankdiff_score_px_tenkai_all_combined_standardized
+    # - race_grade_rank_diff_multi_max_5races_grade_rankdiff_score_px_tenkai_all_combined_standardized
+    # - race_grade_rank_diff_multi_min_5races_grade_rankdiff_score_px_tenkai_all_combined_standardized
+    # - race_grade_rank_diff_multi_mean_10races_grade_rankdiff_score_px_tenkai_all_combined_standardized
+    # - race_grade_rank_diff_multi_max_10races_grade_rankdiff_score_px_tenkai_all_combined_standardized
+    # - race_grade_rank_diff_multi_min_10races_grade_rankdiff_score_px_tenkai_all_combined_standardized   
     - time_diff_sp_mean_1races_relative
     - time_diff_sp_max_1races_relative
     - time_diff_sp_min_1races_relative
@@ -2829,83 +2851,1023 @@ features:
     # - nobori_index_mean_10races
     # - nobori_index_max_10races
     # - nobori_index_min_10races
-#    - sire_n_races_relative
-#    - sire_n_wins_relative
-#    - sire_winrate_relative
-#    - sire_course_len_diff_relative
-#    - bms_n_races_relative
-#    - bms_n_wins_relative
-#    - bms_winrate_relative
-#    - bms_course_len_diff_relative
-    # - syunpatu_mean_1races_encoded_index 
-    # - syunpatu_mean_3races_encoded_index 
-    # - syunpatu_mean_5races_encoded_index 
-    # - syunpatu_mean_8races_encoded_index
-    # - syunpatu_min_1races_encoded_index 
-    # - syunpatu_min_3races_encoded_index 
-    # - syunpatu_min_5races_encoded_index 
-    # - syunpatu_min_8races_encoded_index
-    # - syunpatu_max_1races_encoded_index 
-    # - syunpatu_max_3races_encoded_index 
-    # - syunpatu_max_5races_encoded_index 
-    # - syunpatu_max_8races_encoded_index
-    # - zizoku_mean_1races_encoded_index 
-    # - zizoku_mean_3races_encoded_index 
-    # - zizoku_mean_5races_encoded_index 
-    # - zizoku_mean_8races_encoded_index
-    # - zizoku_min_1races_encoded_index 
-    # - zizoku_min_3races_encoded_index 
-    # - zizoku_min_5races_encoded_index 
-    # - zizoku_min_8races_encoded_index
-    # - zizoku_max_1races_encoded_index 
-    # - zizoku_max_3races_encoded_index 
-    # - zizoku_max_5races_encoded_index 
-    # - zizoku_max_8races_encoded_index
-    # - advantage_max_1_index 
-    # - advantage_max_3_index 
-    # - advantage_max_5_index 
-    # - advantage_max_8_index
-    # - advantage_min_1_index 
-    # - advantage_min_3_index 
-    # - advantage_min_5_index 
-    # - advantage_min_8_index
-    # - advantage_mean_1_index 
-    # - advantage_mean_3_index 
-    # - advantage_mean_5_index 
-    # - advantage_mean_8_index
-    - syunpatu_mean_1races_encoded_index_relative 
-    - syunpatu_mean_3races_encoded_index_relative 
-    - syunpatu_mean_5races_encoded_index_relative 
-    - syunpatu_mean_8races_encoded_index_relative
-    - syunpatu_min_1races_encoded_index_relative 
-    - syunpatu_min_3races_encoded_index_relative 
-    - syunpatu_min_5races_encoded_index_relative 
-    - syunpatu_min_8races_encoded_index_relative
-    - syunpatu_max_1races_encoded_index_relative 
-    - syunpatu_max_3races_encoded_index_relative 
-    - syunpatu_max_5races_encoded_index_relative 
-    - syunpatu_max_8races_encoded_index_relative
-    - zizoku_mean_1races_encoded_index_relative 
-    - zizoku_mean_3races_encoded_index_relative 
-    - zizoku_mean_5races_encoded_index_relative 
-    - zizoku_mean_8races_encoded_index_relative
-    - zizoku_min_1races_encoded_index_relative 
-    - zizoku_min_3races_encoded_index_relative 
-    - zizoku_min_5races_encoded_index_relative 
-    - zizoku_min_8races_encoded_index_relative
-    - zizoku_max_1races_encoded_index_relative 
-    - zizoku_max_3races_encoded_index_relative 
-    - zizoku_max_5races_encoded_index_relative 
-    - zizoku_max_8races_encoded_index_relative
-    - advantage_max_1_index_relative 
-    - advantage_max_3_index_relative 
-    - advantage_max_5_index_relative 
-    - advantage_max_8_index_relative
-    - advantage_min_1_index_relative 
-    - advantage_min_3_index_relative 
-    - advantage_min_5_index_relative 
-    - advantage_min_8_index_relative
-    - advantage_mean_1_index_relative 
-    - advantage_mean_3_index_relative 
-    - advantage_mean_5_index_relative 
-    - advantage_mean_8_index_relative
+# #    - sire_n_races_relative
+# #    - sire_n_wins_relative
+# #    - sire_winrate_relative
+# #    - sire_course_len_diff_relative
+# #    - bms_n_races_relative
+# #    - bms_n_wins_relative
+# #    - bms_winrate_relative
+# #    - bms_course_len_diff_relative
+#     # - syunpatu_mean_1races_encoded_index 
+#     # - syunpatu_mean_3races_encoded_index 
+#     # - syunpatu_mean_5races_encoded_index 
+#     # - syunpatu_mean_8races_encoded_index
+#     # - syunpatu_min_1races_encoded_index 
+#     # - syunpatu_min_3races_encoded_index 
+#     # - syunpatu_min_5races_encoded_index 
+#     # - syunpatu_min_8races_encoded_index
+#     # - syunpatu_max_1races_encoded_index 
+#     # - syunpatu_max_3races_encoded_index 
+#     # - syunpatu_max_5races_encoded_index 
+#     # - syunpatu_max_8races_encoded_index
+#     # - zizoku_mean_1races_encoded_index 
+#     # - zizoku_mean_3races_encoded_index 
+#     # - zizoku_mean_5races_encoded_index 
+#     # - zizoku_mean_8races_encoded_index
+#     # - zizoku_min_1races_encoded_index 
+#     # - zizoku_min_3races_encoded_index 
+#     # - zizoku_min_5races_encoded_index 
+#     # - zizoku_min_8races_encoded_index
+#     # - zizoku_max_1races_encoded_index 
+#     # - zizoku_max_3races_encoded_index 
+#     # - zizoku_max_5races_encoded_index 
+#     # - zizoku_max_8races_encoded_index
+#     # - advantage_max_1_index 
+#     # - advantage_max_3_index 
+#     # - advantage_max_5_index 
+#     # - advantage_max_8_index
+#     # - advantage_min_1_index 
+#     # - advantage_min_3_index 
+#     # - advantage_min_5_index 
+#     # - advantage_min_8_index
+#     # - advantage_mean_1_index 
+#     # - advantage_mean_3_index 
+#     # - advantage_mean_5_index 
+#     # - advantage_mean_8_index
+#     # - syunpatu_mean_1races_encoded_index_relative 
+#     # - syunpatu_mean_3races_encoded_index_relative 
+#     # - syunpatu_mean_5races_encoded_index_relative 
+#     # - syunpatu_mean_8races_encoded_index_relative
+#     # - syunpatu_min_1races_encoded_index_relative 
+#     # - syunpatu_min_3races_encoded_index_relative 
+#     # - syunpatu_min_5races_encoded_index_relative 
+#     # - syunpatu_min_8races_encoded_index_relative
+#     # - syunpatu_max_1races_encoded_index_relative 
+#     # - syunpatu_max_3races_encoded_index_relative 
+#     # - syunpatu_max_5races_encoded_index_relative 
+#     # - syunpatu_max_8races_encoded_index_relative
+#     # - zizoku_mean_1races_encoded_index_relative 
+#     # - zizoku_mean_3races_encoded_index_relative 
+#     # - zizoku_mean_5races_encoded_index_relative 
+#     # - zizoku_mean_8races_encoded_index_relative
+#     # - zizoku_min_1races_encoded_index_relative 
+#     # - zizoku_min_3races_encoded_index_relative 
+#     # - zizoku_min_5races_encoded_index_relative 
+#     # - zizoku_min_8races_encoded_index_relative
+#     # - zizoku_max_1races_encoded_index_relative 
+#     # - zizoku_max_3races_encoded_index_relative 
+#     # - zizoku_max_5races_encoded_index_relative 
+#     # - zizoku_max_8races_encoded_index_relative
+#     # - advantage_max_1_index_relative 
+#     # - advantage_max_3_index_relative 
+#     # - advantage_max_5_index_relative 
+#     # - advantage_max_8_index_relative
+#     # - advantage_min_1_index_relative 
+#     # - advantage_min_3_index_relative 
+#     # - advantage_min_5_index_relative 
+#     # - advantage_min_8_index_relative
+#     # - advantage_mean_1_index_relative 
+#     # - advantage_mean_3_index_relative 
+#     # - advantage_mean_5_index_relative 
+#     # - advantage_mean_8_index_relative
+
+
+
+
+
+
+    - season_turf
+    - day_season_turf
+    - season_turf_condition
+
+
+
+
+
+    # - rush_type_min_1races_relative
+    # - rush_type_max_1races_relative
+    # - rush_type_mean_1races_relative
+    # - rank_diff_pace_diff_slope_range_groundstate_position_min_1races_relative
+    # - rank_diff_pace_diff_slope_range_groundstate_position_max_1races_relative
+    # - rank_diff_pace_diff_slope_range_groundstate_position_mean_1races_relative
+    # - rank_diff_correction_min_1races_relative
+    # - rank_diff_correction_max_1races_relative
+    # - rank_diff_correction_mean_1races_relative
+    # - rank_diff_correction_min_1races_relative
+    # - rank_diff_correction_max_1races_relative
+    # - rank_diff_correction_mean_1races_relative
+    - time_class_min_1races_relative
+    - time_class_max_1races_relative
+    - time_class_mean_1races_relative
+    # - rank_diff_correction_min_1races_relative
+    # - rank_diff_correction_max_1races_relative
+    # - rank_diff_correction_mean_1races_relative
+    # - rank_diff_correction_min_1races_relative
+    # - rank_diff_correction_max_1races_relative
+    # - rank_diff_correction_mean_1races_relative
+    # - rank_diff_position_xxx_race_grade_multi_min_1races_relative
+    # - rank_diff_position_xxx_race_grade_multi_max_1races_relative
+    # - rank_diff_position_xxx_race_grade_multi_mean_1races_relative
+    # - rank_diff_all_xxx_race_grade_multi_min_1races_relative
+    # - rank_diff_all_xxx_race_grade_multi_max_1races_relative
+    # - rank_diff_all_xxx_race_grade_multi_mean_1races_relative
+    # - rank_diff_position_xxx_race_grade_sum_min_1races_relative
+    # - rank_diff_position_xxx_race_grade_sum_max_1races_relative
+    # - rank_diff_position_xxx_race_grade_sum_mean_1races_relative
+    # - rank_diff_all_xxx_race_grade_sum_min_1races_relative
+    # - rank_diff_all_xxx_race_grade_sum_max_1races_relative
+    # - rank_diff_all_xxx_race_grade_sum_mean_1races_relative
+    # - rush_type_min_1races
+    # - rush_type_max_1races
+    # - rush_type_mean_1races
+    # - rank_diff_pace_diff_slope_range_groundstate_position_min_1races
+    # - rank_diff_pace_diff_slope_range_groundstate_position_max_1races
+    # - rank_diff_pace_diff_slope_range_groundstate_position_mean_1races
+    # - rank_diff_correction_min_1races
+    # - rank_diff_correction_max_1races
+    # - rank_diff_correction_mean_1races
+    # - rank_diff_correction_min_1races
+    # - rank_diff_correction_max_1races
+    # - rank_diff_correction_mean_1races
+    # - time_class_min_1races
+    # - time_class_max_1races
+    # - time_class_mean_1races
+    # - rank_diff_correction_min_1races
+    # - rank_diff_correction_max_1races
+    # - rank_diff_correction_mean_1races
+    # - rank_diff_correction_min_1races
+    # - rank_diff_correction_max_1races
+    # - rank_diff_correction_mean_1races
+    # - rank_diff_position_xxx_race_grade_multi_min_1races
+    # - rank_diff_position_xxx_race_grade_multi_max_1races
+    # - rank_diff_position_xxx_race_grade_multi_mean_1races
+    # - rank_diff_all_xxx_race_grade_multi_min_1races
+    # - rank_diff_all_xxx_race_grade_multi_max_1races
+    # - rank_diff_all_xxx_race_grade_multi_mean_1races
+    # - rank_diff_position_xxx_race_grade_sum_min_1races
+    # - rank_diff_position_xxx_race_grade_sum_max_1races
+    # - rank_diff_position_xxx_race_grade_sum_mean_1races
+    # - rank_diff_all_xxx_race_grade_sum_min_1races
+    # - rank_diff_all_xxx_race_grade_sum_max_1races
+    # - rank_diff_all_xxx_race_grade_sum_mean_1races
+    # - rush_type_min_3races_relative
+    # - rush_type_max_3races_relative
+    # - rush_type_mean_3races_relative
+    # - rank_diff_pace_diff_slope_range_groundstate_position_min_3races_relative
+    # - rank_diff_pace_diff_slope_range_groundstate_position_max_3races_relative
+    # - rank_diff_pace_diff_slope_range_groundstate_position_mean_3races_relative
+    # - rank_diff_correction_min_3races_relative
+    # - rank_diff_correction_max_3races_relative
+    # - rank_diff_correction_mean_3races_relative
+    # - rank_diff_correction_min_3races_relative
+    # - rank_diff_correction_max_3races_relative
+    # - rank_diff_correction_mean_3races_relative
+    - time_class_min_3races_relative
+    - time_class_max_3races_relative
+    - time_class_mean_3races_relative
+    # - rank_diff_correction_min_3races_relative
+    # - rank_diff_correction_max_3races_relative
+    # - rank_diff_correction_mean_3races_relative
+    # - rank_diff_correction_min_3races_relative
+    # - rank_diff_correction_max_3races_relative
+    # - rank_diff_correction_mean_3races_relative
+    # - rank_diff_position_xxx_race_grade_multi_min_3races_relative
+    # - rank_diff_position_xxx_race_grade_multi_max_3races_relative
+    # - rank_diff_position_xxx_race_grade_multi_mean_3races_relative
+    # - rank_diff_all_xxx_race_grade_multi_min_3races_relative
+    # - rank_diff_all_xxx_race_grade_multi_max_3races_relative
+    # - rank_diff_all_xxx_race_grade_multi_mean_3races_relative
+    # - rank_diff_position_xxx_race_grade_sum_min_3races_relative
+    # - rank_diff_position_xxx_race_grade_sum_max_3races_relative
+    # - rank_diff_position_xxx_race_grade_sum_mean_3races_relative
+    # - rank_diff_all_xxx_race_grade_sum_min_3races_relative
+    # - rank_diff_all_xxx_race_grade_sum_max_3races_relative
+    # - rank_diff_all_xxx_race_grade_sum_mean_3races_relative
+    # - rush_type_min_3races
+    # - rush_type_max_3races
+    # - rush_type_mean_3races
+    # - rank_diff_pace_diff_slope_range_groundstate_position_min_3races
+    # - rank_diff_pace_diff_slope_range_groundstate_position_max_3races
+    # - rank_diff_pace_diff_slope_range_groundstate_position_mean_3races
+    # - rank_diff_correction_min_3races
+    # - rank_diff_correction_max_3races
+    # - rank_diff_correction_mean_3races
+    # - rank_diff_correction_min_3races
+    # - rank_diff_correction_max_3races
+    # - rank_diff_correction_mean_3races
+    # - time_class_min_3races
+    # - time_class_max_3races
+    # - time_class_mean_3races
+    # - rank_diff_correction_min_3races
+    # - rank_diff_correction_max_3races
+    # - rank_diff_correction_mean_3races
+    # - rank_diff_correction_min_3races
+    # - rank_diff_correction_max_3races
+    # - rank_diff_correction_mean_3races
+    # - rank_diff_position_xxx_race_grade_multi_min_3races
+    # - rank_diff_position_xxx_race_grade_multi_max_3races
+    # - rank_diff_position_xxx_race_grade_multi_mean_3races
+    # - rank_diff_all_xxx_race_grade_multi_min_3races
+    # - rank_diff_all_xxx_race_grade_multi_max_3races
+    # - rank_diff_all_xxx_race_grade_multi_mean_3races
+    # - rank_diff_position_xxx_race_grade_sum_min_3races
+    # - rank_diff_position_xxx_race_grade_sum_max_3races
+    # - rank_diff_position_xxx_race_grade_sum_mean_3races
+    # - rank_diff_all_xxx_race_grade_sum_min_3races
+    # - rank_diff_all_xxx_race_grade_sum_max_3races
+    # - rank_diff_all_xxx_race_grade_sum_mean_3races
+    # - rush_type_min_5races_relative
+    # - rush_type_max_5races_relative
+    # - rush_type_mean_5races_relative
+    # - rank_diff_pace_diff_slope_range_groundstate_position_min_5races_relative
+    # - rank_diff_pace_diff_slope_range_groundstate_position_max_5races_relative
+    # - rank_diff_pace_diff_slope_range_groundstate_position_mean_5races_relative
+    # - rank_diff_correction_min_5races_relative
+    # - rank_diff_correction_max_5races_relative
+    # - rank_diff_correction_mean_5races_relative
+    # - rank_diff_correction_min_5races_relative
+    # - rank_diff_correction_max_5races_relative
+    # - rank_diff_correction_mean_5races_relative
+    - time_class_min_5races_relative
+    - time_class_max_5races_relative
+    - time_class_mean_5races_relative
+    # - rank_diff_correction_min_5races_relative
+    # - rank_diff_correction_max_5races_relative
+    # - rank_diff_correction_mean_5races_relative
+    # - rank_diff_correction_min_5races_relative
+    # - rank_diff_correction_max_5races_relative
+    # - rank_diff_correction_mean_5races_relative
+    # - rank_diff_position_xxx_race_grade_multi_min_5races_relative
+    # - rank_diff_position_xxx_race_grade_multi_max_5races_relative
+    # - rank_diff_position_xxx_race_grade_multi_mean_5races_relative
+    # - rank_diff_all_xxx_race_grade_multi_min_5races_relative
+    # - rank_diff_all_xxx_race_grade_multi_max_5races_relative
+    # - rank_diff_all_xxx_race_grade_multi_mean_5races_relative
+    # - rank_diff_position_xxx_race_grade_sum_min_5races_relative
+    # - rank_diff_position_xxx_race_grade_sum_max_5races_relative
+    # - rank_diff_position_xxx_race_grade_sum_mean_5races_relative
+    # - rank_diff_all_xxx_race_grade_sum_min_5races_relative
+    # - rank_diff_all_xxx_race_grade_sum_max_5races_relative
+    # - rank_diff_all_xxx_race_grade_sum_mean_5races_relative
+    # - rush_type_min_5races
+    # - rush_type_max_5races
+    # - rush_type_mean_5races
+    # - rank_diff_pace_diff_slope_range_groundstate_position_min_5races
+    # - rank_diff_pace_diff_slope_range_groundstate_position_max_5races
+    # - rank_diff_pace_diff_slope_range_groundstate_position_mean_5races
+    # - rank_diff_correction_min_5races
+    # - rank_diff_correction_max_5races
+    # - rank_diff_correction_mean_5races
+    # - rank_diff_correction_min_5races
+    # - rank_diff_correction_max_5races
+    # - rank_diff_correction_mean_5races
+    # - time_class_min_5races
+    # - time_class_max_5races
+    # - time_class_mean_5races
+    # - rank_diff_correction_min_5races
+    # - rank_diff_correction_max_5races
+    # - rank_diff_correction_mean_5races
+    # - rank_diff_correction_min_5races
+    # - rank_diff_correction_max_5races
+    # - rank_diff_correction_mean_5races
+    # - rank_diff_position_xxx_race_grade_multi_min_5races
+    # - rank_diff_position_xxx_race_grade_multi_max_5races
+    # - rank_diff_position_xxx_race_grade_multi_mean_5races
+    # - rank_diff_all_xxx_race_grade_multi_min_5races
+    # - rank_diff_all_xxx_race_grade_multi_max_5races
+    # - rank_diff_all_xxx_race_grade_multi_mean_5races
+    # - rank_diff_position_xxx_race_grade_sum_min_5races
+    # - rank_diff_position_xxx_race_grade_sum_max_5races
+    # - rank_diff_position_xxx_race_grade_sum_mean_5races
+    # - rank_diff_all_xxx_race_grade_sum_min_5races
+    # - rank_diff_all_xxx_race_grade_sum_max_5races
+    # - rank_diff_all_xxx_race_grade_sum_mean_5races
+    # - rush_type_min_8races_relative
+    # - rush_type_max_8races_relative
+    # - rush_type_mean_8races_relative
+    # - rank_diff_pace_diff_slope_range_groundstate_position_min_8races_relative
+    # - rank_diff_pace_diff_slope_range_groundstate_position_max_8races_relative
+    # - rank_diff_pace_diff_slope_range_groundstate_position_mean_8races_relative
+    # - rank_diff_correction_min_8races_relative
+    # - rank_diff_correction_max_8races_relative
+    # - rank_diff_correction_mean_8races_relative
+    # - rank_diff_correction_min_8races_relative
+    # - rank_diff_correction_max_8races_relative
+    # - rank_diff_correction_mean_8races_relative
+    - time_class_min_8races_relative
+    - time_class_max_8races_relative
+    - time_class_mean_8races_relative
+    # - rank_diff_correction_min_8races_relative
+    # - rank_diff_correction_max_8races_relative
+    # - rank_diff_correction_mean_8races_relative
+    # - rank_diff_correction_min_8races_relative
+    # - rank_diff_correction_max_8races_relative
+    # - rank_diff_correction_mean_8races_relative
+    # - rank_diff_position_xxx_race_grade_multi_min_8races_relative
+    # - rank_diff_position_xxx_race_grade_multi_max_8races_relative
+    # - rank_diff_position_xxx_race_grade_multi_mean_8races_relative
+    # - rank_diff_all_xxx_race_grade_multi_min_8races_relative
+    # - rank_diff_all_xxx_race_grade_multi_max_8races_relative
+    # - rank_diff_all_xxx_race_grade_multi_mean_8races_relative
+    # - rank_diff_position_xxx_race_grade_sum_min_8races_relative
+    # - rank_diff_position_xxx_race_grade_sum_max_8races_relative
+    # - rank_diff_position_xxx_race_grade_sum_mean_8races_relative
+    # - rank_diff_all_xxx_race_grade_sum_min_8races_relative
+    # - rank_diff_all_xxx_race_grade_sum_max_8races_relative
+    # - rank_diff_all_xxx_race_grade_sum_mean_8races_relative
+    # - rush_type_min_8races
+    # - rush_type_max_8races
+    # - rush_type_mean_8races
+    # - rank_diff_pace_diff_slope_range_groundstate_position_min_8races
+    # - rank_diff_pace_diff_slope_range_groundstate_position_max_8races
+    # - rank_diff_pace_diff_slope_range_groundstate_position_mean_8races
+    # - rank_diff_correction_min_8races
+    # - rank_diff_correction_max_8races
+    # - rank_diff_correction_mean_8races
+    # - rank_diff_correction_min_8races
+    # - rank_diff_correction_max_8races
+    # - rank_diff_correction_mean_8races
+    # - time_class_min_8races
+    # - time_class_max_8races
+    # - time_class_mean_8races
+    # - rank_diff_correction_min_8races
+    # - rank_diff_correction_max_8races
+    # - rank_diff_correction_mean_8races
+    # - rank_diff_correction_min_8races
+    # - rank_diff_correction_max_8races
+    # - rank_diff_correction_mean_8races
+    # - rank_diff_position_xxx_race_grade_multi_min_8races
+    # - rank_diff_position_xxx_race_grade_multi_max_8races
+    # - rank_diff_position_xxx_race_grade_multi_mean_8races
+    # - rank_diff_all_xxx_race_grade_multi_min_8races
+    # - rank_diff_all_xxx_race_grade_multi_max_8races
+    # - rank_diff_all_xxx_race_grade_multi_mean_8races
+    # - rank_diff_position_xxx_race_grade_sum_min_8races
+    # - rank_diff_position_xxx_race_grade_sum_max_8races
+    # - rank_diff_position_xxx_race_grade_sum_mean_8races
+    # - rank_diff_all_xxx_race_grade_sum_min_8races
+    # - rank_diff_all_xxx_race_grade_sum_max_8races
+    # - rank_diff_all_xxx_race_grade_sum_mean_8races
+    - rush_type_Advantages
+    - rush_type_final
+    - rush_advantages_cross
+    - rush_advantages_cross_plus
+    - rush_type_final_standardized
+    - rush_type_Advantages_standardized
+    - rush_advantages_cross_standardized
+    - rush_advantages_cross_plus_standardized
+    - tenkai_combined_2_standardized
+    - tenkai_place_combined_standardized
+    - tenkai_place_start_slope_combined_standardized
+    - tenkai_place_start_slope_range_combined_standardized
+    - tenkai_place_start_slope_range_grade_combined_standardized
+    - tenkai_place_start_slope_range_grade_lcurve_slope_combined_standardized
+    - tenkai_place_start_slope_range_grade_lcurve_slope_type_combined_standardized
+    - tenkai_place_start_slope_range_grade_lcurve_slope_type_curve_combined_standardized
+    - tenkai_place_start_slope_range_grade_lcurve_slope_type_curve_goal_range_combined_standardized
+    - tenkai_place_start_slope_range_grade_lcurve_slope_type_curve_goal_range_slope_combined_standardized
+    - tenkai_place_start_slope_range_grade_lcurve_slope_type_curve_goal_range_slope_first_curve_combined_standardized
+    - tenkai_place_start_slope_range_grade_lcurve_slope_type_curve_goal_range_slope_first_curve_front_combined_standardized
+    - tenkai_place_start_slope_range_grade_lcurve_slope_type_curve_goal_range_slope_first_curve_front_len_combined_standardized
+    - tenkai_place_start_slope_range_grade_lcurve_slope_type_curve_goal_range_slope_first_curve_front_len_umaban_combined_standardized
+    - umaban_combined_standardized
+    - umaban_curve_combined_standardized
+    - umaban_curve_lcurves_combined_standardized
+    - umaban_curve_lcurves_condition_combined_standardized
+    - umaban_curve_lcurves_condition_type_combined_standardized
+    - umaban_curve_lcurves_condition_type_corner_combined_standardized
+    - rank_diff_position_xxx_race_grade_multi_mean_1races_tenkai_plus_standardized
+    - rank_diff_position_xxx_race_grade_multi_mean_1races_tenkai_all_plus_standardized
+    - rank_diff_position_xxx_race_grade_multi_mean_1races_umaban_plus_standardized
+    - rank_diff_position_xxx_race_grade_multi_mean_1races_umaban_tenkai_plus_standardized
+    - rank_diff_position_xxx_race_grade_multi_mean_1races_umaban_tenkai_all_plus_standardized
+    - rank_diff_position_xxx_race_grade_multi_mean_1races_tenkai_com_standardized
+    - rank_diff_position_xxx_race_grade_multi_mean_1races_tenkai_all_com_standardized
+    - rank_diff_position_xxx_race_grade_multi_mean_1races_umaban_com_standardized
+    - rank_diff_position_xxx_race_grade_multi_mean_1races_umaban_tenkai_com_standardized
+    - rank_diff_position_xxx_race_grade_multi_mean_1races_umaban_tenkai_all_com_standardized
+    - rank_diff_all_xxx_race_grade_multi_mean_1races_tenkai_plus_standardized
+    - rank_diff_all_xxx_race_grade_multi_mean_1races_tenkai_all_plus_standardized
+    - rank_diff_all_xxx_race_grade_multi_mean_1races_umaban_plus_standardized
+    - rank_diff_all_xxx_race_grade_multi_mean_1races_umaban_tenkai_plus_standardized
+    - rank_diff_all_xxx_race_grade_multi_mean_1races_umaban_tenkai_all_plus_standardized
+    - rank_diff_all_xxx_race_grade_multi_mean_1races_tenkai_com_standardized
+    - rank_diff_all_xxx_race_grade_multi_mean_1races_tenkai_all_com_standardized
+    - rank_diff_all_xxx_race_grade_multi_mean_1races_umaban_com_standardized
+    - rank_diff_all_xxx_race_grade_multi_mean_1races_umaban_tenkai_com_standardized
+    - rank_diff_all_xxx_race_grade_multi_mean_1races_umaban_tenkai_all_com_standardized
+    - rank_diff_position_xxx_race_grade_sum_mean_1races_tenkai_plus_standardized
+    - rank_diff_position_xxx_race_grade_sum_mean_1races_tenkai_all_plus_standardized
+    - rank_diff_position_xxx_race_grade_sum_mean_1races_umaban_plus_standardized
+    - rank_diff_position_xxx_race_grade_sum_mean_1races_umaban_tenkai_plus_standardized
+    - rank_diff_position_xxx_race_grade_sum_mean_1races_umaban_tenkai_all_plus_standardized
+    - rank_diff_position_xxx_race_grade_sum_mean_1races_tenkai_com_standardized
+    - rank_diff_position_xxx_race_grade_sum_mean_1races_tenkai_all_com_standardized
+    - rank_diff_position_xxx_race_grade_sum_mean_1races_umaban_com_standardized
+    - rank_diff_position_xxx_race_grade_sum_mean_1races_umaban_tenkai_com_standardized
+    - rank_diff_position_xxx_race_grade_sum_mean_1races_umaban_tenkai_all_com_standardized
+    - rank_diff_all_xxx_race_grade_sum_mean_1races_tenkai_plus_standardized
+    - rank_diff_all_xxx_race_grade_sum_mean_1races_tenkai_all_plus_standardized
+    - rank_diff_all_xxx_race_grade_sum_mean_1races_umaban_plus_standardized
+    - rank_diff_all_xxx_race_grade_sum_mean_1races_umaban_tenkai_plus_standardized
+    - rank_diff_all_xxx_race_grade_sum_mean_1races_umaban_tenkai_all_plus_standardized
+    - rank_diff_all_xxx_race_grade_sum_mean_1races_tenkai_com_standardized
+    - rank_diff_all_xxx_race_grade_sum_mean_1races_tenkai_all_com_standardized
+    - rank_diff_all_xxx_race_grade_sum_mean_1races_umaban_com_standardized
+    - rank_diff_all_xxx_race_grade_sum_mean_1races_umaban_tenkai_com_standardized
+    - rank_diff_all_xxx_race_grade_sum_mean_1races_umaban_tenkai_all_com_standardized
+    - rank_diff_position_xxx_race_grade_multi_mean_3races_tenkai_plus_standardized
+    - rank_diff_position_xxx_race_grade_multi_mean_3races_tenkai_all_plus_standardized
+    - rank_diff_position_xxx_race_grade_multi_mean_3races_umaban_plus_standardized
+    - rank_diff_position_xxx_race_grade_multi_mean_3races_umaban_tenkai_plus_standardized
+    - rank_diff_position_xxx_race_grade_multi_mean_3races_umaban_tenkai_all_plus_standardized
+    - rank_diff_position_xxx_race_grade_multi_mean_3races_tenkai_com_standardized
+    - rank_diff_position_xxx_race_grade_multi_mean_3races_tenkai_all_com_standardized
+    - rank_diff_position_xxx_race_grade_multi_mean_3races_umaban_com_standardized
+    - rank_diff_position_xxx_race_grade_multi_mean_3races_umaban_tenkai_com_standardized
+    - rank_diff_position_xxx_race_grade_multi_mean_3races_umaban_tenkai_all_com_standardized
+    - rank_diff_all_xxx_race_grade_multi_mean_3races_tenkai_plus_standardized
+    - rank_diff_all_xxx_race_grade_multi_mean_3races_tenkai_all_plus_standardized
+    - rank_diff_all_xxx_race_grade_multi_mean_3races_umaban_plus_standardized
+    - rank_diff_all_xxx_race_grade_multi_mean_3races_umaban_tenkai_plus_standardized
+    - rank_diff_all_xxx_race_grade_multi_mean_3races_umaban_tenkai_all_plus_standardized
+    - rank_diff_all_xxx_race_grade_multi_mean_3races_tenkai_com_standardized
+    - rank_diff_all_xxx_race_grade_multi_mean_3races_tenkai_all_com_standardized
+    - rank_diff_all_xxx_race_grade_multi_mean_3races_umaban_com_standardized
+    - rank_diff_all_xxx_race_grade_multi_mean_3races_umaban_tenkai_com_standardized
+    - rank_diff_all_xxx_race_grade_multi_mean_3races_umaban_tenkai_all_com_standardized
+    - rank_diff_position_xxx_race_grade_sum_mean_3races_tenkai_plus_standardized
+    - rank_diff_position_xxx_race_grade_sum_mean_3races_tenkai_all_plus_standardized
+    - rank_diff_position_xxx_race_grade_sum_mean_3races_umaban_plus_standardized
+    - rank_diff_position_xxx_race_grade_sum_mean_3races_umaban_tenkai_plus_standardized
+    - rank_diff_position_xxx_race_grade_sum_mean_3races_umaban_tenkai_all_plus_standardized
+    - rank_diff_position_xxx_race_grade_sum_mean_3races_tenkai_com_standardized
+    - rank_diff_position_xxx_race_grade_sum_mean_3races_tenkai_all_com_standardized
+    - rank_diff_position_xxx_race_grade_sum_mean_3races_umaban_com_standardized
+    - rank_diff_position_xxx_race_grade_sum_mean_3races_umaban_tenkai_com_standardized
+    - rank_diff_position_xxx_race_grade_sum_mean_3races_umaban_tenkai_all_com_standardized
+    - rank_diff_all_xxx_race_grade_sum_mean_3races_tenkai_plus_standardized
+    - rank_diff_all_xxx_race_grade_sum_mean_3races_tenkai_all_plus_standardized
+    - rank_diff_all_xxx_race_grade_sum_mean_3races_umaban_plus_standardized
+    - rank_diff_all_xxx_race_grade_sum_mean_3races_umaban_tenkai_plus_standardized
+    - rank_diff_all_xxx_race_grade_sum_mean_3races_umaban_tenkai_all_plus_standardized
+    - rank_diff_all_xxx_race_grade_sum_mean_3races_tenkai_com_standardized
+    - rank_diff_all_xxx_race_grade_sum_mean_3races_tenkai_all_com_standardized
+    - rank_diff_all_xxx_race_grade_sum_mean_3races_umaban_com_standardized
+    - rank_diff_all_xxx_race_grade_sum_mean_3races_umaban_tenkai_com_standardized
+    - rank_diff_all_xxx_race_grade_sum_mean_3races_umaban_tenkai_all_com_standardized
+    - rank_diff_position_xxx_race_grade_multi_mean_5races_tenkai_plus_standardized
+    - rank_diff_position_xxx_race_grade_multi_mean_5races_tenkai_all_plus_standardized
+    - rank_diff_position_xxx_race_grade_multi_mean_5races_umaban_plus_standardized
+    - rank_diff_position_xxx_race_grade_multi_mean_5races_umaban_tenkai_plus_standardized
+    - rank_diff_position_xxx_race_grade_multi_mean_5races_umaban_tenkai_all_plus_standardized
+    - rank_diff_position_xxx_race_grade_multi_mean_5races_tenkai_com_standardized
+    - rank_diff_position_xxx_race_grade_multi_mean_5races_tenkai_all_com_standardized
+    - rank_diff_position_xxx_race_grade_multi_mean_5races_umaban_com_standardized
+    - rank_diff_position_xxx_race_grade_multi_mean_5races_umaban_tenkai_com_standardized
+    - rank_diff_position_xxx_race_grade_multi_mean_5races_umaban_tenkai_all_com_standardized
+    - rank_diff_all_xxx_race_grade_multi_mean_5races_tenkai_plus_standardized
+    - rank_diff_all_xxx_race_grade_multi_mean_5races_tenkai_all_plus_standardized
+    - rank_diff_all_xxx_race_grade_multi_mean_5races_umaban_plus_standardized
+    - rank_diff_all_xxx_race_grade_multi_mean_5races_umaban_tenkai_plus_standardized
+    - rank_diff_all_xxx_race_grade_multi_mean_5races_umaban_tenkai_all_plus_standardized
+    - rank_diff_all_xxx_race_grade_multi_mean_5races_tenkai_com_standardized
+    - rank_diff_all_xxx_race_grade_multi_mean_5races_tenkai_all_com_standardized
+    - rank_diff_all_xxx_race_grade_multi_mean_5races_umaban_com_standardized
+    - rank_diff_all_xxx_race_grade_multi_mean_5races_umaban_tenkai_com_standardized
+    - rank_diff_all_xxx_race_grade_multi_mean_5races_umaban_tenkai_all_com_standardized
+    - rank_diff_position_xxx_race_grade_sum_mean_5races_tenkai_plus_standardized
+    - rank_diff_position_xxx_race_grade_sum_mean_5races_tenkai_all_plus_standardized
+    - rank_diff_position_xxx_race_grade_sum_mean_5races_umaban_plus_standardized
+    - rank_diff_position_xxx_race_grade_sum_mean_5races_umaban_tenkai_plus_standardized
+    - rank_diff_position_xxx_race_grade_sum_mean_5races_umaban_tenkai_all_plus_standardized
+    - rank_diff_position_xxx_race_grade_sum_mean_5races_tenkai_com_standardized
+    - rank_diff_position_xxx_race_grade_sum_mean_5races_tenkai_all_com_standardized
+    - rank_diff_position_xxx_race_grade_sum_mean_5races_umaban_com_standardized
+    - rank_diff_position_xxx_race_grade_sum_mean_5races_umaban_tenkai_com_standardized
+    - rank_diff_position_xxx_race_grade_sum_mean_5races_umaban_tenkai_all_com_standardized
+    - rank_diff_all_xxx_race_grade_sum_mean_5races_tenkai_plus_standardized
+    - rank_diff_all_xxx_race_grade_sum_mean_5races_tenkai_all_plus_standardized
+    - rank_diff_all_xxx_race_grade_sum_mean_5races_umaban_plus_standardized
+    - rank_diff_all_xxx_race_grade_sum_mean_5races_umaban_tenkai_plus_standardized
+    - rank_diff_all_xxx_race_grade_sum_mean_5races_umaban_tenkai_all_plus_standardized
+    - rank_diff_all_xxx_race_grade_sum_mean_5races_tenkai_com_standardized
+    - rank_diff_all_xxx_race_grade_sum_mean_5races_tenkai_all_com_standardized
+    - rank_diff_all_xxx_race_grade_sum_mean_5races_umaban_com_standardized
+    - rank_diff_all_xxx_race_grade_sum_mean_5races_umaban_tenkai_com_standardized
+    - rank_diff_all_xxx_race_grade_sum_mean_5races_umaban_tenkai_all_com_standardized
+    - rank_diff_position_xxx_race_grade_multi_mean_8races_tenkai_plus_standardized
+    - rank_diff_position_xxx_race_grade_multi_mean_8races_tenkai_all_plus_standardized
+    - rank_diff_position_xxx_race_grade_multi_mean_8races_umaban_plus_standardized
+    - rank_diff_position_xxx_race_grade_multi_mean_8races_umaban_tenkai_plus_standardized
+    - rank_diff_position_xxx_race_grade_multi_mean_8races_umaban_tenkai_all_plus_standardized
+    - rank_diff_position_xxx_race_grade_multi_mean_8races_tenkai_com_standardized
+    - rank_diff_position_xxx_race_grade_multi_mean_8races_tenkai_all_com_standardized
+    - rank_diff_position_xxx_race_grade_multi_mean_8races_umaban_com_standardized
+    - rank_diff_position_xxx_race_grade_multi_mean_8races_umaban_tenkai_com_standardized
+    - rank_diff_position_xxx_race_grade_multi_mean_8races_umaban_tenkai_all_com_standardized
+    - rank_diff_all_xxx_race_grade_multi_mean_8races_tenkai_plus_standardized
+    - rank_diff_all_xxx_race_grade_multi_mean_8races_tenkai_all_plus_standardized
+    - rank_diff_all_xxx_race_grade_multi_mean_8races_umaban_plus_standardized
+    - rank_diff_all_xxx_race_grade_multi_mean_8races_umaban_tenkai_plus_standardized
+    - rank_diff_all_xxx_race_grade_multi_mean_8races_umaban_tenkai_all_plus_standardized
+    - rank_diff_all_xxx_race_grade_multi_mean_8races_tenkai_com_standardized
+    - rank_diff_all_xxx_race_grade_multi_mean_8races_tenkai_all_com_standardized
+    - rank_diff_all_xxx_race_grade_multi_mean_8races_umaban_com_standardized
+    - rank_diff_all_xxx_race_grade_multi_mean_8races_umaban_tenkai_com_standardized
+    - rank_diff_all_xxx_race_grade_multi_mean_8races_umaban_tenkai_all_com_standardized
+    - rank_diff_position_xxx_race_grade_sum_mean_8races_tenkai_plus_standardized
+    - rank_diff_position_xxx_race_grade_sum_mean_8races_tenkai_all_plus_standardized
+    - rank_diff_position_xxx_race_grade_sum_mean_8races_umaban_plus_standardized
+    - rank_diff_position_xxx_race_grade_sum_mean_8races_umaban_tenkai_plus_standardized
+    - rank_diff_position_xxx_race_grade_sum_mean_8races_umaban_tenkai_all_plus_standardized
+    - rank_diff_position_xxx_race_grade_sum_mean_8races_tenkai_com_standardized
+    - rank_diff_position_xxx_race_grade_sum_mean_8races_tenkai_all_com_standardized
+    - rank_diff_position_xxx_race_grade_sum_mean_8races_umaban_com_standardized
+    - rank_diff_position_xxx_race_grade_sum_mean_8races_umaban_tenkai_com_standardized
+    - rank_diff_position_xxx_race_grade_sum_mean_8races_umaban_tenkai_all_com_standardized
+    - rank_diff_all_xxx_race_grade_sum_mean_8races_tenkai_plus_standardized
+    - rank_diff_all_xxx_race_grade_sum_mean_8races_tenkai_all_plus_standardized
+    - rank_diff_all_xxx_race_grade_sum_mean_8races_umaban_plus_standardized
+    - rank_diff_all_xxx_race_grade_sum_mean_8races_umaban_tenkai_plus_standardized
+    - rank_diff_all_xxx_race_grade_sum_mean_8races_umaban_tenkai_all_plus_standardized
+    - rank_diff_all_xxx_race_grade_sum_mean_8races_tenkai_com_standardized
+    - rank_diff_all_xxx_race_grade_sum_mean_8races_tenkai_all_com_standardized
+    - rank_diff_all_xxx_race_grade_sum_mean_8races_umaban_com_standardized
+    - rank_diff_all_xxx_race_grade_sum_mean_8races_umaban_tenkai_com_standardized
+    - rank_diff_all_xxx_race_grade_sum_mean_8races_umaban_tenkai_all_com_standardized
+    - rank_diff_position_xxx_race_grade_multi_min_1races_tenkai_plus_standardized
+    - rank_diff_position_xxx_race_grade_multi_min_1races_tenkai_all_plus_standardized
+    - rank_diff_position_xxx_race_grade_multi_min_1races_umaban_plus_standardized
+    - rank_diff_position_xxx_race_grade_multi_min_1races_umaban_tenkai_plus_standardized
+    - rank_diff_position_xxx_race_grade_multi_min_1races_umaban_tenkai_all_plus_standardized
+    - rank_diff_position_xxx_race_grade_multi_min_1races_tenkai_com_standardized
+    - rank_diff_position_xxx_race_grade_multi_min_1races_tenkai_all_com_standardized
+    - rank_diff_position_xxx_race_grade_multi_min_1races_umaban_com_standardized
+    - rank_diff_position_xxx_race_grade_multi_min_1races_umaban_tenkai_com_standardized
+    - rank_diff_position_xxx_race_grade_multi_min_1races_umaban_tenkai_all_com_standardized
+    - rank_diff_all_xxx_race_grade_multi_min_1races_tenkai_plus_standardized
+    - rank_diff_all_xxx_race_grade_multi_min_1races_tenkai_all_plus_standardized
+    - rank_diff_all_xxx_race_grade_multi_min_1races_umaban_plus_standardized
+    - rank_diff_all_xxx_race_grade_multi_min_1races_umaban_tenkai_plus_standardized
+    - rank_diff_all_xxx_race_grade_multi_min_1races_umaban_tenkai_all_plus_standardized
+    - rank_diff_all_xxx_race_grade_multi_min_1races_tenkai_com_standardized
+    - rank_diff_all_xxx_race_grade_multi_min_1races_tenkai_all_com_standardized
+    - rank_diff_all_xxx_race_grade_multi_min_1races_umaban_com_standardized
+    - rank_diff_all_xxx_race_grade_multi_min_1races_umaban_tenkai_com_standardized
+    - rank_diff_all_xxx_race_grade_multi_min_1races_umaban_tenkai_all_com_standardized
+    - rank_diff_position_xxx_race_grade_sum_min_1races_tenkai_plus_standardized
+    - rank_diff_position_xxx_race_grade_sum_min_1races_tenkai_all_plus_standardized
+    - rank_diff_position_xxx_race_grade_sum_min_1races_umaban_plus_standardized
+    - rank_diff_position_xxx_race_grade_sum_min_1races_umaban_tenkai_plus_standardized
+    - rank_diff_position_xxx_race_grade_sum_min_1races_umaban_tenkai_all_plus_standardized
+    - rank_diff_position_xxx_race_grade_sum_min_1races_tenkai_com_standardized
+    - rank_diff_position_xxx_race_grade_sum_min_1races_tenkai_all_com_standardized
+    - rank_diff_position_xxx_race_grade_sum_min_1races_umaban_com_standardized
+    - rank_diff_position_xxx_race_grade_sum_min_1races_umaban_tenkai_com_standardized
+    - rank_diff_position_xxx_race_grade_sum_min_1races_umaban_tenkai_all_com_standardized
+    - rank_diff_all_xxx_race_grade_sum_min_1races_tenkai_plus_standardized
+    - rank_diff_all_xxx_race_grade_sum_min_1races_tenkai_all_plus_standardized
+    - rank_diff_all_xxx_race_grade_sum_min_1races_umaban_plus_standardized
+    - rank_diff_all_xxx_race_grade_sum_min_1races_umaban_tenkai_plus_standardized
+    - rank_diff_all_xxx_race_grade_sum_min_1races_umaban_tenkai_all_plus_standardized
+    - rank_diff_all_xxx_race_grade_sum_min_1races_tenkai_com_standardized
+    - rank_diff_all_xxx_race_grade_sum_min_1races_tenkai_all_com_standardized
+    - rank_diff_all_xxx_race_grade_sum_min_1races_umaban_com_standardized
+    - rank_diff_all_xxx_race_grade_sum_min_1races_umaban_tenkai_com_standardized
+    - rank_diff_all_xxx_race_grade_sum_min_1races_umaban_tenkai_all_com_standardized
+    - rank_diff_position_xxx_race_grade_multi_min_3races_tenkai_plus_standardized
+    - rank_diff_position_xxx_race_grade_multi_min_3races_tenkai_all_plus_standardized
+    - rank_diff_position_xxx_race_grade_multi_min_3races_umaban_plus_standardized
+    - rank_diff_position_xxx_race_grade_multi_min_3races_umaban_tenkai_plus_standardized
+    - rank_diff_position_xxx_race_grade_multi_min_3races_umaban_tenkai_all_plus_standardized
+    - rank_diff_position_xxx_race_grade_multi_min_3races_tenkai_com_standardized
+    - rank_diff_position_xxx_race_grade_multi_min_3races_tenkai_all_com_standardized
+    - rank_diff_position_xxx_race_grade_multi_min_3races_umaban_com_standardized
+    - rank_diff_position_xxx_race_grade_multi_min_3races_umaban_tenkai_com_standardized
+    - rank_diff_position_xxx_race_grade_multi_min_3races_umaban_tenkai_all_com_standardized
+    - rank_diff_all_xxx_race_grade_multi_min_3races_tenkai_plus_standardized
+    - rank_diff_all_xxx_race_grade_multi_min_3races_tenkai_all_plus_standardized
+    - rank_diff_all_xxx_race_grade_multi_min_3races_umaban_plus_standardized
+    - rank_diff_all_xxx_race_grade_multi_min_3races_umaban_tenkai_plus_standardized
+    - rank_diff_all_xxx_race_grade_multi_min_3races_umaban_tenkai_all_plus_standardized
+    - rank_diff_all_xxx_race_grade_multi_min_3races_tenkai_com_standardized
+    - rank_diff_all_xxx_race_grade_multi_min_3races_tenkai_all_com_standardized
+    - rank_diff_all_xxx_race_grade_multi_min_3races_umaban_com_standardized
+    - rank_diff_all_xxx_race_grade_multi_min_3races_umaban_tenkai_com_standardized
+    - rank_diff_all_xxx_race_grade_multi_min_3races_umaban_tenkai_all_com_standardized
+    - rank_diff_position_xxx_race_grade_sum_min_3races_tenkai_plus_standardized
+    - rank_diff_position_xxx_race_grade_sum_min_3races_tenkai_all_plus_standardized
+    - rank_diff_position_xxx_race_grade_sum_min_3races_umaban_plus_standardized
+    - rank_diff_position_xxx_race_grade_sum_min_3races_umaban_tenkai_plus_standardized
+    - rank_diff_position_xxx_race_grade_sum_min_3races_umaban_tenkai_all_plus_standardized
+    - rank_diff_position_xxx_race_grade_sum_min_3races_tenkai_com_standardized
+    - rank_diff_position_xxx_race_grade_sum_min_3races_tenkai_all_com_standardized
+    - rank_diff_position_xxx_race_grade_sum_min_3races_umaban_com_standardized
+    - rank_diff_position_xxx_race_grade_sum_min_3races_umaban_tenkai_com_standardized
+    - rank_diff_position_xxx_race_grade_sum_min_3races_umaban_tenkai_all_com_standardized
+    - rank_diff_all_xxx_race_grade_sum_min_3races_tenkai_plus_standardized
+    - rank_diff_all_xxx_race_grade_sum_min_3races_tenkai_all_plus_standardized
+    - rank_diff_all_xxx_race_grade_sum_min_3races_umaban_plus_standardized
+    - rank_diff_all_xxx_race_grade_sum_min_3races_umaban_tenkai_plus_standardized
+    - rank_diff_all_xxx_race_grade_sum_min_3races_umaban_tenkai_all_plus_standardized
+    - rank_diff_all_xxx_race_grade_sum_min_3races_tenkai_com_standardized
+    - rank_diff_all_xxx_race_grade_sum_min_3races_tenkai_all_com_standardized
+    - rank_diff_all_xxx_race_grade_sum_min_3races_umaban_com_standardized
+    - rank_diff_all_xxx_race_grade_sum_min_3races_umaban_tenkai_com_standardized
+    - rank_diff_all_xxx_race_grade_sum_min_3races_umaban_tenkai_all_com_standardized
+    - rank_diff_position_xxx_race_grade_multi_min_5races_tenkai_plus_standardized
+    - rank_diff_position_xxx_race_grade_multi_min_5races_tenkai_all_plus_standardized
+    - rank_diff_position_xxx_race_grade_multi_min_5races_umaban_plus_standardized
+    - rank_diff_position_xxx_race_grade_multi_min_5races_umaban_tenkai_plus_standardized
+    - rank_diff_position_xxx_race_grade_multi_min_5races_umaban_tenkai_all_plus_standardized
+    - rank_diff_position_xxx_race_grade_multi_min_5races_tenkai_com_standardized
+    - rank_diff_position_xxx_race_grade_multi_min_5races_tenkai_all_com_standardized
+    - rank_diff_position_xxx_race_grade_multi_min_5races_umaban_com_standardized
+    - rank_diff_position_xxx_race_grade_multi_min_5races_umaban_tenkai_com_standardized
+    - rank_diff_position_xxx_race_grade_multi_min_5races_umaban_tenkai_all_com_standardized
+    - rank_diff_all_xxx_race_grade_multi_min_5races_tenkai_plus_standardized
+    - rank_diff_all_xxx_race_grade_multi_min_5races_tenkai_all_plus_standardized
+    - rank_diff_all_xxx_race_grade_multi_min_5races_umaban_plus_standardized
+    - rank_diff_all_xxx_race_grade_multi_min_5races_umaban_tenkai_plus_standardized
+    - rank_diff_all_xxx_race_grade_multi_min_5races_umaban_tenkai_all_plus_standardized
+    - rank_diff_all_xxx_race_grade_multi_min_5races_tenkai_com_standardized
+    - rank_diff_all_xxx_race_grade_multi_min_5races_tenkai_all_com_standardized
+    - rank_diff_all_xxx_race_grade_multi_min_5races_umaban_com_standardized
+    - rank_diff_all_xxx_race_grade_multi_min_5races_umaban_tenkai_com_standardized
+    - rank_diff_all_xxx_race_grade_multi_min_5races_umaban_tenkai_all_com_standardized
+    - rank_diff_position_xxx_race_grade_sum_min_5races_tenkai_plus_standardized
+    - rank_diff_position_xxx_race_grade_sum_min_5races_tenkai_all_plus_standardized
+    - rank_diff_position_xxx_race_grade_sum_min_5races_umaban_plus_standardized
+    - rank_diff_position_xxx_race_grade_sum_min_5races_umaban_tenkai_plus_standardized
+    - rank_diff_position_xxx_race_grade_sum_min_5races_umaban_tenkai_all_plus_standardized
+    - rank_diff_position_xxx_race_grade_sum_min_5races_tenkai_com_standardized
+    - rank_diff_position_xxx_race_grade_sum_min_5races_tenkai_all_com_standardized
+    - rank_diff_position_xxx_race_grade_sum_min_5races_umaban_com_standardized
+    - rank_diff_position_xxx_race_grade_sum_min_5races_umaban_tenkai_com_standardized
+    - rank_diff_position_xxx_race_grade_sum_min_5races_umaban_tenkai_all_com_standardized
+    - rank_diff_all_xxx_race_grade_sum_min_5races_tenkai_plus_standardized
+    - rank_diff_all_xxx_race_grade_sum_min_5races_tenkai_all_plus_standardized
+    - rank_diff_all_xxx_race_grade_sum_min_5races_umaban_plus_standardized
+    - rank_diff_all_xxx_race_grade_sum_min_5races_umaban_tenkai_plus_standardized
+    - rank_diff_all_xxx_race_grade_sum_min_5races_umaban_tenkai_all_plus_standardized
+    - rank_diff_all_xxx_race_grade_sum_min_5races_tenkai_com_standardized
+    - rank_diff_all_xxx_race_grade_sum_min_5races_tenkai_all_com_standardized
+    - rank_diff_all_xxx_race_grade_sum_min_5races_umaban_com_standardized
+    - rank_diff_all_xxx_race_grade_sum_min_5races_umaban_tenkai_com_standardized
+    - rank_diff_all_xxx_race_grade_sum_min_5races_umaban_tenkai_all_com_standardized
+    - rank_diff_position_xxx_race_grade_multi_min_8races_tenkai_plus_standardized
+    - rank_diff_position_xxx_race_grade_multi_min_8races_tenkai_all_plus_standardized
+    - rank_diff_position_xxx_race_grade_multi_min_8races_umaban_plus_standardized
+    - rank_diff_position_xxx_race_grade_multi_min_8races_umaban_tenkai_plus_standardized
+    - rank_diff_position_xxx_race_grade_multi_min_8races_umaban_tenkai_all_plus_standardized
+    - rank_diff_position_xxx_race_grade_multi_min_8races_tenkai_com_standardized
+    - rank_diff_position_xxx_race_grade_multi_min_8races_tenkai_all_com_standardized
+    - rank_diff_position_xxx_race_grade_multi_min_8races_umaban_com_standardized
+    - rank_diff_position_xxx_race_grade_multi_min_8races_umaban_tenkai_com_standardized
+    - rank_diff_position_xxx_race_grade_multi_min_8races_umaban_tenkai_all_com_standardized
+    - rank_diff_all_xxx_race_grade_multi_min_8races_tenkai_plus_standardized
+    - rank_diff_all_xxx_race_grade_multi_min_8races_tenkai_all_plus_standardized
+    - rank_diff_all_xxx_race_grade_multi_min_8races_umaban_plus_standardized
+    - rank_diff_all_xxx_race_grade_multi_min_8races_umaban_tenkai_plus_standardized
+    - rank_diff_all_xxx_race_grade_multi_min_8races_umaban_tenkai_all_plus_standardized
+    - rank_diff_all_xxx_race_grade_multi_min_8races_tenkai_com_standardized
+    - rank_diff_all_xxx_race_grade_multi_min_8races_tenkai_all_com_standardized
+    - rank_diff_all_xxx_race_grade_multi_min_8races_umaban_com_standardized
+    - rank_diff_all_xxx_race_grade_multi_min_8races_umaban_tenkai_com_standardized
+    - rank_diff_all_xxx_race_grade_multi_min_8races_umaban_tenkai_all_com_standardized
+    - rank_diff_position_xxx_race_grade_sum_min_8races_tenkai_plus_standardized
+    - rank_diff_position_xxx_race_grade_sum_min_8races_tenkai_all_plus_standardized
+    - rank_diff_position_xxx_race_grade_sum_min_8races_umaban_plus_standardized
+    - rank_diff_position_xxx_race_grade_sum_min_8races_umaban_tenkai_plus_standardized
+    - rank_diff_position_xxx_race_grade_sum_min_8races_umaban_tenkai_all_plus_standardized
+    - rank_diff_position_xxx_race_grade_sum_min_8races_tenkai_com_standardized
+    - rank_diff_position_xxx_race_grade_sum_min_8races_tenkai_all_com_standardized
+    - rank_diff_position_xxx_race_grade_sum_min_8races_umaban_com_standardized
+    - rank_diff_position_xxx_race_grade_sum_min_8races_umaban_tenkai_com_standardized
+    - rank_diff_position_xxx_race_grade_sum_min_8races_umaban_tenkai_all_com_standardized
+    - rank_diff_all_xxx_race_grade_sum_min_8races_tenkai_plus_standardized
+    - rank_diff_all_xxx_race_grade_sum_min_8races_tenkai_all_plus_standardized
+    - rank_diff_all_xxx_race_grade_sum_min_8races_umaban_plus_standardized
+    - rank_diff_all_xxx_race_grade_sum_min_8races_umaban_tenkai_plus_standardized
+    - rank_diff_all_xxx_race_grade_sum_min_8races_umaban_tenkai_all_plus_standardized
+    - rank_diff_all_xxx_race_grade_sum_min_8races_tenkai_com_standardized
+    - rank_diff_all_xxx_race_grade_sum_min_8races_tenkai_all_com_standardized
+    - rank_diff_all_xxx_race_grade_sum_min_8races_umaban_com_standardized
+    - rank_diff_all_xxx_race_grade_sum_min_8races_umaban_tenkai_com_standardized
+    - rank_diff_all_xxx_race_grade_sum_min_8races_umaban_tenkai_all_com_standardized
+    - rank_diff_position_xxx_race_grade_multi_max_1races_tenkai_plus_standardized
+    - rank_diff_position_xxx_race_grade_multi_max_1races_tenkai_all_plus_standardized
+    - rank_diff_position_xxx_race_grade_multi_max_1races_umaban_plus_standardized
+    - rank_diff_position_xxx_race_grade_multi_max_1races_umaban_tenkai_plus_standardized
+    - rank_diff_position_xxx_race_grade_multi_max_1races_umaban_tenkai_all_plus_standardized
+    - rank_diff_position_xxx_race_grade_multi_max_1races_tenkai_com_standardized
+    - rank_diff_position_xxx_race_grade_multi_max_1races_tenkai_all_com_standardized
+    - rank_diff_position_xxx_race_grade_multi_max_1races_umaban_com_standardized
+    - rank_diff_position_xxx_race_grade_multi_max_1races_umaban_tenkai_com_standardized
+    - rank_diff_position_xxx_race_grade_multi_max_1races_umaban_tenkai_all_com_standardized
+    - rank_diff_all_xxx_race_grade_multi_max_1races_tenkai_plus_standardized
+    - rank_diff_all_xxx_race_grade_multi_max_1races_tenkai_all_plus_standardized
+    - rank_diff_all_xxx_race_grade_multi_max_1races_umaban_plus_standardized
+    - rank_diff_all_xxx_race_grade_multi_max_1races_umaban_tenkai_plus_standardized
+    - rank_diff_all_xxx_race_grade_multi_max_1races_umaban_tenkai_all_plus_standardized
+    - rank_diff_all_xxx_race_grade_multi_max_1races_tenkai_com_standardized
+    - rank_diff_all_xxx_race_grade_multi_max_1races_tenkai_all_com_standardized
+    - rank_diff_all_xxx_race_grade_multi_max_1races_umaban_com_standardized
+    - rank_diff_all_xxx_race_grade_multi_max_1races_umaban_tenkai_com_standardized
+    - rank_diff_all_xxx_race_grade_multi_max_1races_umaban_tenkai_all_com_standardized
+    - rank_diff_position_xxx_race_grade_sum_max_1races_tenkai_plus_standardized
+    - rank_diff_position_xxx_race_grade_sum_max_1races_tenkai_all_plus_standardized
+    - rank_diff_position_xxx_race_grade_sum_max_1races_umaban_plus_standardized
+    - rank_diff_position_xxx_race_grade_sum_max_1races_umaban_tenkai_plus_standardized
+    - rank_diff_position_xxx_race_grade_sum_max_1races_umaban_tenkai_all_plus_standardized
+    - rank_diff_position_xxx_race_grade_sum_max_1races_tenkai_com_standardized
+    - rank_diff_position_xxx_race_grade_sum_max_1races_tenkai_all_com_standardized
+    - rank_diff_position_xxx_race_grade_sum_max_1races_umaban_com_standardized
+    - rank_diff_position_xxx_race_grade_sum_max_1races_umaban_tenkai_com_standardized
+    - rank_diff_position_xxx_race_grade_sum_max_1races_umaban_tenkai_all_com_standardized
+    - rank_diff_all_xxx_race_grade_sum_max_1races_tenkai_plus_standardized
+    - rank_diff_all_xxx_race_grade_sum_max_1races_tenkai_all_plus_standardized
+    - rank_diff_all_xxx_race_grade_sum_max_1races_umaban_plus_standardized
+    - rank_diff_all_xxx_race_grade_sum_max_1races_umaban_tenkai_plus_standardized
+    - rank_diff_all_xxx_race_grade_sum_max_1races_umaban_tenkai_all_plus_standardized
+    - rank_diff_all_xxx_race_grade_sum_max_1races_tenkai_com_standardized
+    - rank_diff_all_xxx_race_grade_sum_max_1races_tenkai_all_com_standardized
+    - rank_diff_all_xxx_race_grade_sum_max_1races_umaban_com_standardized
+    - rank_diff_all_xxx_race_grade_sum_max_1races_umaban_tenkai_com_standardized
+    - rank_diff_all_xxx_race_grade_sum_max_1races_umaban_tenkai_all_com_standardized
+    - rank_diff_position_xxx_race_grade_multi_max_3races_tenkai_plus_standardized
+    - rank_diff_position_xxx_race_grade_multi_max_3races_tenkai_all_plus_standardized
+    - rank_diff_position_xxx_race_grade_multi_max_3races_umaban_plus_standardized
+    - rank_diff_position_xxx_race_grade_multi_max_3races_umaban_tenkai_plus_standardized
+    - rank_diff_position_xxx_race_grade_multi_max_3races_umaban_tenkai_all_plus_standardized
+    - rank_diff_position_xxx_race_grade_multi_max_3races_tenkai_com_standardized
+    - rank_diff_position_xxx_race_grade_multi_max_3races_tenkai_all_com_standardized
+    - rank_diff_position_xxx_race_grade_multi_max_3races_umaban_com_standardized
+    - rank_diff_position_xxx_race_grade_multi_max_3races_umaban_tenkai_com_standardized
+    - rank_diff_position_xxx_race_grade_multi_max_3races_umaban_tenkai_all_com_standardized
+    - rank_diff_all_xxx_race_grade_multi_max_3races_tenkai_plus_standardized
+    - rank_diff_all_xxx_race_grade_multi_max_3races_tenkai_all_plus_standardized
+    - rank_diff_all_xxx_race_grade_multi_max_3races_umaban_plus_standardized
+    - rank_diff_all_xxx_race_grade_multi_max_3races_umaban_tenkai_plus_standardized
+    - rank_diff_all_xxx_race_grade_multi_max_3races_umaban_tenkai_all_plus_standardized
+    - rank_diff_all_xxx_race_grade_multi_max_3races_tenkai_com_standardized
+    - rank_diff_all_xxx_race_grade_multi_max_3races_tenkai_all_com_standardized
+    - rank_diff_all_xxx_race_grade_multi_max_3races_umaban_com_standardized
+    - rank_diff_all_xxx_race_grade_multi_max_3races_umaban_tenkai_com_standardized
+    - rank_diff_all_xxx_race_grade_multi_max_3races_umaban_tenkai_all_com_standardized
+    - rank_diff_position_xxx_race_grade_sum_max_3races_tenkai_plus_standardized
+    - rank_diff_position_xxx_race_grade_sum_max_3races_tenkai_all_plus_standardized
+    - rank_diff_position_xxx_race_grade_sum_max_3races_umaban_plus_standardized
+    - rank_diff_position_xxx_race_grade_sum_max_3races_umaban_tenkai_plus_standardized
+    - rank_diff_position_xxx_race_grade_sum_max_3races_umaban_tenkai_all_plus_standardized
+    - rank_diff_position_xxx_race_grade_sum_max_3races_tenkai_com_standardized
+    - rank_diff_position_xxx_race_grade_sum_max_3races_tenkai_all_com_standardized
+    - rank_diff_position_xxx_race_grade_sum_max_3races_umaban_com_standardized
+    - rank_diff_position_xxx_race_grade_sum_max_3races_umaban_tenkai_com_standardized
+    - rank_diff_position_xxx_race_grade_sum_max_3races_umaban_tenkai_all_com_standardized
+    - rank_diff_all_xxx_race_grade_sum_max_3races_tenkai_plus_standardized
+    - rank_diff_all_xxx_race_grade_sum_max_3races_tenkai_all_plus_standardized
+    - rank_diff_all_xxx_race_grade_sum_max_3races_umaban_plus_standardized
+    - rank_diff_all_xxx_race_grade_sum_max_3races_umaban_tenkai_plus_standardized
+    - rank_diff_all_xxx_race_grade_sum_max_3races_umaban_tenkai_all_plus_standardized
+    - rank_diff_all_xxx_race_grade_sum_max_3races_tenkai_com_standardized
+    - rank_diff_all_xxx_race_grade_sum_max_3races_tenkai_all_com_standardized
+    - rank_diff_all_xxx_race_grade_sum_max_3races_umaban_com_standardized
+    - rank_diff_all_xxx_race_grade_sum_max_3races_umaban_tenkai_com_standardized
+    - rank_diff_all_xxx_race_grade_sum_max_3races_umaban_tenkai_all_com_standardized
+    - rank_diff_position_xxx_race_grade_multi_max_5races_tenkai_plus_standardized
+    - rank_diff_position_xxx_race_grade_multi_max_5races_tenkai_all_plus_standardized
+    - rank_diff_position_xxx_race_grade_multi_max_5races_umaban_plus_standardized
+    - rank_diff_position_xxx_race_grade_multi_max_5races_umaban_tenkai_plus_standardized
+    - rank_diff_position_xxx_race_grade_multi_max_5races_umaban_tenkai_all_plus_standardized
+    - rank_diff_position_xxx_race_grade_multi_max_5races_tenkai_com_standardized
+    - rank_diff_position_xxx_race_grade_multi_max_5races_tenkai_all_com_standardized
+    - rank_diff_position_xxx_race_grade_multi_max_5races_umaban_com_standardized
+    - rank_diff_position_xxx_race_grade_multi_max_5races_umaban_tenkai_com_standardized
+    - rank_diff_position_xxx_race_grade_multi_max_5races_umaban_tenkai_all_com_standardized
+    - rank_diff_all_xxx_race_grade_multi_max_5races_tenkai_plus_standardized
+    - rank_diff_all_xxx_race_grade_multi_max_5races_tenkai_all_plus_standardized
+    - rank_diff_all_xxx_race_grade_multi_max_5races_umaban_plus_standardized
+    - rank_diff_all_xxx_race_grade_multi_max_5races_umaban_tenkai_plus_standardized
+    - rank_diff_all_xxx_race_grade_multi_max_5races_umaban_tenkai_all_plus_standardized
+    - rank_diff_all_xxx_race_grade_multi_max_5races_tenkai_com_standardized
+    - rank_diff_all_xxx_race_grade_multi_max_5races_tenkai_all_com_standardized
+    - rank_diff_all_xxx_race_grade_multi_max_5races_umaban_com_standardized
+    - rank_diff_all_xxx_race_grade_multi_max_5races_umaban_tenkai_com_standardized
+    - rank_diff_all_xxx_race_grade_multi_max_5races_umaban_tenkai_all_com_standardized
+    - rank_diff_position_xxx_race_grade_sum_max_5races_tenkai_plus_standardized
+    - rank_diff_position_xxx_race_grade_sum_max_5races_tenkai_all_plus_standardized
+    - rank_diff_position_xxx_race_grade_sum_max_5races_umaban_plus_standardized
+    - rank_diff_position_xxx_race_grade_sum_max_5races_umaban_tenkai_plus_standardized
+    - rank_diff_position_xxx_race_grade_sum_max_5races_umaban_tenkai_all_plus_standardized
+    - rank_diff_position_xxx_race_grade_sum_max_5races_tenkai_com_standardized
+    - rank_diff_position_xxx_race_grade_sum_max_5races_tenkai_all_com_standardized
+    - rank_diff_position_xxx_race_grade_sum_max_5races_umaban_com_standardized
+    - rank_diff_position_xxx_race_grade_sum_max_5races_umaban_tenkai_com_standardized
+    - rank_diff_position_xxx_race_grade_sum_max_5races_umaban_tenkai_all_com_standardized
+    - rank_diff_all_xxx_race_grade_sum_max_5races_tenkai_plus_standardized
+    - rank_diff_all_xxx_race_grade_sum_max_5races_tenkai_all_plus_standardized
+    - rank_diff_all_xxx_race_grade_sum_max_5races_umaban_plus_standardized
+    - rank_diff_all_xxx_race_grade_sum_max_5races_umaban_tenkai_plus_standardized
+    - rank_diff_all_xxx_race_grade_sum_max_5races_umaban_tenkai_all_plus_standardized
+    - rank_diff_all_xxx_race_grade_sum_max_5races_tenkai_com_standardized
+    - rank_diff_all_xxx_race_grade_sum_max_5races_tenkai_all_com_standardized
+    - rank_diff_all_xxx_race_grade_sum_max_5races_umaban_com_standardized
+    - rank_diff_all_xxx_race_grade_sum_max_5races_umaban_tenkai_com_standardized
+    - rank_diff_all_xxx_race_grade_sum_max_5races_umaban_tenkai_all_com_standardized
+    - rank_diff_position_xxx_race_grade_multi_max_8races_tenkai_plus_standardized
+    - rank_diff_position_xxx_race_grade_multi_max_8races_tenkai_all_plus_standardized
+    - rank_diff_position_xxx_race_grade_multi_max_8races_umaban_plus_standardized
+    - rank_diff_position_xxx_race_grade_multi_max_8races_umaban_tenkai_plus_standardized
+    - rank_diff_position_xxx_race_grade_multi_max_8races_umaban_tenkai_all_plus_standardized
+    - rank_diff_position_xxx_race_grade_multi_max_8races_tenkai_com_standardized
+    - rank_diff_position_xxx_race_grade_multi_max_8races_tenkai_all_com_standardized
+    - rank_diff_position_xxx_race_grade_multi_max_8races_umaban_com_standardized
+    - rank_diff_position_xxx_race_grade_multi_max_8races_umaban_tenkai_com_standardized
+    - rank_diff_position_xxx_race_grade_multi_max_8races_umaban_tenkai_all_com_standardized
+    - rank_diff_all_xxx_race_grade_multi_max_8races_tenkai_plus_standardized
+    - rank_diff_all_xxx_race_grade_multi_max_8races_tenkai_all_plus_standardized
+    - rank_diff_all_xxx_race_grade_multi_max_8races_umaban_plus_standardized
+    - rank_diff_all_xxx_race_grade_multi_max_8races_umaban_tenkai_plus_standardized
+    - rank_diff_all_xxx_race_grade_multi_max_8races_umaban_tenkai_all_plus_standardized
+    - rank_diff_all_xxx_race_grade_multi_max_8races_tenkai_com_standardized
+    - rank_diff_all_xxx_race_grade_multi_max_8races_tenkai_all_com_standardized
+    - rank_diff_all_xxx_race_grade_multi_max_8races_umaban_com_standardized
+    - rank_diff_all_xxx_race_grade_multi_max_8races_umaban_tenkai_com_standardized
+    - rank_diff_all_xxx_race_grade_multi_max_8races_umaban_tenkai_all_com_standardized
+    - rank_diff_position_xxx_race_grade_sum_max_8races_tenkai_plus_standardized
+    - rank_diff_position_xxx_race_grade_sum_max_8races_tenkai_all_plus_standardized
+    - rank_diff_position_xxx_race_grade_sum_max_8races_umaban_plus_standardized
+    - rank_diff_position_xxx_race_grade_sum_max_8races_umaban_tenkai_plus_standardized
+    - rank_diff_position_xxx_race_grade_sum_max_8races_umaban_tenkai_all_plus_standardized
+    - rank_diff_position_xxx_race_grade_sum_max_8races_tenkai_com_standardized
+    - rank_diff_position_xxx_race_grade_sum_max_8races_tenkai_all_com_standardized
+    - rank_diff_position_xxx_race_grade_sum_max_8races_umaban_com_standardized
+    - rank_diff_position_xxx_race_grade_sum_max_8races_umaban_tenkai_com_standardized
+    - rank_diff_position_xxx_race_grade_sum_max_8races_umaban_tenkai_all_com_standardized
+    - rank_diff_all_xxx_race_grade_sum_max_8races_tenkai_plus_standardized
+    - rank_diff_all_xxx_race_grade_sum_max_8races_tenkai_all_plus_standardized
+    - rank_diff_all_xxx_race_grade_sum_max_8races_umaban_plus_standardized
+    - rank_diff_all_xxx_race_grade_sum_max_8races_umaban_tenkai_plus_standardized
+    - rank_diff_all_xxx_race_grade_sum_max_8races_umaban_tenkai_all_plus_standardized
+    - rank_diff_all_xxx_race_grade_sum_max_8races_tenkai_com_standardized
+    - rank_diff_all_xxx_race_grade_sum_max_8races_tenkai_all_com_standardized
+    - rank_diff_all_xxx_race_grade_sum_max_8races_umaban_com_standardized
+    - rank_diff_all_xxx_race_grade_sum_max_8races_umaban_tenkai_com_standardized
+    - rank_diff_all_xxx_race_grade_sum_max_8races_umaban_tenkai_all_com_standardized
+    # - nobori_pace_diff_slope_range_groundstate_position_mean_1races_relative
+    # - nobori_pace_diff_slope_range_groundstate_position_max_1races_relative
+    # - nobori_pace_diff_slope_range_groundstate_position_min_1races_relative
+    - nobori_pace_diff_slope_range_groundstate_position_umaban_mean_1races_relative
+    - nobori_pace_diff_slope_range_groundstate_position_umaban_max_1races_relative
+    - nobori_pace_diff_slope_range_groundstate_position_umaban_min_1races_relative
+    - course_len_allfix_diff_mean_1races_relative
+    - course_len_allfix_diff_max_1races_relative
+    - course_len_allfix_diff_min_1races_relative
+    # - course_len_allfix_normal_diff_mean_1races_relative
+    # - course_len_allfix_normal_diff_max_1races_relative
+    # - course_len_allfix_normal_diff_min_1races_relative
+    - course_len_allfix_horse_mean_1races_relative
+    - course_len_allfix_horse_max_1races_relative
+    - course_len_allfix_horse_min_1races_relative
+    # - nobori_pace_diff_slope_range_groundstate_position_mean_1races
+    # - nobori_pace_diff_slope_range_groundstate_position_max_1races
+    # - nobori_pace_diff_slope_range_groundstate_position_min_1races
+    # - nobori_pace_diff_slope_range_groundstate_position_umaban_mean_1races
+    # - nobori_pace_diff_slope_range_groundstate_position_umaban_max_1races
+    # - nobori_pace_diff_slope_range_groundstate_position_umaban_min_1races
+    # - course_len_allfix_diff_mean_1races
+    # - course_len_allfix_diff_max_1races
+    # - course_len_allfix_diff_min_1races
+    # - course_len_allfix_normal_diff_mean_1races
+    # - course_len_allfix_normal_diff_max_1races
+    # - course_len_allfix_normal_diff_min_1races
+    # - course_len_allfix_horse_mean_1races
+    # - course_len_allfix_horse_max_1races
+    # - course_len_allfix_horse_min_1races
+    # - nobori_pace_diff_slope_range_groundstate_position_mean_3races_relative
+    # - nobori_pace_diff_slope_range_groundstate_position_max_3races_relative
+    # - nobori_pace_diff_slope_range_groundstate_position_min_3races_relative
+    - nobori_pace_diff_slope_range_groundstate_position_umaban_mean_3races_relative
+    - nobori_pace_diff_slope_range_groundstate_position_umaban_max_3races_relative
+    - nobori_pace_diff_slope_range_groundstate_position_umaban_min_3races_relative
+    - course_len_allfix_diff_mean_3races_relative
+    - course_len_allfix_diff_max_3races_relative
+    - course_len_allfix_diff_min_3races_relative
+    # - course_len_allfix_normal_diff_mean_3races_relative
+    # - course_len_allfix_normal_diff_max_3races_relative
+    # - course_len_allfix_normal_diff_min_3races_relative
+    - course_len_allfix_horse_mean_3races_relative
+    - course_len_allfix_horse_max_3races_relative
+    - course_len_allfix_horse_min_3races_relative
+    # - nobori_pace_diff_slope_range_groundstate_position_mean_3races
+    # - nobori_pace_diff_slope_range_groundstate_position_max_3races
+    # - nobori_pace_diff_slope_range_groundstate_position_min_3races
+    # - nobori_pace_diff_slope_range_groundstate_position_umaban_mean_3races
+    # - nobori_pace_diff_slope_range_groundstate_position_umaban_max_3races
+    # - nobori_pace_diff_slope_range_groundstate_position_umaban_min_3races
+    # - course_len_allfix_diff_mean_3races
+    # - course_len_allfix_diff_max_3races
+    # - course_len_allfix_diff_min_3races
+    # - course_len_allfix_normal_diff_mean_3races
+    # - course_len_allfix_normal_diff_max_3races
+    # - course_len_allfix_normal_diff_min_3races
+    # - course_len_allfix_horse_mean_3races
+    # - course_len_allfix_horse_max_3races
+    # - course_len_allfix_horse_min_3races
+    # - nobori_pace_diff_slope_range_groundstate_position_mean_5races_relative
+    # - nobori_pace_diff_slope_range_groundstate_position_max_5races_relative
+    # - nobori_pace_diff_slope_range_groundstate_position_min_5races_relative
+    - nobori_pace_diff_slope_range_groundstate_position_umaban_mean_5races_relative
+    - nobori_pace_diff_slope_range_groundstate_position_umaban_max_5races_relative
+    - nobori_pace_diff_slope_range_groundstate_position_umaban_min_5races_relative
+    - course_len_allfix_diff_mean_5races_relative
+    - course_len_allfix_diff_max_5races_relative
+    - course_len_allfix_diff_min_5races_relative
+    # - course_len_allfix_normal_diff_mean_5races_relative
+    # - course_len_allfix_normal_diff_max_5races_relative
+    # - course_len_allfix_normal_diff_min_5races_relative
+    - course_len_allfix_horse_mean_5races_relative
+    - course_len_allfix_horse_max_5races_relative
+    - course_len_allfix_horse_min_5races_relative
+    # - nobori_pace_diff_slope_range_groundstate_position_mean_5races
+    # - nobori_pace_diff_slope_range_groundstate_position_max_5races
+    # - nobori_pace_diff_slope_range_groundstate_position_min_5races
+    # - nobori_pace_diff_slope_range_groundstate_position_umaban_mean_5races
+    # - nobori_pace_diff_slope_range_groundstate_position_umaban_max_5races
+    # - nobori_pace_diff_slope_range_groundstate_position_umaban_min_5races
+    # - course_len_allfix_diff_mean_5races
+    # - course_len_allfix_diff_max_5races
+    # - course_len_allfix_diff_min_5races
+    # - course_len_allfix_normal_diff_mean_5races
+    # - course_len_allfix_normal_diff_max_5races
+    # - course_len_allfix_normal_diff_min_5races
+    # - course_len_allfix_horse_mean_5races
+    # - course_len_allfix_horse_max_5races
+    # - course_len_allfix_horse_min_5races
+    # - nobori_pace_diff_slope_range_groundstate_position_mean_8races_relative
+    # - nobori_pace_diff_slope_range_groundstate_position_max_8races_relative
+    # - nobori_pace_diff_slope_range_groundstate_position_min_8races_relative
+    - nobori_pace_diff_slope_range_groundstate_position_umaban_mean_8races_relative
+    - nobori_pace_diff_slope_range_groundstate_position_umaban_max_8races_relative
+    - nobori_pace_diff_slope_range_groundstate_position_umaban_min_8races_relative
+    - course_len_allfix_diff_mean_8races_relative
+    - course_len_allfix_diff_max_8races_relative
+    - course_len_allfix_diff_min_8races_relative
+    # - course_len_allfix_normal_diff_mean_8races_relative
+    # - course_len_allfix_normal_diff_max_8races_relative
+    # - course_len_allfix_normal_diff_min_8races_relative
+    - course_len_allfix_horse_mean_8races_relative
+    - course_len_allfix_horse_max_8races_relative
+    - course_len_allfix_horse_min_8races_relative
+    # - nobori_pace_diff_slope_range_groundstate_position_mean_8races
+    # - nobori_pace_diff_slope_range_groundstate_position_max_8races
+    # - nobori_pace_diff_slope_range_groundstate_position_min_8races
+    - nobori_pace_diff_slope_range_groundstate_position_umaban_mean_8races
+    - nobori_pace_diff_slope_range_groundstate_position_umaban_max_8races
+    - nobori_pace_diff_slope_range_groundstate_position_umaban_min_8races
+    # - course_len_allfix_diff_mean_8races
+    # - course_len_allfix_diff_max_8races
+    # - course_len_allfix_diff_min_8races
+    # - course_len_allfix_normal_diff_mean_8races
+    # - course_len_allfix_normal_diff_max_8races
+    # - course_len_allfix_normal_diff_min_8races
+    # - course_len_allfix_horse_mean_8races
+    # - course_len_allfix_horse_max_8races
+    # - course_len_allfix_horse_min_8races
+    # - cross_nobori_range
+    # - cross_nobori_slope
+    # - cross_nobori_corner
+    # - cross_nobori_all
+    - course_len_shorter
+    # - cross_nobori_range_standardized
+    # - cross_nobori_slope_standardized
+    # - cross_nobori_corner_standardized
+    - cross_nobori_all_standardized
+    # - course_len_shorter_standardized
+    # - time_pace_diff_slope_range_groundstate_position_min_1races_relative
+    # - time_pace_diff_slope_range_groundstate_position_max_1races_relative
+    # - time_pace_diff_slope_range_groundstate_position_mean_1races_relative
+    # - time_correction_min_1races_relative
+    # - time_correction_max_1races_relative
+    # - time_correction_mean_1races_relative
+    # - time_pace_diff_slope_range_groundstate_position_min_3races_relative
+    # - time_pace_diff_slope_range_groundstate_position_max_3races_relative
+    # - time_pace_diff_slope_range_groundstate_position_mean_3races_relative
+    # - time_correction_min_3races_relative
+    # - time_correction_max_3races_relative
+    # - time_correction_mean_3races_relative
+    # - time_pace_diff_slope_range_groundstate_position_min_5races_relative
+    # - time_pace_diff_slope_range_groundstate_position_max_5races_relative
+    # - time_pace_diff_slope_range_groundstate_position_mean_5races_relative
+    # - time_correction_min_5races_relative
+    # - time_correction_max_5races_relative
+    # - time_correction_mean_5races_relative
+    # - time_pace_diff_slope_range_groundstate_position_min_8races_relative
+    # - time_pace_diff_slope_range_groundstate_position_max_8races_relative
+    # - time_pace_diff_slope_range_groundstate_position_mean_8races_relative
+    # - time_correction_min_8races_relative
+    # - time_correction_max_8races_relative
+    # - time_correction_mean_8races_relative

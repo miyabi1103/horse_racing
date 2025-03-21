@@ -1,0 +1,33 @@
+
+   # (-.corner_3)
+# # $1
+
+#もどすとき
+    ##  ^#\s*(.*corner_3.*)
+#    $1
+
+(per(.+)race_type)
+
+# params = {
+#     'num_leaves': 31,            # デフォルト値 (一般的に 31)
+#     'min_child_weight': 1e-3,     # デフォルト値（0.001)
+#     'feature_fraction': 1.0,      # デフォルト値 (すべての特徴量を使用)
+#     'objective': 'regression',    # 回帰モデルの場合
+#     'max_depth': -1,              # デフォルト値 (-1 は制限なし)
+#     'learning_rate': 0.1,         # デフォルト値
+#     'metric': 'l2',               # 回帰の場合は 'l2'（RMSE）
+#     'reg_alpha': 0.0,             # デフォルト値 (L1正則化なし)
+#     'reg_lambda': 0.0,            # デフォルト値 (L2正則化なし)
+#     'max_bin': 255,               # デフォルト値
+#     'subsample': 1.0,             # デフォルト値 (すべてのデータを使用)
+#     'colsample_bytree': 1.0       # デフォルト値 (すべての特徴量を使用)
+# }
+
+
+^(\s*-\s*)(\S*?_umaban_tenkai_all_com_standardized\S*)
+#$1 $2
+
+もどすとき
+^(\s*#?\s*)(-\s*)(\S*tenkai_com_standardized\S*)
+    $2 $3
+

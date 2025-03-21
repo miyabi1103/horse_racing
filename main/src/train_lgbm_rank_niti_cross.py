@@ -318,7 +318,7 @@ class Trainer_lightgbm_rank_niti_cv:
         importance_df.to_csv(self.output_dir / f"{importance_filename}.csv", index=False, sep="\t")
 
         # 評価
-        evaluation_df = valid_df[["race_id", "horse_id", "target", "rank", "tansho_odds", "popularity", "umaban"]].copy()
+        evaluation_df = valid_df[["race_id", "horse_id", "target", "rank","course_len","weather","ground_state","race_class","age","median_age","mean_age","place", "tansho_odds", "popularity", "umaban"]].copy()
         evaluation_df["pred"] = model.predict(valid_df[self.feature_cols], num_iteration=model.best_iteration)
 
         # 0.5 を閾値にしてクラス分類

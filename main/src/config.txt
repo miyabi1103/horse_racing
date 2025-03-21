@@ -22,3 +22,14 @@
 #     'subsample': 1.0,             # デフォルト値 (すべてのデータを使用)
 #     'colsample_bytree': 1.0       # デフォルト値 (すべての特徴量を使用)
 # }
+
+
+^(\s*-\s*)(\S*?_umaban_tenkai_all_com_standardized\S*)
+#$1 $2
+
+もどすとき
+^(\s*#?\s*)(-\s*)(\S*tenkai_com_standardized\S*)
+    $2 $3
+
+^(\s*-\s*)(\S*?_umaban_plus\S*)
+_umaban_plus

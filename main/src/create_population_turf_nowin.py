@@ -65,7 +65,8 @@ def create(
     )
     race_info = race_info[race_info["race_class"] == 1]
 
-    
+
+
     results = pd.read_csv(input_dir / results_filename, sep="\t")
 
 

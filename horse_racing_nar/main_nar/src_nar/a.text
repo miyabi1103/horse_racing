@@ -1,0 +1,13 @@
+# オッズと人気を特徴量から省いたランク、芝、クロスバリデーション
+trainer = Trainer_lightgbm_time_cv(
+    features_filename = "features_dirt_sonoda.csv", 
+    config_filepath="config_lightgbm_kaiki_dev_dirt10.yaml",
+)
+evaluation_df = trainer.run(
+    n_splits = 5,
+    importance_filename="importance_lightgbm_kaiki_cv_dev_dirt_sonoda",
+    model_filename="model_lightgbm_kaikii_cv_dev_dirt_sonoda.pkl",
+    evaluation_filename="evaluation_lightgbm_kaiki_cv_dev_dirt_sonoda.csv",
+    final_model_filename = "model_lightgbm_kaiki_cv_full_dev_dirt_sonoda.pkl",
+    final_num_boost_round = 2000
+)

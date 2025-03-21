@@ -28,7 +28,7 @@ class Evaluator_lightgbm_time_kaiki:
     def box_top_n(
         self,
         sort_col: str = "pred",
-        ascending: bool = True,
+        ascending: bool = False,
         n: int = 5,
         exp_name: str = "model",
     ):

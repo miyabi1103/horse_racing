@@ -266,13 +266,13 @@ class Trainer_lightgbm_time_cv:
 
     def create_dataset_for_cv(
         self, 
-        n_splits: int = 10
+        n_splits: int = 5
     ):
         """ 時系列クロスバリデーションのため、データをn_splitsに分割
         学習データを徐々に増やし、評価データを次に進めていく
         """
         # 目的変数
-        self.features["target"] = self.features["time"].astype(int)
+        self.features["target"] = self.features["speed_index"].astype(int)
 
         # 時系列でデータを並べ替え
         self.features = self.features.sort_values("date")
@@ -359,7 +359,8 @@ class Trainer_lightgbm_time_cv:
         importance_filename: str = "importance_lightgbm_time_cv", 
         model_filename: str = "model_lightgbm_time_cv.pkl", 
         evaluation_filename: str = "evaluation_lightgbm_time_cv.csv", 
-        final_model_filename: str = "model_lightgbm_time_cv_full.pkl"
+        final_model_filename: str = "model_lightgbm_time_cv_full.pkl",
+        final_num_boost_round: int = 1000
     ):
         """ 時系列クロスバリデーションを実行し、最後に全データを使って学習したモデルを保存
         """
@@ -403,7 +404,7 @@ class Trainer_lightgbm_time_cv:
         model = lgb.train(
             self.params,
             lgb_train,
-            num_boost_round=additional_boost_round,
+            num_boost_round=final_num_boost_round,
             init_model=init_model
         )
 

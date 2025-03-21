@@ -44,7 +44,10 @@ async def update_odds_and_popularity(features,race_id:str):
 
     df = features.copy()
     df["tansho_odds"] = df["umaban"].map(odds)
+    df["tansho_odds"] = pd.to_numeric(df["tansho_odds"], errors="coerce")
+
     df["popularity"] = df["tansho_odds"].rank(ascending = True,method ="min")
+
     df_reload = df
     return df_reload
 
