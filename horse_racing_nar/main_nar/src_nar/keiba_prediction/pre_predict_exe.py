@@ -30,12 +30,12 @@ from feature_engineering_prediction import PredictionFeatureCreator
 import shutil
 
 
-DATA_DIR = Path("..", "..","..","common_nar", "data_nar",)
+DATA_DIR = Path("..", "..","..","common_nar", "data_nar")
 HTML_RACE_DIR = DATA_DIR / "html" / "race"
 HTML_HORSE_DIR = DATA_DIR / "html" / "horse"
 HTML_PED_DIR = DATA_DIR / "html" / "ped"
 HTML_LEADING_DIR = DATA_DIR / "html" / "leading"
-POPULATION_DIR_NEW = COMMON_DATA_DIR / "prediction_population"
+POPULATION_DIR_NEW = DATA_DIR / "prediction_population"
 
 # ### 実際に予測する際の事前準備
 
@@ -132,8 +132,9 @@ def prepredict(kaisai_date:str):
     # リスト内の日付をフィルタリング
     kaisai_date_list_prediction = [
         date for date in kaisai_date_list_prediction
-        if datetime.strptime(date, "%Y-%m-%d") >= cutoff_date
+        if datetime.strptime(date, "%Y%m%d") >= cutoff_date
     ]
+    print(kaisai_date_list_prediction)
 
     TMP_DIR3 = scraping.DATA_DIR / "tmp_predict2"
     # TMP_DIR3の中身を削除して再作成

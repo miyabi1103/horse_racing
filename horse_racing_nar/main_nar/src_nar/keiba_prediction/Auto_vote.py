@@ -4,23 +4,25 @@ from datetime import datetime,timedelta
 from apscheduler.schedulers.blocking import BlockingScheduler
 import sys
 from pathlib import Path
-sys.path.append(str(Path(__file__).resolve().parent.parent.parent / "src"))
+sys.path.append(str(Path(__file__).resolve().parent.parent.parent / "src_nar"))
 import pandas as pd
 
-import create_population
-import create_population_dirt_sonoda
-import create_population_dirt_urawa
-import create_population_dirt_saga
-import create_population_dirt_ooi
-import create_population_dirt_nagoya
-import create_population_dirt_morioka
-import create_population_dirt_monbetu
-import create_population_dirt_mizusawa
-import create_population_dirt_kouti
-import create_population_dirt_kawasaki
-import create_population_dirt_kasamatu
-import create_population_dirt_kanazawa
-import create_population_dirt_funabasi
+import predict_exe_funabasi
+import predict_exe_monbetu
+import predict_exe_kanazawa
+import pre_predict_exe
+import predict_exe_kasamatu
+import predict_exe_kawasaki
+import predict_exe_kouti
+import predict_exe_mizusawa
+import predict_exe_nagoya
+import predict_exe_morioka
+import predict_exe_sonoda
+import predict_exe_urawa
+import predict_exe_ooi
+import predict_exe_saga
+
+from keiba_notify import discord
 
 import Auto_prediction
 #ここに投票を行う遷移の関数をいれる
@@ -28,21 +30,73 @@ import Auto_prediction
 #     print(f"scraping auto {race_id}")
 #     asyncio.run(scraper.Create_time_table(race_id=race_id))
 
-def scrape_job(race_id:str):
+def scrape_job(race_id:str, row: dict):
     #ここに予測の実行、投票の実行のプログラムをいれる
     #その前に、pre_predict_exeを実行したいが、それは一日に一度で良い
-
-    if row["place"] == 2:  
-        predict = predict_exe_obstract.def_predict_exe_obstract(kaisai_date=args.kaisai_date, race_id=race_id)  
     
-    elif row["type"] == 2:  
-        predict = predict_exe_obstract.def_predict_exe_obstract(kaisai_date=args.kaisai_date, race_id=race_id)  
+
+    if row["place"] == 30:  
+        predict = predict_exe_monbetu.def_predict_exe_monbetu(kaisai_date=args.kaisai_date, race_id=race_id)  
+        discord_notify = discord.post_discord()
+
+    elif row["place"] == 35:  
+        predict = predict_exe_morioka.def_predict_exe_morioka(kaisai_date=args.kaisai_date, race_id=race_id)  
+        discord_notify = discord.post_discord()
+
+    elif row["place"] == 36:  
+        predict = predict_exe_mizusawa.def_predict_exe_mizusawa(kaisai_date=args.kaisai_date, race_id=race_id)  
+        discord_notify = discord.post_discord()
+
+    elif row["place"] == 42:  
+        predict = predict_exe_urawa.def_predict_exe_urawa(kaisai_date=args.kaisai_date, race_id=race_id)  
+        discord_notify = discord.post_discord()
+
+    elif row["place"] == 43:  
+        predict = predict_exe_funabasi.def_predict_exe_funabasi(kaisai_date=args.kaisai_date, race_id=race_id)  
+        discord_notify = discord.post_discord()
+
+    elif row["place"] == 44:  
+        predict = predict_exe_ooi.def_predict_exe_ooi(kaisai_date=args.kaisai_date, race_id=race_id)  
+        discord_notify = discord.post_discord()
+
+    elif row["place"] == 45:  
+        predict = predict_exe_kawasaki.def_predict_exe_kawasaki(kaisai_date=args.kaisai_date, race_id=race_id)  
+        discord_notify = discord.post_discord()
+
+    elif row["place"] == 46:  
+        predict = predict_exe_kanazawa.def_predict_exe_kanazawa(kaisai_date=args.kaisai_date, race_id=race_id)  
+        discord_notify = discord.post_discord()
+
+    elif row["place"] == 47:  
+        predict = predict_exe_kasamatu.def_predict_exe_kasamatu(kaisai_date=args.kaisai_date, race_id=race_id)  
+        discord_notify = discord.post_discord()
+
+    elif row["place"] == 48:  
+        predict = predict_exe_nagoya.def_predict_exe_nagoya(kaisai_date=args.kaisai_date, race_id=race_id)  
+        discord_notify = discord.post_discord()
+
+    elif row["place"] == 50:  
+        predict = predict_exe_sonoda.def_predict_exe_sonoda(kaisai_date=args.kaisai_date, race_id=race_id)  
+        discord_notify = discord.post_discord()
+
+    elif row["place"] == 51:  
+        predict = predict_exe_sonoda.def_predict_exe_sonoda(kaisai_date=args.kaisai_date, race_id=race_id)  
+        discord_notify = discord.post_discord()
+
+    elif row["place"] == 54:  
+        predict = predict_exe_kouti.def_predict_exe_kouti(kaisai_date=args.kaisai_date, race_id=race_id)  
+        discord_notify = discord.post_discord()
+
+    elif row["place"] == 55:  
+        predict = predict_exe_saga.def_predict_exe_saga(kaisai_date=args.kaisai_date, race_id=race_id)  
+        discord_notify = discord.post_discord()
+
     elif row["type"] == "none":  
         predict = pre_predict_exe.prepredict(kaisai_date=args.kaisai_date)  
+
     else:
-        predict = predict_exe_turf.def_predict_exe_turf(kaisai_date=args.kaisai_date, race_id=race_id)
+        print("error")
         
-    print(f"scraping auto {race_id}")
 
     print(f"scraping auto {race_id}")
 
@@ -66,17 +120,21 @@ if __name__ == "__main__":
     time_table = asyncio.run(Auto_prediction.Create_time_table(kaisai_data=args.kaisai_date))
     time_table_dev = time_table.copy()
 
+
+    ###########################################
     #開発用
     time_table_dev["post_time"] = [
         (datetime.now() + timedelta(minutes=1 * i + 1)).strftime("%H:%M")
         for i in range(len(time_table))
     ]
+    ###########################################
+
 
     # 一番手前のpost_timeを取得
     first_post_time = datetime.strptime(time_table_dev.iloc[0]["post_time"], "%H:%M")
 
     # 1時間前の時間を計算
-    new_post_time = (first_post_time - timedelta(minutes=19)).strftime("%H:%M")
+    new_post_time = (first_post_time - timedelta(minutes=120)).strftime("%H:%M")
 
     # 新しい行を作成
     new_row = {col: "none" for col in time_table_dev.columns}  # すべての列に100を設定
@@ -84,6 +142,8 @@ if __name__ == "__main__":
 
     # 新しい行をDataFrameに追加
     time_table_dev = pd.concat([pd.DataFrame([new_row]), time_table_dev], ignore_index=True)
+
+
 
 
     print(time_table_dev)
@@ -97,7 +157,7 @@ if __name__ == "__main__":
         post_time = datetime.strptime(row["post_time"],"%H:%M").time()
         run_at = (
             datetime.combine(datetime.now(),post_time)
-            # - timedelta(minutes = 2)
+            # - timedelta(minutes = 6)
             # - timedelta(seconds = 10)
         )
         scheduler.add_job(

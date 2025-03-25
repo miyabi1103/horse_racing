@@ -20,7 +20,173 @@ async def Create_time_table(kaisai_data:str):
         "JS": 2
     }
     race_class_mapping = {
-        "新馬": 0,
+
+        "新馬": -15,
+        "初出": -15,
+        "初出走": -15,
+        "未走": -15,
+        "未出走": -15,
+
+
+        "C３級上": -11.5,
+        "C３級下": -12.5,
+        "C４": -13,
+        "C３": -12,
+        "C２": -11,
+        "C１": -10,
+        "B４": -10,
+        "B３": -9,
+        "B２": -8,
+        "B１": -7,
+        "A４": -7,
+        "A３": -6,
+        "A２": -5,
+        "A１": -4,
+        "H4": -4,
+        "H3": -3,
+        "H2": -2,
+        "H1": -1,
+        "H４": -4,
+        "H３": -3,
+        "H２": -2,
+        "H１": -1,
+
+        "C3級上": -11.5,
+        "C3級下": -12.5,
+        "C4": -13,
+        "C3": -12,
+        "C2": -11,
+        "C1": -10,
+        "B4": -10,
+        "B3": -9,
+        "B2": -8,
+        "B1": -7,
+        "A4": -6,
+        "A3": -6,
+        "A2": -5,
+        "A1": -4,
+
+        
+        "S4": -4,
+        "S3": -3,
+        "S2": -2,
+        "S1": -1,
+        "S４": -4, 
+        "S３": -3,
+        "S２": -2,
+        "S１": -1,
+
+        "M4": -4,
+        "M3": -3,
+        "M2": -2,
+        "M1": -1,
+        "M４": -4, 
+        "M３": -3,
+        "M２": -2,
+        "M１": -1,
+
+        "Jpn3": 6,
+        "Jpn2": 7,
+        "Jpn1": 8,
+        "Jpn３": 6,
+        "Jpn２": 7,
+        "Jpn１": 8,
+        "JpnIII": 6,
+        "JpnII": 7,
+        "JpnI": 8,
+        "JpnⅢ": 6,
+        "JpnⅡ": 7,
+        "JpnⅠ": 8,
+        "トライアル": -10,
+        "フューチャーステップ": -10,
+        "サファイア": -10,
+        "サードニクス": -10,
+        "チャレンジ": -10,
+        "セレクトゴールド": -10, 
+        "アッパートライ": -10, 
+        "アッパート": -10, 
+        "JRA認定": -10, 
+        "JRA交流": -10, 
+        "Cー4": -13,
+        "Cー3": -12,
+        "Cー2": -11,
+        "Cー1": -10,
+        "Bー4": -10,
+        "Bー3": -9,
+        "Bー2": -8,
+        "Bー1": -7,
+        "Aー4": -7,
+        "Aー3": -6,
+        "Aー2": -5,
+        "Aー1": -4,
+        "Hー4": -3,
+        "Hー3": -3,
+        "Hー2": -2,
+        "Hー1": -1,
+        "Hー４": -4,
+        "Hー３": -3,
+        "Hー２": -2,
+        "Hー１": -1,
+        "Sー4": -4,
+        "Sー3": -3,
+        "Sー2": -2,
+        "Sー1": -1,
+        "Sー４": -4,
+        "Sー３": -3,
+        "Sー２": -2,
+        "Sー１": -1,
+
+        "C-4": -13,
+        "C-3": -12,
+        "C-2": -11,
+        "C-1": -10,
+        "B-4": -10,
+        "B-3": -9,
+        "B-2": -8,
+        "B-1": -7,
+        "A-4": -7,
+        "A-3": -6,
+        "A-2": -5,
+        "A-1": -4,
+
+        "H-4": -4,
+        "H-3": -3,
+        "H-2": -2,
+        "H-1": -1,
+        "H-４": -3,
+        "H-３": -3,
+        "H-２": -2,
+        "H-１": -1,
+        "S-4": -4,
+        "S-3": -3,
+        "S-2": -2,
+        "S-1": -1,
+        "S-４": -4,
+        "S-３": -3,
+        "S-２": -2,
+        "S-１": -1,
+        "OP": -5,
+        "重賞": -6,
+        "オープン": -5,
+        
+
+        "Mー4": -4,
+        "Mー3": -3,
+        "Mー2": -2,
+        "Mー1": -1,
+        "Mー４": -4,
+        "Mー３": -3,
+        "Mー２": -2,
+        "Mー１": -1,
+        "M-4": -4,
+        "M-3": -3,
+        "M-2": -2,
+        "M-1": -1,
+        "M-４": -4,
+        "M-３": -3,
+        "M-２": -2,
+        "M-１": -1,
+
         "未勝利": 1,
         "1勝クラス": 2,
         "１勝クラス": 2,
@@ -28,24 +194,22 @@ async def Create_time_table(kaisai_data:str):
         "２勝クラス": 3,
         "3勝クラス": 4,
         "３勝クラス": 4,
-        "オープン": 5,
         "G3": 6,
         "G2": 7,
         "G1": 8,
         "GIII": 6,
         "GII": 7,
-        "GI": 8,
-        "重賞": 6,    
+        "GI": 8,  
         "GⅢ": 6,
         "GⅡ": 7,
         "GⅠ": 8,
         "L":5,
-        "OP": 5,
-        "特別":5,
         "500万下": 2,
         "1000万下": 3,
         "1600万下": 4
-        }
+    
+
+    }
 
     async with async_playwright() as playwright:
         # playwright = await async_playwright().start()
@@ -137,10 +301,28 @@ async def Create_time_table(kaisai_data:str):
             time_table_dict["class"].append(race_class)
             
             #発走時刻の取得
-            post_time = await race.locator("span.RaceList_Itemtime").inner_text()
-            time_table_dict["post_time"].append(post_time.strip())
-           
+            # post_time = await race.locator("span.RaceList_Itemtime").inner_text()
+            # time_table_dict["post_time"].append(post_time.strip())
 
+            # spanタグ内のテキストをすべて取得
+            span_tags = await race.locator("span").all_text_contents()
+
+            # 正規表現で「数字:数字」の形式を抽出
+            time_pattern = r"\b\d{1,2}:\d{2}\b"  # 例: 12:30, 9:45 など
+            post_time = None  # 初期値を設定
+
+            for text in span_tags:
+                match = re.search(time_pattern, text)
+                if match:
+                    post_time = match.group(0)  # 最初にマッチした時間を取得
+                    break  # 最初のマッチでループを終了
+
+            # 発走時刻をtime_table_dictに追加
+            if post_time:
+                time_table_dict["post_time"].append(post_time.strip())
+            else:
+                time_table_dict["post_time"].append(None)  # 時刻が見つからない場合はNoneを追加
+                
 
         # ---------------------
         await context.close()
@@ -167,6 +349,8 @@ async def Create_time_table(kaisai_data:str):
     df = df[df["class"] != 0]
     # typeが0かつclassが1かつlongが1900未満の行を除外
     df = df[~((df["long"] < 1900))]
+    df["place"] = df["race_id"].astype(str).str[4:6]
+    df["place"] = df["place"].astype(int)
 
     return df
 

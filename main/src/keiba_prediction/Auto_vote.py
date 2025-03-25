@@ -14,7 +14,7 @@ from keiba_prediction import predict_exe_dirt
 from keiba_prediction import predict_exe_dirt_nowin
 from keiba_prediction import predict_exe_obstract
 import pandas as pd
-
+from keiba_notify import discord
 #ここに投票を行う遷移の関数をいれる
 # def scrape_job(race_id:str,scraper:Auto_prediction):
 #     print(f"scraping auto {race_id}")
@@ -28,19 +28,31 @@ def scrape_job(race_id:str, row: dict):
 
     if row["type"] == 1 and row["class"] >= 2:
         predict = predict_exe_turf.def_predict_exe_turf(kaisai_date=args.kaisai_date, race_id=race_id)
-    elif row["type"] == 1 and row["class"] <  2:
+        discord_notify = discord.post_discord()
+
+    elif row["type"] == 1 and row["class"] < 2:
         predict = predict_exe_turf_nowin.def_predict_exe_turf_nowin(kaisai_date=args.kaisai_date, race_id=race_id)
+        discord_notify = discord.post_discord()
+
     elif row["type"] == 0 and row["class"] >= 2:
         predict = predict_exe_dirt.def_predict_exe_dirt(kaisai_date=args.kaisai_date, race_id=race_id)
-    elif row["type"] == 0 and row["class"] <  2:
-        predict = predict_exe_dirt_nowin.def_predict_exe_dirt_nowin(kaisai_date=args.kaisai_date, race_id=race_id)  
-    elif row["type"] == 2:  
-        predict = predict_exe_obstract.def_predict_exe_obstract(kaisai_date=args.kaisai_date, race_id=race_id)  
-    elif row["type"] == "none":  
-        predict = pre_predict_exe.prepredict(kaisai_date=args.kaisai_date)  
+        discord_notify = discord.post_discord()
+
+    elif row["type"] == 0 and row["class"] < 2:
+        predict = predict_exe_dirt_nowin.def_predict_exe_dirt_nowin(kaisai_date=args.kaisai_date, race_id=race_id)
+        discord_notify = discord.post_discord()
+
+    elif row["type"] == 2:
+        predict = predict_exe_obstract.def_predict_exe_obstract(kaisai_date=args.kaisai_date, race_id=race_id)
+        discord_notify = discord.post_discord()
+
+    elif row["type"] == "none":
+        predict = pre_predict_exe.prepredict(kaisai_date=args.kaisai_date)
+
+
     else:
         predict = predict_exe_turf.def_predict_exe_turf(kaisai_date=args.kaisai_date, race_id=race_id)
-        
+        discord_notify = discord.post_discord() 
     print(f"scraping auto {race_id}")
 
 
@@ -64,18 +76,18 @@ if __name__ == "__main__":
     time_table = asyncio.run(Auto_prediction.Create_time_table(kaisai_data=args.kaisai_date))
     time_table_dev = time_table.copy()
 
-    #開発用
-    time_table_dev["post_time"] = [
-        (datetime.now() + timedelta(minutes=1 * i + 20)).strftime("%H:%M")
-        for i in range(len(time_table))
-    ]
+    # #開発用
+    # time_table_dev["post_time"] = [
+    #     (datetime.now() + timedelta(minutes=1 * i + 20)).strftime("%H:%M")
+    #     for i in range(len(time_table))
+    # ]
 
 
     # 一番手前のpost_timeを取得
     first_post_time = datetime.strptime(time_table_dev.iloc[0]["post_time"], "%H:%M")
 
     # 1時間前の時間を計算
-    new_post_time = (first_post_time - timedelta(minutes=19)).strftime("%H:%M")
+    new_post_time = (first_post_time - timedelta(minutes=120)).strftime("%H:%M")
 
     # 新しい行を作成
     new_row = {col: "none" for col in time_table_dev.columns}  # すべての列に100を設定
@@ -96,8 +108,8 @@ if __name__ == "__main__":
         post_time = datetime.strptime(row["post_time"],"%H:%M").time()
         run_at = (
             datetime.combine(datetime.now(),post_time)
-            # - timedelta(minutes = 2)
-            # - timedelta(seconds = 10)
+            - timedelta(minutes = 6)
+            - timedelta(seconds = 0)
             # それより何分前に実行させるか
         )
         scheduler.add_job(

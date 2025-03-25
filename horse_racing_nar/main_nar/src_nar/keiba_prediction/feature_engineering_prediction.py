@@ -21,7 +21,7 @@ POPULATION_DIR = COMMON_DATA_DIR / "prediction_population"
 MAPPING_DIR = COMMON_DATA_DIR / "mapping"
 
 
-DATA_DIR = Path("..", "data_nar")
+DATA_DIR = Path("..","..", "data_nar")
 OLD_POPULATION_DIR = DATA_DIR / "00_population"
 INPUT_DIR = DATA_DIR / "01_preprocessed"
 OUTPUT_DIR = DATA_DIR / "02_features"

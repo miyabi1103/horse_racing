@@ -106,9 +106,9 @@ def prepredict(kaisai_date:str):
     # リスト内の日付をフィルタリング
     kaisai_date_list_prediction = [
         date for date in kaisai_date_list_prediction
-        if datetime.strptime(date, "%Y-%m-%d") >= cutoff_date
+        if datetime.strptime(date, "%Y%m%d") >= cutoff_date
     ]
-
+    print(kaisai_date_list_prediction)
 
     TMP_DIR3 = scraping.DATA_DIR / "tmp_predict2"
     # TMP_DIR3の中身を削除して再作成

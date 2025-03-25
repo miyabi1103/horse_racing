@@ -21,9 +21,9 @@ class TicketsPurchaser:
         # JRA IPATのurl
         self.pat_url = "https://www.ipat.jra.go.jp/index.cgi"
         # # INETID
-        # self.inet_id = "W2H2Y6C9"
+        # self.inet_id = ""
         # # 加入者番号
-        # self.kanyusha_no = "68354754"
+        # self.kanyusha_no = ""
         # # PATのパスワード
         # self.password_pat = ""
         # # P-ARS番号
