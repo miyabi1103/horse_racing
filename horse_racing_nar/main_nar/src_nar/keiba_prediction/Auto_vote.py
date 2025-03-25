@@ -121,13 +121,13 @@ if __name__ == "__main__":
     time_table_dev = time_table.copy()
 
 
-    ###########################################
-    #開発用
-    time_table_dev["post_time"] = [
-        (datetime.now() + timedelta(minutes=1 * i + 1)).strftime("%H:%M")
-        for i in range(len(time_table))
-    ]
-    ###########################################
+    # ###########################################
+    # #開発用
+    # time_table_dev["post_time"] = [
+    #     (datetime.now() + timedelta(minutes=1 * i + 1)).strftime("%H:%M")
+    #     for i in range(len(time_table))
+    # ]
+    # ###########################################
 
 
     # 一番手前のpost_timeを取得
@@ -157,7 +157,7 @@ if __name__ == "__main__":
         post_time = datetime.strptime(row["post_time"],"%H:%M").time()
         run_at = (
             datetime.combine(datetime.now(),post_time)
-            # - timedelta(minutes = 6)
+            - timedelta(minutes = 6)
             # - timedelta(seconds = 10)
         )
         scheduler.add_job(

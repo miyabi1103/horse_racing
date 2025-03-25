@@ -44,7 +44,7 @@ def predict(
     prediction_df["pred"] = prediction_df.groupby("race_id")["pred"].transform(lambda x: x / x.sum())
 
     prediction_df["Ex_value"] = prediction_df["pred"] * prediction_df["tansho_odds"]
-    prediction_df["popularity"] =  prediction_df["popularity"]*100
+    prediction_df["popularity"] =  prediction_df["popularity"].astype(int)  * 100
 
 
     prediction_df = prediction_df.join(features[[
@@ -184,7 +184,7 @@ def predict(
         import matplotlib
         matplotlib.use("Agg")  # GUIバックエンドを無効化
         import matplotlib.pyplot as plt
-        plt.rcParams["font.family"] = "DejaVu Sans"  # 英語用フォント
+        # plt.rcParams["font.family"] = "DejaVu Sans"  # 英語用フォント
 
 
         # 背景色を完全ダークモードに
