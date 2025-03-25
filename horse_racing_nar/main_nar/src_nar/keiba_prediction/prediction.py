@@ -184,6 +184,7 @@ def predict(
         import matplotlib
         matplotlib.use("Agg")  # GUIバックエンドを無効化
         import matplotlib.pyplot as plt
+        plt.rcParams["font.family"] = "DejaVu Sans"  # 英語用フォント
 
 
         # 背景色を完全ダークモードに
