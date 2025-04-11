@@ -42,7 +42,7 @@ class Evaluator_lightgbm_rank_niti_cross:
         """
         # self.evaluation_df = self.evaluation_df.query("course_len <= 1500")
         # self.evaluation_df = self.evaluation_df.query("1500 < course_len <= 2200")
-        self.evaluation_df = self.evaluation_df.query("1900 <= course_len")
+        # self.evaluation_df = self.evaluation_df.query("1900 <= course_len")
 
         # self.evaluation_df = self.evaluation_df.query("weather <= 2")
         # self.evaluation_df = self.evaluation_df.query("2 <  weather")
@@ -55,6 +55,16 @@ class Evaluator_lightgbm_rank_niti_cross:
 
         # self.evaluation_df = self.evaluation_df.query("mean_age <= 3.4")
         # self.evaluation_df = self.evaluation_df.query("3.4 < mean_age")
+
+        # self.evaluation_df = self.evaluation_df.query("n_horses <=8")
+        # self.evaluation_df = self.evaluation_df.query("n_horses <=10")
+        # self.evaluation_df = self.evaluation_df.query("16 <= n_horses")
+        # self.evaluation_df = self.evaluation_df.query("10 <= n_horses <=15")
+        # self.evaluation_df = self.evaluation_df.query("tansho_odds >=2")
+        # self.evaluation_df = self.evaluation_df.query("tansho_odds >=4")
+        # self.evaluation_df = self.evaluation_df.query("tansho_odds <=10")
+
+
 
         # ・距離1500以下	
         # ・距離1500～2200	

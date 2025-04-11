@@ -40,6 +40,9 @@ with open(MAPPING_DIR / "ground_state.json", "r") as f:
     ground_state_mapping = json.load(f)
 with open(MAPPING_DIR / "race_class.json", "r") as f:
     race_class_mapping = json.load(f)
+with open(MAPPING_DIR / "race_class_2.json", "r") as f:
+    race_class_mapping2 = json.load(f)
+
 
 #出走馬の過去のレースとかのデータを、学習したデータに合わせる
 
@@ -415,20 +418,27 @@ class PredictionFeatureCreator:
         race_class = re.findall(regex_race_class, divs_02[0].text)
 
 
-        race_class_mapping_general = {
-            "2歳": -13,
-            "3歳": -12,
-            "２歳": -13,
-            "３歳": -12,
-            "C": -11,
-            "B": -8,
-            "A": -5,
-        }
-        regex_race_class_general = "|".join(list(race_class_mapping_general.keys()))
-
-        race_class_title_general = re.findall(regex_race_class_general, title)
+        # レース階級情報の取得
+        regex_race_class2 = "|".join(race_class_mapping2)
+        race_class_title2 = re.findall(regex_race_class2, title)
         # タイトルからレース階級情報が取れない場合
-        race_class_general = re.findall(regex_race_class_general, divs[0].text)
+        race_class2 = re.findall(regex_race_class2, divs_02[0].text)
+
+
+        # race_class_mapping_general = {
+        #     "2歳": -13,
+        #     "3歳": -12,
+        #     "２歳": -13,
+        #     "３歳": -12,
+        #     "C": -11,
+        #     "B": -8,
+        #     "A": -5,
+        # }
+        # regex_race_class_general = "|".join(list(race_class_mapping_general.keys()))
+
+        # race_class_title_general = re.findall(regex_race_class_general, title)
+        # # タイトルからレース階級情報が取れない場合
+        # race_class_general = re.findall(regex_race_class_general, divs[0].text)
 
 
         if len(race_class_title) != 0:
@@ -458,27 +468,11 @@ class PredictionFeatureCreator:
             elif 10000 <= prize_amount:
                 race_grade = "GⅠ"
                 info_dict["race_class"] = race_class_mapping[race_grade]
-        elif len(race_class_title_general) != 0:
-
-            info_dict["race_class"] = regex_race_class_general.get(race_class_title_general[0], None)
-
+        elif len(race_class_title2) != 0:
+            info_dict["race_class"] = race_class_mapping2[race_class_title2[0]]
             # info_dict["race_class"] = regex_race_class_general[race_class_title_general[0]]
-        elif len(race_class_general) != 0:
-            race_class_mapping_general = {
-                "2歳": -13,
-                "3歳": -12,
-                "２歳": -13,
-                "３歳": -12,
-                "C": -11,
-                "B": -8,
-                "A": -5,
-            }
-            regex_race_class_general = "|".join(list(race_class_mapping_general.keys()))
-
-            race_class_title_general = re.findall(regex_race_class_general, title)
-            # タイトルからレース階級情報が取れない場合
-            race_class_general = re.findall(regex_race_class_general, divs[1].text)
-            info_dict["race_class"] = regex_race_class_general[race_class_general[0]]
+        elif len(race_class2) != 0 and race_class2 != ['オープン']:
+            info_dict["race_class"] = race_class_mapping2[race_class2[0]]
         else:
             info_dict["race_class"] = None
 
@@ -14201,7 +14195,7 @@ class PredictionFeatureCreator:
         self.cross_features_13()
         self.cross_features_14(date_condition_a)
         self.cross_features_15()
-        # self.cross_features_16()
+        self.cross_features_16()
         self.position_results()
         self.dirt_weight_weather()
         self.umaban_good()
@@ -14402,12 +14396,12 @@ class PredictionFeatureCreator:
                 how="left",
                 # copy=False,
             )          
-            # .merge(
-            #     self.agg_cross_features_df_16,
-            #     on=["race_id", "date", "horse_id"],
-            #     how="left",
-            #     # copy=False,
-            # )   
+            .merge(
+                self.agg_cross_features_df_16,
+                on=["race_id", "date", "horse_id"],
+                how="left",
+                # copy=False,
+            )   
             .merge(
                 self.agg_position_results,
                 on=["race_id", "date", "horse_id"],

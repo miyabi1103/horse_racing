@@ -78,8 +78,8 @@ def process_results(
     df["wakuban"] = df["枠番"].astype(int)
     df["sex"] = df["性齢"].str[0].map(sex_mapping)
     df["age"] = df["性齢"].str[1:].astype(int)
-    df["weight"] = df["馬体重"].str.extract(r"(\d+)").astype(int)
-    df["weight_diff"] = df["馬体重"].str.extract(r"\((.+)\)").astype(int)
+    df["weight"] = df["馬体重"].str.extract(r"(\d+)").fillna(0).astype(int)
+    df["weight_diff"] = df["馬体重"].str.extract(r"\((.+)\)").fillna(0).astype(int)
     df["n_horses"] = df.groupby("race_id")["race_id"].transform("count")
     
     # コーナー通過順を分割して列を作成

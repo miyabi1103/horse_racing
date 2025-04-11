@@ -1,0 +1,20 @@
+
+05 12 * * 1 cd /Users/gotoumasafumi/Downloads/GitHub/horse_racing/horse_racing_nar/main_nar/src_nar/keiba_prediction && /Users/gotoumasafumi/Downloads/GitHub/horse_racing/.venv/bin/python3 Auto_vote.py >> /tmp/cron_output.log 2>&1
+
+05 12 * * 2 cd /Users/gotoumasafumi/Downloads/GitHub/horse_racing/horse_racing_nar/main_nar/src_nar/keiba_prediction && /Users/gotoumasafumi/Downloads/GitHub/horse_racing/.venv/bin/python3 Auto_vote.py >> /tmp/cron_output.log 2>&1
+
+05 12 * * 3 cd /Users/gotoumasafumi/Downloads/GitHub/horse_racing/horse_racing_nar/main_nar/src_nar/keiba_prediction && /Users/gotoumasafumi/Downloads/GitHub/horse_racing/.venv/bin/python3 Auto_vote.py >> /tmp/cron_output.log 2>&1
+
+05 12 * * 4 cd /Users/gotoumasafumi/Downloads/GitHub/horse_racing/horse_racing_nar/main_nar/src_nar/keiba_prediction && /Users/gotoumasafumi/Downloads/GitHub/horse_racing/.venv/bin/python3 Auto_vote.py >> /tmp/cron_output.log 2>&1
+
+05 12 * * 5 cd /Users/gotoumasafumi/Downloads/GitHub/horse_racing/horse_racing_nar/main_nar/src_nar/keiba_prediction && /Users/gotoumasafumi/Downloads/GitHub/horse_racing/.venv/bin/python3 Auto_vote.py >> /tmp/cron_output.log 2>&1
+
+45 16 * * 6 cd /Users/gotoumasafumi/Downloads/GitHub/horse_racing/horse_racing_nar/main_nar/src_nar/keiba_prediction && /Users/gotoumasafumi/Downloads/GitHub/horse_racing/.venv/bin/python3 Auto_vote.py >> /tmp/cron_output.log 2>&1
+
+45 16 * * 7 cd /Users/gotoumasafumi/Downloads/GitHub/horse_racing/horse_racing_nar/main_nar/src_nar/keiba_prediction && /Users/gotoumasafumi/Downloads/GitHub/horse_racing/.venv/bin/python3 Auto_vote.py >> /tmp/cron_output.log 2>&1
+
+05 9 * * 1 cd /Users/gotoumasafumi/Downloads/GitHub/horse_racing/horse_racing/main/src/keiba_prediction && /Users/gotoumasafumi/Downloads/GitHub/horse_racing/.venv/bin/python3 Auto_vote.py >> /tmp/cron_output.log 2>&1
+
+05 9 * * 7 cd /Users/gotoumasafumi/Downloads/GitHub/horse_racing/horse_racing/main/src/keiba_prediction && /Users/gotoumasafumi/Downloads/GitHub/horse_racing/.venv/bin/python3 Auto_vote.py >> /tmp/cron_output.log 2>&1
+
+05 9 * * 6 cd /Users/gotoumasafumi/Downloads/GitHub/horse_racing/horse_racing/main/src/keiba_prediction && /Users/gotoumasafumi/Downloads/GitHub/horse_racing/.venv/bin/python3 Auto_vote.py >> /tmp/cron_output.log 2>&1

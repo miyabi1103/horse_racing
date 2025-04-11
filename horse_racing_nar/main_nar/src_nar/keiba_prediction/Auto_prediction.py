@@ -8,8 +8,22 @@ from bs4 import BeautifulSoup
 
 import sys
 from pathlib import Path
-sys.path.append(str(Path(__file__).resolve().parent.parent.parent / "src"))
 
+
+import matplotlib
+matplotlib.use("Agg")  # GUIバックエンドを無効化
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# from matplotlib import rcParams
+# rcParams["font.family"] = "Noto Sans CJK JP"
+
+# # plt.rcParams["font.family"] = "IPAexGothic"
+# matplotlib.rcParams["font.family"] = "Noto Sans CJK JP"
+# matplotlib.rcParams["font.sans-serif"] = ["Noto Sans CJK JP"]
+# plt.rcParams["font.style"] = "normal"
+DATA_DIR = Path("..", "..", "data_nar")
+SAVE_DIR = DATA_DIR / "05_prediction_results"
 
 async def Create_time_table(kaisai_data:str):
     race_type_mapping = {
@@ -351,6 +365,124 @@ async def Create_time_table(kaisai_data:str):
     df = df[~((df["long"] < 1900))]
     df["place"] = df["race_id"].astype(str).str[4:6]
     df["place"] = df["place"].astype(int)
+
+    place_mapping = {
+        '01': 'Sapporo',
+        '02': 'Hakodate',
+        '03': 'Fukushima',
+        '04': 'Niigata',
+        '05': 'Tokyo',
+        '06': 'Nakayama',
+        '07': 'Chukyo',
+        '08': 'Kyoto',
+        '09': 'Hanshin',
+        '10': 'Kokura',
+        '30': "monbetu",
+        '35': "morioka",
+        '36': "mizusawa",
+        '42': "urawa",
+        '43': "funabasi",
+        '44': "ooi",
+        '45': "kawasaki",
+        '46': "kanazawa",
+        '47': "kasamatu",
+        '48': "nagoya",
+        '50': "sonoda",
+        '51': "himeji",
+        '54': "kouti",
+        '55': "saga"
+
+    }
+
+    from datetime import datetime
+
+    # 曜日を取得するためのマッピング
+    weekday_mapping = ["mon", "tue", "wed", "thu", "fri", "sat", "sun"]
+
+    # RACE_INFO列を作成
+    df["RACE_INFO"] = df["race_id"].apply(
+        lambda race_id: f"{datetime.now().strftime('%Y/%m/%d')}({weekday_mapping[datetime.now().weekday()]}) "
+                        f"{place_mapping[str(race_id[4:6])]} No.{int(str(race_id[10:12]))}"
+    )
+    # RACE_INFO列を一番左に移動
+    columns = ["RACE_INFO"] + [col for col in df.columns if col != "RACE_INFO"]
+    df = df[columns]
+    # prediction_df = prediction_df.drop(columns=["race_id"])
+
+
+    # データフレームをPNG形式で保存する関数
+    def save_csv_as_image(dataframe: pd.DataFrame, output_file: Path):
+        import matplotlib
+        matplotlib.use("Agg")  # GUIバックエンドを無効化
+        import matplotlib.pyplot as plt
+        import seaborn as sns
+
+        # from matplotlib import rcParams
+
+
+        # 背景色とスタイルを設定
+        plt.rcParams.update({
+            "figure.facecolor": "black",  # 背景色を黒に設定
+            "axes.facecolor": "black",   # 軸の背景色を黒に設定
+            "text.color": "white",       # テキストの色を白に設定
+            "axes.labelcolor": "white",  # 軸ラベルの色を白に設定
+            "xtick.color": "white",      # x軸目盛りの色を白に設定
+            "ytick.color": "white",      # y軸目盛りの色を白に設定
+        })
+
+        # Seaborn のスタイル適用
+        sns.set_style("dark")
+
+        # プロットの作成
+        fig, ax = plt.subplots(figsize=(len(dataframe.columns) * 1.2, len(dataframe) * 0.6))  # サイズ調整
+        ax.axis("tight")
+        ax.axis("off")
+
+        # テーブルを描画
+        table = ax.table(
+            cellText=dataframe.values,
+            colLabels=dataframe.columns,
+            cellLoc="center",
+            loc="center",
+            bbox=[0, 0, 1, 1]  # テーブル全体を中央配置
+        )
+        table.auto_set_font_size(False)
+        table.set_fontsize(10)
+
+        # 列幅を適切に調整
+        for i in range(len(dataframe.columns)):
+            table.auto_set_column_width([i])
+
+        # テーブルのデザイン（完全ダークモード）
+        for (row, col), cell in table.get_celld().items():
+            cell.set_edgecolor("#555555")  # 枠線をダークグレーに
+            cell.set_linewidth(0.5)  # 線を細く
+
+            if row == 0:  # ヘッダー部分
+                cell.set_facecolor("#1F354D")  # ヘッダーの背景色をダークグレーに設定
+                cell.set_text_props(weight="bold", color="white")  # ヘッダーの文字色を白に設定
+            else:
+                # 偶数・奇数行で色を変える
+                if row % 2 == 0:
+                    cell.set_facecolor("#333333")  # 偶数行の背景色を濃いグレーに設定
+                else:
+                    cell.set_facecolor("#222222")  # 奇数行の背景色をさらに暗いグレーに設定
+                cell.set_text_props(color="white")  # テキストを白に設定
+
+        # 画像を保存
+        plt.savefig(output_file, dpi=300, bbox_inches="tight", pad_inches=0, facecolor="black")
+        plt.close()
+
+    # 保存先ディレクトリとファイル名
+    DATA_DIR = Path("..", "..", "data_nar")
+    SAVE_DIR = DATA_DIR / "05_prediction_results"
+    SAVE_DIR.mkdir(parents=True, exist_ok=True)  # ディレクトリを作成
+    output_image = SAVE_DIR / "prediction_result.png"
+
+    # データフレームをPNG形式で保存
+    save_csv_as_image(df, output_image)
+    print(f"データフレームを画像として保存しました: {output_image}")
+    
 
     return df
 

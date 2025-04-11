@@ -14104,7 +14104,7 @@ class PredictionFeatureCreator:
 
         self.cross_features_2()
         self.cross_features_3()
-        self.cross_features_4()
+        # self.cross_features_4()
         self.cross_features_5()
         self.cross_features_6(date_condition_a)
         self.cross_features_7()
@@ -14246,11 +14246,11 @@ class PredictionFeatureCreator:
                 on=["race_id", "date", "horse_id"],
                 how="left",
             )    
-            .merge(
-                self.agg_cross_features_df_4,
-                on=["race_id", "date", "horse_id"],
-                how="left",
-            )  
+            # .merge(
+            #     self.agg_cross_features_df_4,
+            #     on=["race_id", "date", "horse_id"],
+            #     how="left",
+            # )  
             .merge(
                 self.agg_cross_features_df_5,
                 on=["race_id", "date", "horse_id"],

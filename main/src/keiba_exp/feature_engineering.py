@@ -3334,8 +3334,8 @@ class FeatureCreator:
         
             # 3. df_old2_1 から条件に一致する行をフィルタリング
             filtered_df_old2_1 = df_old2_1[
-                (df_old2_1["race_date_day_count"] >= (target_day_count - 400)) &  # race_date_day_count が target_day_count-1200 以上
-                (df_old2_1["race_date_day_count"] <= (target_day_count - 1)) &  # race_date_day_count が target_day_count-1 以下
+                (df_old2_1["race_date_day_count"] >= (target_day_count - 1200)) &  # race_date_day_count が target_day_count-1200 以上
+                (df_old2_1["race_date_day_count"] <= (target_day_count - 300)) &  # race_date_day_count が target_day_count-1 以下
                 (df_old2_1["place"] == row["place"]) &  # place が一致
                 (df_old2_1["race_type"] == row["race_type"])  
                 # (df_old2_1["weather"].isin([0, 1, 2])) &  # weather が 0, 1, 2 のいずれか
@@ -3346,7 +3346,7 @@ class FeatureCreator:
 
             filtered_df_old2_2 = df_old2_1[
                 (df_old2_1["race_date_day_count"] >= (target_day_count - 1200)) &  # race_date_day_count が target_day_count-1200 以上
-                (df_old2_1["race_date_day_count"] <= (target_day_count - 1)) &  # race_date_day_count が target_day_count-1 以下
+                (df_old2_1["race_date_day_count"] <= (target_day_count - 300)) &  # race_date_day_count が target_day_count-1 以下
                 (df_old2_1["place"] == row["place"]) &  # place が一致
                 (df_old2_1["race_type"] == row["race_type"]) & 
                 (df_old2_1["weather"].isin([0, 1, 2])) &  # weather が 0, 1, 2 のいずれか
@@ -5343,8 +5343,8 @@ class FeatureCreator:
         
             # 3. df_old2_1 から条件に一致する行をフィルタリング
             filtered_df_old2_1 = df_old2_1[
-                (df_old2_1["race_date_day_count"] >= (target_day_count - 400)) &  # race_date_day_count が target_day_count-1200 以上
-                (df_old2_1["race_date_day_count"] <= (target_day_count - 1)) &  # race_date_day_count が target_day_count-1 以下
+                (df_old2_1["race_date_day_count"] >= (target_day_count - 1200)) &  # race_date_day_count が target_day_count-1200 以上
+                (df_old2_1["race_date_day_count"] <= (target_day_count - 300)) &  # race_date_day_count が target_day_count-1 以下
                 (df_old2_1["place"] == row["place"]) &  # place が一致
                 (df_old2_1["race_type"] == row["race_type"]) & 
                 (df_old2_1["weather"].isin([0, 1, 2])) &  # weather が 0, 1, 2 のいずれか
@@ -5355,7 +5355,7 @@ class FeatureCreator:
         
             filtered_df_old2_2 = df_old2_1[
                 (df_old2_1["race_date_day_count"] >= (target_day_count - 1200)) &  # race_date_day_count が target_day_count-1200 以上
-                (df_old2_1["race_date_day_count"] <= (target_day_count - 1 )) &  # race_date_day_count が target_day_count-1 以下
+                (df_old2_1["race_date_day_count"] <= (target_day_count - 300)) &  # race_date_day_count が target_day_count-1 以下
                 (df_old2_1["place"] == row["place"]) &  # place が一致
                 (df_old2_1["race_type"] == row["race_type"])  &
                 (df_old2_1["weather"].isin([0, 1, 2])) &  # weather が 0, 1, 2 のいずれか
@@ -7111,8 +7111,8 @@ class FeatureCreator:
 
                 # 3. df_old2_1 から条件に一致する行をフィルタリング
                 filtered_df_old2_1 = df_old2_1[
-                    (df_old2_1["race_date_day_count"] >= (target_day_count - 400)) &  # race_date_day_count が target_day_count-1200 以上
-                    (df_old2_1["race_date_day_count"] <= (target_day_count - 1)) &  # race_date_day_count が target_day_count-1 以下
+                    (df_old2_1["race_date_day_count"] >= (target_day_count - 1200)) &  # race_date_day_count が target_day_count-1200 以上
+                    (df_old2_1["race_date_day_count"] <= (target_day_count - 300)) &  # race_date_day_count が target_day_count-1 以下
                     (df_old2_1["place"] == row["place"]) &  # place が一致
                     (df_old2_1["race_type"] == row["race_type"])  
                     # (df_old2_1["weather"].isin([0, 1, 2])) &  # weather が 0, 1, 2 のいずれか
@@ -7121,8 +7121,8 @@ class FeatureCreator:
                     # (df_old2_1["rank_per_horse"] < 0.87)  # rank_per_horse が 0.87 未満
                 ]
                 filtered_df_old2_2 = df_old2_1[
-                    (df_old2_1["race_date_day_count"] >= (target_day_count - 400)) &  # race_date_day_count が target_day_count-1200 以上
-                    (df_old2_1["race_date_day_count"] <= (target_day_count + 100)) &  # race_date_day_count が target_day_count-1 以下
+                    (df_old2_1["race_date_day_count"] >= (target_day_count - 1200)) &  # race_date_day_count が target_day_count-1200 以上
+                    (df_old2_1["race_date_day_count"] <= (target_day_count + 300)) &  # race_date_day_count が target_day_count-1 以下
                     (df_old2_1["place"] == row["place"]) &  # place が一致
                     (df_old2_1["race_type"] == row["race_type"]) 
                     # (df_old2_1["weather"].isin([0, 1, 2])) &  # weather が 0, 1, 2 のいずれか
@@ -9996,8 +9996,8 @@ class FeatureCreator:
                 
             # 3. df_old2_1 から条件に一致する行をフィルタリング
             filtered_df_old2_1 = df_old2_1[
-                (df_old2_1["race_date_day_count"] >= (target_day_count - 400)) &  # race_date_day_count が target_day_count-1200 以上
-                (df_old2_1["race_date_day_count"] <= (target_day_count - 1)) &  # race_date_day_count が target_day_count-1 以下
+                (df_old2_1["race_date_day_count"] >= (target_day_count - 1200)) &  # race_date_day_count が target_day_count-1200 以上
+                (df_old2_1["race_date_day_count"] <= (target_day_count - 300)) &  # race_date_day_count が target_day_count-1 以下
                 (df_old2_1["place"] == row["place"]) &  # place が一致
                 (df_old2_1["race_type"] == row["race_type"])  & 
                 (df_old2_1["weather"].isin([0, 1, 2])) &  # weather が 0, 1, 2 のいずれか
@@ -10008,7 +10008,7 @@ class FeatureCreator:
 
             filtered_df_old2_2 = df_old2_1[
                 (df_old2_1["race_date_day_count"] >= (target_day_count - 1200)) &  # race_date_day_count が target_day_count-1200 以上
-                (df_old2_1["race_date_day_count"] <= (target_day_count - 1)) &  # race_date_day_count が target_day_count-1 以下
+                (df_old2_1["race_date_day_count"] <= (target_day_count - 300)) &  # race_date_day_count が target_day_count-1 以下
                 (df_old2_1["place"] == row["place"]) &  # place が一致
                 (df_old2_1["race_type"] == row["race_type"]) & 
                 (df_old2_1["weather"].isin([0, 1, 2])) &  # weather が 0, 1, 2 のいずれか

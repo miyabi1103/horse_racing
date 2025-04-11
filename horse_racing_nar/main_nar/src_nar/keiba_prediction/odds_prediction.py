@@ -31,7 +31,6 @@ async def update_odds_and_popularity(features,race_id:str):
         51: "姫路",
         54: "高知",
         55: "佐賀"
-
     }
     async with async_playwright() as playwright:
         place_count = f"{int(race_id[10:12])}"
@@ -40,7 +39,7 @@ async def update_odds_and_popularity(features,race_id:str):
         context = await browser.new_context()
         page = await context.new_page()
         await page.goto("https://www.keiba.go.jp/KeibaWeb/TodayRaceInfo/TodayRaceInfoTop")
-        await page.get_by_role("link", name=place_name).nth(2).click()
+        await page.get_by_role("cell", name=place_name, exact=True).click()
         async with page.expect_navigation():
             # await page.get_by_role("row", name="1R 14:15 Ｃ３三 左1200m 晴 重 12").get_by_role("link").nth(1).click()
             await page.locator("tr").filter(has_text=re.compile(fr"\b{place_count}R\b")).locator("a").nth(1).click()

@@ -127,7 +127,7 @@ def prepredict(kaisai_date:str):
     kaisai_date_obj2 = datetime.strptime(kaisai_date, "%Y%m%d")
 
     # 14日前の日付を計算
-    cutoff_date = kaisai_date_obj2 - timedelta(days=14)
+    cutoff_date = kaisai_date_obj2 - timedelta(days=10)
 
     # リスト内の日付をフィルタリング
     kaisai_date_list_prediction = [
@@ -147,9 +147,8 @@ def prepredict(kaisai_date:str):
     )
 
 
-
     # raceページのhtmlをスクレイピング
-    html_paths_race_prediction = scraping_prediction.scrape_html_race(race_id_list=race_id_list_prediction, skip=True)
+    html_paths_race_prediction = scraping_prediction.scrape_html_race(race_id_list=race_id_list_prediction, skip=False)
 
 
     # 途中で処理が途切れるなどした場合は、直接htmlのファイルパスを取得
@@ -161,9 +160,7 @@ def prepredict(kaisai_date:str):
 
     results_pre = scraping_prediction.create_results(html_path_list=html_paths_race_prediction)
 
-    html_paths_race_prediction = [
-        scraping_prediction.HTML_RACE_DIR / f"{race_id}.bin" for race_id in race_id_list_prediction
-    ]
+
     race_info_pre = scraping_prediction.create_race_info(html_path_list=html_paths_race_prediction)
 
 

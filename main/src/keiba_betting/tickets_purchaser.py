@@ -11,6 +11,27 @@ from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.support.select import Select
+
+from dotenv import load_dotenv  # dotenvをインポート
+
+# .envファイルを読み込む
+load_dotenv()
+
+# DiscordのWebhook URLを環境変数から取得
+INET_URL = os.getenv("INET_ID")
+KANYUSYA_URL = os.getenv("KANYUSYA_NO")
+PASSWORD_URL = os.getenv("PASSWORD_PAT")
+PARS_URL = os.getenv("PARS_NO")
+
+if not INET_URL:
+    raise ValueError("INET_IDが設定されていません。'.env'ファイルを確認してください。")
+if not KANYUSYA_URL:
+    raise ValueError("KANYUSYA_NOが設定されていません。'.env'ファイルを確認してください。")
+if not PASSWORD_URL:
+    raise ValueError("PASSWORD_PATが設定されていません。'.env'ファイルを確認してください。")
+if not PARS_URL:
+    raise ValueError("PARS_NOが設定されていません。'.env'ファイルを確認してください。")
+
 class TicketsPurchaser:
     def __init__(self):
         # グローバル変数
@@ -61,7 +82,7 @@ class TicketsPurchaser:
         options = Options()
         # ヘッドレスモード
         # options.headless = True
-        options.add_argument("--headless=new")
+        # options.add_argument("--headless=new")
         options.add_experimental_option('excludeSwitches', ['enable-logging'])
         driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
         driver.get(self.pat_url)
@@ -236,3 +257,6 @@ class TicketsPurchaser:
             driver.quit()
         else:
             print("Purchase Failure")
+if __name__ == "__main__":
+    purchaser = TicketsPurchaser()
+    purchaser.auto_in_money()

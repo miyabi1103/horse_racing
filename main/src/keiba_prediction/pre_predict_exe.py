@@ -123,16 +123,14 @@ def prepredict(kaisai_date:str):
 
     # raceページのhtmlをスクレイピング
     html_paths_race_prediction = scraping_prediction.scrape_html_race(race_id_list=race_id_list_prediction, skip = True)
-    
-    results_pre = scraping_prediction.create_results(html_path_list=html_paths_race_prediction)
-
-
-
     html_paths_race_prediction = [
         scraping_prediction.HTML_RACE_DIR / f"{race_id}.bin" for race_id in race_id_list_prediction
     ]
+    results_pre = scraping_prediction.create_results(html_path_list=html_paths_race_prediction)
+
 
     race_info_pre = scraping_prediction.create_race_info(html_path_list=html_paths_race_prediction)
+
 
 
 
