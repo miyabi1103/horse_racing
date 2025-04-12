@@ -390,6 +390,10 @@ class PredictionFeatureCreator:
             around_mapping[info1[2][0]] if info_dict["race_type"] != 2 else np.nan
         )
         info_dict["course_len"] = int(re.findall(r"\d+", info1[1])[0])
+        # print(div1)
+        # print(info1)
+        info_dict["start_time"] = re.findall(r"\d{2}:\d{2}", div1)[0]
+
         info_dict["course_len_type"] = (
             1 if len(info1[2]) > 1 and "内" in str(info1[2][1]) 
             else 2 if len(info1[2]) > 1 and "外" in str(info1[2][1]) 
@@ -14104,7 +14108,7 @@ class PredictionFeatureCreator:
 
         self.cross_features_2()
         self.cross_features_3()
-        # self.cross_features_4()
+        self.cross_features_4()
         self.cross_features_5()
         self.cross_features_6(date_condition_a)
         self.cross_features_7()
@@ -14116,7 +14120,7 @@ class PredictionFeatureCreator:
         self.cross_features_13()
         self.cross_features_14(date_condition_a)
         self.cross_features_15()
-        # self.cross_features_16()
+        self.cross_features_16()
         self.position_results()
         self.dirt_weight_weather()
         self.umaban_good()
@@ -14246,11 +14250,11 @@ class PredictionFeatureCreator:
                 on=["race_id", "date", "horse_id"],
                 how="left",
             )    
-            # .merge(
-            #     self.agg_cross_features_df_4,
-            #     on=["race_id", "date", "horse_id"],
-            #     how="left",
-            # )  
+            .merge(
+                self.agg_cross_features_df_4,
+                on=["race_id", "date", "horse_id"],
+                how="left",
+            )  
             .merge(
                 self.agg_cross_features_df_5,
                 on=["race_id", "date", "horse_id"],
@@ -14317,12 +14321,12 @@ class PredictionFeatureCreator:
                 how="left",
                 # copy=False,
             )          
-            # .merge(
-            #     self.agg_cross_features_df_16,
-            #     on=["race_id", "date", "horse_id"],
-            #     how="left",
-            #     # copy=False,
-            # )   
+            .merge(
+                self.agg_cross_features_df_16,
+                on=["race_id", "date", "horse_id"],
+                how="left",
+                # copy=False,
+            )   
             .merge(
                 self.agg_position_results,
                 on=["race_id", "date", "horse_id"],

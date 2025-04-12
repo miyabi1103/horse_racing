@@ -54,6 +54,7 @@ def predict(
         "dominant_position_category",
         "tenkai_place_start_slope_range_grade_lcurve_slope_type_curve_goal_range_slope_first_curve_front_len_umaban_combined_standardized",     
         # # "place_season_condition_type_categori_x",
+        "start_time",
 
         # #展開の有利不利
         # "tenkai_combined",

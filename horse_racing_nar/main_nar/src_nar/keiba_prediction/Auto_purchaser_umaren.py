@@ -130,8 +130,11 @@ async def Auto_purchase_umaren(race_id:str,top_n: int = 2,amount: str = "100",am
         await page2.locator("#gotoCfm-buy").click()
         await page2.locator("input[name=\"cfm_ansho\"]").click()
         await page2.locator("input[name=\"cfm_ansho\"]").fill(PASSWORD)
+        await asyncio.sleep(1)
         await page2.locator("input[name=\"cfm_amount\"]").click()
+        await asyncio.sleep(1)
         await page2.locator("input[name=\"cfm_amount\"]").fill(amount)
+        await asyncio.sleep(2)
         try:
             # ここでplace_countRをクリック（一定時間だけ待つ）
             await asyncio.wait_for(
@@ -150,6 +153,7 @@ async def Auto_purchase_umaren(race_id:str,top_n: int = 2,amount: str = "100",am
         except asyncio.TimeoutError:
             # タイムアウトしたら代わりに「照会」と「開催要領」ボタンをクリック
             await page2.get_by_text("投票する").click()
+            
         await page2.close()
         # ---------------------
         await context.close()

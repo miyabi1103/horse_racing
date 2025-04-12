@@ -126,7 +126,7 @@ class TicketsPurchaser:
             # PAT購入画面に遷移・ログイン
             # INETIDを入力する
             driver.find_elements(By.CSS_SELECTOR, "input[name^='inetid']")[0].send_keys(self.inet_id)
-            sleep(3)
+            # sleep(3)
             
             self.click_css_selector(driver, "a[onclick^='javascript']", 0)
             sleep(self.wait_sec)

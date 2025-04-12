@@ -130,8 +130,11 @@ async def Auto_purchase_wide(race_id:str,top_n: int = 2,amount: str = "100",amou
         await page2.locator("#gotoCfm-buy").click()
         await page2.locator("input[name=\"cfm_ansho\"]").click()
         await page2.locator("input[name=\"cfm_ansho\"]").fill(PASSWORD)
+        await asyncio.sleep(1)
         await page2.locator("input[name=\"cfm_amount\"]").click()
+        await asyncio.sleep(1)
         await page2.locator("input[name=\"cfm_amount\"]").fill(amount)
+        await asyncio.sleep(2)
         try:
             # ここでplace_countRをクリック（一定時間だけ待つ）
             await asyncio.wait_for(

@@ -13,8 +13,8 @@
 
 45 16 * * 7 cd /Users/gotoumasafumi/Downloads/GitHub/horse_racing/horse_racing_nar/main_nar/src_nar/keiba_prediction && /Users/gotoumasafumi/Downloads/GitHub/horse_racing/.venv/bin/python3 Auto_vote.py >> /tmp/cron_output.log 2>&1
 
-05 9 * * 1 cd /Users/gotoumasafumi/Downloads/GitHub/horse_racing/horse_racing/main/src/keiba_prediction && /Users/gotoumasafumi/Downloads/GitHub/horse_racing/.venv/bin/python3 Auto_vote.py >> /tmp/cron_output.log 2>&1
+05 09 * * 1 cd /Users/gotoumasafumi/Downloads/GitHub/horse_racing/main/src/keiba_prediction && /Users/gotoumasafumi/Downloads/GitHub/horse_racing/.venv/bin/python3 Auto_vote.py >> /tmp/cron_output.log 2>&1
 
-05 9 * * 7 cd /Users/gotoumasafumi/Downloads/GitHub/horse_racing/horse_racing/main/src/keiba_prediction && /Users/gotoumasafumi/Downloads/GitHub/horse_racing/.venv/bin/python3 Auto_vote.py >> /tmp/cron_output.log 2>&1
+05 09 * * 7 cd /Users/gotoumasafumi/Downloads/GitHub/horse_racing/main/src/keiba_prediction && /Users/gotoumasafumi/Downloads/GitHub/horse_racing/.venv/bin/python3 Auto_vote.py >> /tmp/cron_output.log 2>&1
 
-05 9 * * 6 cd /Users/gotoumasafumi/Downloads/GitHub/horse_racing/horse_racing/main/src/keiba_prediction && /Users/gotoumasafumi/Downloads/GitHub/horse_racing/.venv/bin/python3 Auto_vote.py >> /tmp/cron_output.log 2>&1
+05 09 * * 6 cd /Users/gotoumasafumi/Downloads/GitHub/horse_racing/main/src/keiba_prediction && /Users/gotoumasafumi/Downloads/GitHub/horse_racing/.venv/bin/python3 Auto_vote.py >> /tmp/cron_output.log 2>&1

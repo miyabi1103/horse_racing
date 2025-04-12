@@ -41,8 +41,6 @@ if not PARS_URL:
     raise ValueError("PARS_NOが設定されていません。'.env'ファイルを確認してください。")
 
 
-csv_file_path = Path("../../data_nar/05_prediction_results/prediction_result.csv")
-
 
 # if not INET_URL:
 #     raise ValueError("INET_IDが設定されていません。'.env'ファイルを確認してください。")
@@ -53,8 +51,8 @@ csv_file_path = Path("../../data_nar/05_prediction_results/prediction_result.csv
 # if not PARS_URL:
 #     raise ValueError("PARS_NOが設定されていません。'.env'ファイルを確認してください。")
 
-async def Auto_purchase_sanrentan(race_id:str,csv_path: Path, top_n: int = 3,amount: str = "200",amount_num: str = "1"):
-    csv_path = Path("../../data_nar/05_prediction_results/prediction_result.csv")
+async def Auto_purchase_sanrentan(race_id:str, top_n: int = 3,amount: str = "200",amount_num: str = "1"):
+    csv_path = Path("../../data/05_prediction_results/prediction_result.csv")
     try:
         # CSVファイルを読み込む
         df = pd.read_csv(csv_path, sep="\t")
@@ -77,6 +75,14 @@ async def Auto_purchase_sanrentan(race_id:str,csv_path: Path, top_n: int = 3,amo
     first_umaban = str(top_umaban[0])  # 1番目の要素
     second_umaban = str(top_umaban[1]) if len(top_umaban) > 1 else None  # 2番目の要素（存在する場合）
     third_umaban = str(top_umaban[2]) if len(top_umaban) > 2 else None  # 3番目の要素（存在する場合）
+    # # 開発用
+    # ####################################################################
+    # first_umaban = "2"
+    # second_umaban = "4"
+    # third_umaban = "9"
+    # ####################################################################
+
+
 
 
 
@@ -103,6 +109,7 @@ async def Auto_purchase_sanrentan(race_id:str,csv_path: Path, top_n: int = 3,amo
         place_count_minus = int(race_id[10:12])- 1
         place_name = f"{place_mapping[int(race_id[4:6])]}"
         weekday_map = ["月","火", "水", "木", "金", "土", "日"]
+        # weekday_map = ["火", "水", "木", "金", "土", "日","月"]
         today_weekday = weekday_map[datetime.now().weekday()]
         button_name = f"{place_name}（{today_weekday}）"
         race_button_name = f"{place_count}R"
@@ -139,15 +146,25 @@ async def Auto_purchase_sanrentan(race_id:str,csv_path: Path, top_n: int = 3,amo
         await page1.get_by_role("button", name="セット").click()
 
         await page1.get_by_role("button", name="購入予定リスト").click()
-        await page1.get_by_label("円").first.click()
-        await page1.get_by_label("円").first.fill(amount_num)
-        await page1.get_by_role("row", name="1").get_by_label("円").dblclick()
-        await page1.get_by_role("row", name="1").get_by_label("円").fill(amount_num)
+
+
+        # await page1.get_by_label("円").first.click()
+        # await page1.get_by_label("円").first.fill(amount_num)
+        # await page1.get_by_role("row", name="1").get_by_label("円").dblclick()
+        # await page1.get_by_role("row", name="1").get_by_label("円").fill(amount_num)
+        await page1.get_by_role("button", name="金額セット用テンキ―").first.click()
+        await page1.locator("#bet-list-top").get_by_role("button", name=amount_num).click()
+        await page1.locator("#bet-list-top").get_by_role("button", name="セット", exact=True).click()
+        await page1.get_by_role("button", name="一括セット").click()
+        await asyncio.sleep(2)
         await page1.get_by_role("cell", name="合計金額入力： 円 金額セット用テンキ―").get_by_role("textbox").click()
         await page1.get_by_role("cell", name="合計金額入力： 円 金額セット用テンキ―").get_by_role("textbox").fill(amount)
+        await asyncio.sleep(2)
         await page1.get_by_role("button", name="購入する").click()
+        await asyncio.sleep(1)
         await page1.get_by_role("button", name="OK").click()
-        await page1.get_by_role("button", name="閉じる").click()
+        # await page1.get_by_role("button", name="閉じる").click()
+        await asyncio.sleep(1)
 
 
 
@@ -155,7 +172,8 @@ async def Auto_purchase_sanrentan(race_id:str,csv_path: Path, top_n: int = 3,amo
         # ---------------------
         await context.close()
         await browser.close()
-    print("三連単投票が完了しました")
+        print("三連単投票が完了しました")
+        
 
-# if __name__ == "__main__":
-#     asyncio.run(Auto_purchase_sanrenpuku())
+if __name__ == "__main__":
+    asyncio.run(Auto_purchase_sanrentan())

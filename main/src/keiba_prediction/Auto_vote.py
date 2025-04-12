@@ -44,7 +44,7 @@ def scrape_job(race_id:str, row: dict):
         predict = predict_exe_turf.def_predict_exe_turf_ex(kaisai_date=args.kaisai_date, race_id=race_id)
         discord_notify = discord.post_discord()
         #購入手続き
-        money = asyncio.run(Auto_purchaser_sanrenpuku.Auto_purchase_sanrenpuku(race_id=race_id,amount = "400",amount_num = "4"))
+        money = asyncio.run(Auto_purchaser_sanrenpuku.Auto_purchase_sanrenpuku(race_id=race_id,amount = "300",amount_num = "3"))
         money = asyncio.run(Auto_purchaser_sanrentan.Auto_purchase_sanrentan(race_id=race_id,amount = "100",amount_num = "2"))
 
 
@@ -53,20 +53,22 @@ def scrape_job(race_id:str, row: dict):
         predict = predict_exe_turf_nowin.def_predict_exe_turf_nowin(kaisai_date=args.kaisai_date, race_id=race_id)
         discord_notify = discord.post_discord()
         #購入手続き
-        money = asyncio.run(Auto_purchaser_sanrenpuku.Auto_purchase_sanrenpuku(race_id=race_id,amount = "300",amount_num = "3"))
+        money = asyncio.run(Auto_purchaser_sanrenpuku.Auto_purchase_sanrenpuku(race_id=race_id,amount = "200",amount_num = "2"))
         money = asyncio.run(Auto_purchaser_sanrentan.Auto_purchase_sanrentan(race_id=race_id,amount = "100",amount_num = "2"))
 
 
     elif row['EARLY'] == 1 and row["type"] == 0 and row["class"] >= 2:
         predict = predict_exe_dirt.def_predict_exe_dirt(kaisai_date=args.kaisai_date, race_id=race_id)
         discord_notify = discord.post_discord()
-        money = asyncio.run(Auto_purchaser_sanrenpuku.Auto_purchase_sanrenpuku(race_id=race_id,amount = "200",amount_num = "2"))
+        money = asyncio.run(Auto_purchaser_sanrenpuku.Auto_purchase_sanrenpuku(race_id=race_id,amount = "100",amount_num = "1"))
+        # money = asyncio.run(Auto_purchaser_sanrentan.Auto_purchase_sanrentan(race_id=race_id,amount = "100",amount_num = "2"))
 
 
     elif row['EARLY'] == 1 and row["type"] == 0 and row["class"] < 2:
         predict = predict_exe_dirt_nowin.def_predict_exe_dirt_nowin(kaisai_date=args.kaisai_date, race_id=race_id)
         discord_notify = discord.post_discord()
-        money = asyncio.run(Auto_purchaser_sanrenpuku.Auto_purchase_sanrenpuku(race_id=race_id,amount = "200",amount_num = "2"))
+        money = asyncio.run(Auto_purchaser_sanrenpuku.Auto_purchase_sanrenpuku(race_id=race_id,amount = "100",amount_num = "1"))
+        # money = asyncio.run(Auto_purchaser_sanrentan.Auto_purchase_sanrentan(race_id=race_id,amount = "100",amount_num = "2"))
 
 
     elif row['EARLY'] == 1 and row["type"] == 2:
@@ -77,19 +79,22 @@ def scrape_job(race_id:str, row: dict):
 
 
 
-    if row['EARLY'] == 0 and row["type"] == 1 and row["class"] >= 2:
+    elif row['EARLY'] == 0 and row["type"] == 1 and row["class"] >= 2:
         predict = predict_exe_turf.def_predict_exe_turf(kaisai_date=args.kaisai_date, race_id=race_id)
         money = asyncio.run(Auto_purchaser_tansho_turf.Auto_purchase_tansho_turf(race_id=race_id,amount = "300",amount_num = "3"))
+        print("demo")
 
 
     elif row['EARLY'] == 0 and row["type"] == 1 and row["class"] < 2:
         predict = predict_exe_turf_nowin.def_predict_exe_turf_nowin(kaisai_date=args.kaisai_date, race_id=race_id)
         money = asyncio.run(Auto_purchaser_tansho_turf_nowin.Auto_purchase_tansho_turf_nowin(race_id=race_id,amount = "200",amount_num = "2"))
+        print("demo")
 
 
     elif row['EARLY'] == 0 and row["type"] == 0 and row["class"] >= 2:
         predict = predict_exe_dirt.def_predict_exe_dirt(kaisai_date=args.kaisai_date, race_id=race_id)
         money = asyncio.run(Auto_purchaser_tansho_dirt.Auto_purchase_tansho_dirt(race_id=race_id,amount = "200",amount_num = "2"))
+        print("demo")
 
 
     elif row['EARLY'] == 0 and row["type"] == 0 and row["class"] < 2:
@@ -98,13 +103,15 @@ def scrape_job(race_id:str, row: dict):
 
     elif row['EARLY'] == 0 and row["type"] == 2:
         predict = predict_exe_obstract.def_predict_exe_obstract(kaisai_date=args.kaisai_date, race_id=race_id)
-        discord_notify = discord.post_discord()
-        money = asyncio.run(Auto_purchaser_tansho_obstract.Auto_purchase_tansho_obstract(race_id=race_id,amount = "500",amount_num = "5"))
+        money = asyncio.run(Auto_purchaser_tansho_obstract.Auto_purchase_tansho_obstract(race_id=race_id,amount = "1000",amount_num = "10"))
+        print("demo")
 
     elif row["type"] == "none":
         discord_notify = discord.post_discord() 
         predict = pre_predict_exe.prepredict(kaisai_date=args.kaisai_date)
-        money = TicketsPurchaser.auto_in_money()
+        purchaser = TicketsPurchaser()
+        money = purchaser.auto_in_money()
+        # print("demo")
         
     elif row["type"] == "end":
         print("スケジューラを停止します...")
@@ -169,9 +176,14 @@ if __name__ == "__main__":
     # ###########################################
     # #開発用
     # time_table_dev["post_time"] = [
-    #     (datetime.now() + timedelta(minutes=3 * i + 9)).strftime("%H:%M")
+    #     (datetime.now() + timedelta(minutes=3 * i + 7)).strftime("%H:%M")
     #     for i in range(len(time_table))
     # ]
+
+
+
+
+
 
 
     # 一番手前のpost_timeを取得
@@ -184,7 +196,7 @@ if __name__ == "__main__":
     current_time = datetime.now()
 
     # 現在時刻の1分後を計算
-    new_post_time = (current_time + timedelta(minutes=4)).strftime("%H:%M")
+    new_post_time = (current_time + timedelta(minutes=6)).strftime("%H:%M")
 
 
     # 新しい行を作成
@@ -214,7 +226,7 @@ if __name__ == "__main__":
         post_time = datetime.strptime(row["post_time"],"%H:%M").time()
         run_at = (
             datetime.combine(datetime.now(),post_time)
-            - timedelta(minutes = 3)
+            - timedelta(minutes = 5)
             - timedelta(seconds = 0)
             # それより何分前に実行させるか
         )

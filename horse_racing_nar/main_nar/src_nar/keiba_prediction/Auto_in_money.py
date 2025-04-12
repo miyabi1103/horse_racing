@@ -83,7 +83,7 @@ async def auto_in_money():
             await page.get_by_role("button", name="入金").click()
         page1 = await page1_info.value
         await page1.locator("#ENTERR").click()
-        await page1.locator("#ENTERR").fill("1000")
+        await page1.locator("#ENTERR").fill("4000")
         await page1.get_by_role("button", name="入金指示確認へ").click()
         await page1.locator("#MEMBERPASSR").click()
         await page1.locator("#MEMBERPASSR").fill(PASSWORD)

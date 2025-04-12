@@ -41,8 +41,6 @@ if not PARS_URL:
     raise ValueError("PARS_NOが設定されていません。'.env'ファイルを確認してください。")
 
 
-csv_file_path = Path("../../data_nar/05_prediction_results/prediction_result.csv")
-
 
 # if not INET_URL:
 #     raise ValueError("INET_IDが設定されていません。'.env'ファイルを確認してください。")
@@ -53,7 +51,7 @@ csv_file_path = Path("../../data_nar/05_prediction_results/prediction_result.csv
 # if not PARS_URL:
 #     raise ValueError("PARS_NOが設定されていません。'.env'ファイルを確認してください。")
 
-async def Auto_purchase_tansho_dirt(race_id:str,csv_path: Path,amount: str = "100",amount_num: str = "1"):
+async def Auto_purchase_tansho_dirt(race_id:str,amount: str = "100",amount_num: str = "1"):
     csv_path = Path("../../data/05_prediction_results/prediction_result.csv")
     """
     【ダート】条件を満たすumaban列の値を抽出
@@ -61,10 +59,11 @@ async def Auto_purchase_tansho_dirt(race_id:str,csv_path: Path,amount: str = "10
     """
     try:
         df = pd.read_csv(csv_path, sep="\t")
-        filtered = df[(df["pred"] > 0.1) & (df["tansho_odds"] < 100) & (df["Ex_value"] > 6)]
+        filtered = df[(df["pred"] > 0.1) & (df["tansho_odds"] < 100) & (df["Ex_value"] > 7)]
         umaban_list = filtered["umaban"].tolist()
 
     except Exception as e:
+        print("単勝投票はありません")
         return 
 
     place_mapping = {
@@ -106,11 +105,13 @@ async def Auto_purchase_tansho_dirt(race_id:str,csv_path: Path,amount: str = "10
         await page1.locator("input[name=\"r\"]").fill(PARS_URL)
         await page1.get_by_role("link", name="ネット投票メニューへ").click()
         await page1.get_by_role("button", name="マークカード投票").click()
-        await page1.get_by_role("button", name=button_name, exact=False).click()
-        await page1.locator('button:has-text("R")').nth(place_count_minus).click()
         #単勝
-        await page1.locator(".btn-mark").first.click()
+
+        umaban_list = list(map(int, umaban_list))
         for count in umaban_list:
+            await page1.get_by_role("button", name=button_name, exact=False).click()
+            await page1.locator('button:has-text("R")').nth(place_count_minus).click()
+            await page1.locator(".btn-mark").first.click()
             if count == 1:
                 await page1.locator(".btn-mark-num").first.click()
             elif 2 <= count <= 9:
@@ -125,20 +126,33 @@ async def Auto_purchase_tansho_dirt(race_id:str,csv_path: Path,amount: str = "10
             await page1.get_by_role("button", name="セット").click()
 
             await page1.get_by_role("button", name="購入予定リスト").click()
-            await page1.get_by_label("円").first.click()
-            await page1.get_by_label("円").first.fill(amount_num)
-            await page1.get_by_role("row", name="1").get_by_label("円").dblclick()
-            await page1.get_by_role("row", name="1").get_by_label("円").fill(amount_num)
+            # await page1.get_by_label("円").first.click()
+            # await page1.get_by_label("円").first.fill(amount_num)
+            # await page1.get_by_role("row", name="1").get_by_label("円").dblclick()
+            # await page1.get_by_role("row", name="1").get_by_label("円").fill(amount_num)
+            await page1.get_by_role("button", name="金額セット用テンキ―").first.click()
+            await page1.locator("#bet-list-top").get_by_role("button", name=amount_num).click()
+            await page1.locator("#bet-list-top").get_by_role("button", name="セット", exact=True).click()
+            await page1.get_by_role("button", name="一括セット").click()
+            await asyncio.sleep(2)
             await page1.get_by_role("cell", name="合計金額入力： 円 金額セット用テンキ―").get_by_role("textbox").click()
             await page1.get_by_role("cell", name="合計金額入力： 円 金額セット用テンキ―").get_by_role("textbox").fill(amount)
+            await asyncio.sleep(1)
             await page1.get_by_role("button", name="購入する").click()
+            await asyncio.sleep(1)
             await page1.get_by_role("button", name="OK").click()
-            await page1.get_by_role("button", name="閉じる").click()
-            await page1.close()
+            await asyncio.sleep(1)
+            await page1.get_by_role("button", name="続けて投票する").click()
+            await asyncio.sleep(2)
+            # await page1.get_by_role("link", name="JRAネット投票").click()
+            # await page1.reload()
+
+
         # ---------------------
         await context.close()
         await browser.close()
-    print("単勝投票が完了しました")
+        print("ダート単勝投票が完了しました")
+        print("投票対象:", umaban_list)
 
-# if __name__ == "__main__":
-#     asyncio.run(Auto_purchase_sanrenpuku())
+if __name__ == "__main__":
+    asyncio.run(Auto_purchase_tansho_dirt())
