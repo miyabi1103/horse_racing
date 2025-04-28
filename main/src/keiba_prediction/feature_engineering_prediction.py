@@ -589,13 +589,13 @@ class PredictionFeatureCreator:
         # 月を抽出して開催シーズンを判定
         def determine_season_turf(month):
             if 6 <= month <= 8:
-                return "4" #"夏開催"
+                return "1" #"夏開催"
             elif month == 12 or 1 <= month <= 2:
-                return "2" #"冬開催"
+                return "4" #"冬開催"
             elif 3 <= month <= 5:
-                return "3" #"春開催"
+                return "1" #"春開催"
             elif 9 <= month <= 11:
-                return "1" #"秋開催"    
+                return "2" #"秋開催"    
         
         df["season_turf"] = df["date"].dt.month.map(determine_season_turf)
         df["day"] = df["day"].astype(str)
@@ -12006,7 +12006,7 @@ class PredictionFeatureCreator:
         merged_df_all["pace_category_processed"]  = (merged_df_all["pace_category"]  - 2.5) *20
         # dominant_position_category_processed 列の処理
 
-        merged_df_all["ground_state_level_processed"] = merged_df_all["ground_state_level_processed"] + ((merged_df_all["season_turf_condition"] - 7)*1/1)
+        merged_df_all["ground_state_level_processed"] = merged_df_all["ground_state_level_processed"] + ((merged_df_all["season_turf_condition"] - 7)*1.5/1)
 
 
         # tenkai_sumed の計算

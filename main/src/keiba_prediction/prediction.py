@@ -112,8 +112,10 @@ def predict(
         # "zizoku_mean_3races_encoded_index_relative",
         # "advantage_mean_3_index", 
         # "advantage_mean_3_index_relative",
-        # "speed_index_min_5races",
-        # "nobori_index_min_5races",
+        "rush_advantages_cross",
+        "rush_type_final",
+        "speed_index_max_3races",
+        "nobori_index_max_3races",
         # "speed_index_mean_3races_relative",
         # "nobori_index_mean_3races_relative",
         

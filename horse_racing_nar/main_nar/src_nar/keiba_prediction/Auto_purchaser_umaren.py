@@ -106,6 +106,14 @@ async def Auto_purchase_umaren(race_id:str,top_n: int = 2,amount: str = "100",am
         await page.locator("#MEMBERIDR").click()
         await page.locator("#MEMBERIDR").fill(USE_URL)
         await page.get_by_text("ログイン", exact=True).click()
+        await asyncio.sleep(2)
+        close_buttons = page.get_by_role("button", name="閉じる")
+        if await close_buttons.count() > 0:
+            if await close_buttons.nth(0).is_visible():
+                await close_buttons.nth(0).click()
+        else:
+            await asyncio.sleep(2)
+        await asyncio.sleep(1)
         try:
             # ここでplace_countRをクリック（一定時間だけ待つ）
             await asyncio.wait_for(
@@ -142,19 +150,10 @@ async def Auto_purchase_umaren(race_id:str,top_n: int = 2,amount: str = "100",am
                 timeout=10  # 秒
             )
         except asyncio.TimeoutError:
-            # タイムアウトしたら代わりに「照会」と「開催要領」ボタンをクリック
             await page2.locator("div").filter(has_text=place_name).first.click()
-        try:
-            # ここでplace_countRをクリック（一定時間だけ待つ）
-            await asyncio.wait_for(
-                page2.get_by_text("投票する").click(),
-                timeout=10  # 秒
-            )
-        except asyncio.TimeoutError:
-            # タイムアウトしたら代わりに「照会」と「開催要領」ボタンをクリック
+            await asyncio.sleep(2)
             await page2.get_by_text("投票する").click()
-            
-        await page2.close()
+        await asyncio.sleep(2)
         # ---------------------
         await context.close()
         await browser.close()

@@ -10477,7 +10477,7 @@ class FeatureCreator:
 
         merged_df_all["pace_category_processed"]  = (merged_df_all["pace_category"]  - 2.5) *20
         # dominant_position_category_processed 列の処理
-        merged_df_all["ground_state_level_processed"] = merged_df_all["ground_state_level_processed"] + ((merged_df_all["season_turf_condition"] - 7)*1/1)
+        merged_df_all["ground_state_level_processed"] = merged_df_all["ground_state_level_processed"] + ((merged_df_all["season_turf_condition"] - 7)*1.5/1)
 
 
         # tenkai_sumed の計算

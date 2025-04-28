@@ -79,6 +79,14 @@ async def auto_in_money():
         await page.locator("#MEMBERIDR").click()
         await page.locator("#MEMBERIDR").fill(USE_URL)
         await page.get_by_text("ログイン", exact=True).click()
+        await asyncio.sleep(2)
+        close_buttons = page.get_by_role("button", name="閉じる")
+        if await close_buttons.count() > 0:
+            if await close_buttons.nth(0).is_visible():
+                await close_buttons.nth(0).click()
+        else:
+            await asyncio.sleep(2)
+        await asyncio.sleep(1)
         async with page.expect_popup() as page1_info:
             await page.get_by_role("button", name="入金").click()
         page1 = await page1_info.value
@@ -95,5 +103,5 @@ async def auto_in_money():
         await browser.close()
     print("入金が終了しました")
 
-# if __name__ == "__main__":
-#     asyncio.run(auto_in_money())
+if __name__ == "__main__":
+    asyncio.run(auto_in_money())

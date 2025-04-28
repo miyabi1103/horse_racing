@@ -39,54 +39,54 @@ def scrape_job(race_id:str, row: dict):
 
     if row["place"] == 30:  
         predict = predict_exe_monbetu.def_predict_exe_monbetu(kaisai_date=args.kaisai_date, race_id=race_id)  
-        discord_notify = discord.post_discord()
+        # discord_notify = discord.post_discord()
         #購入手続き
         money = asyncio.run(Auto_purchaser_sanrenpuku.Auto_purchase_sanrenpuku(race_id=race_id,amount = "2000",amount_num = "20"))
 
     elif row["place"] == 35:  
         predict = predict_exe_morioka.def_predict_exe_morioka(kaisai_date=args.kaisai_date, race_id=race_id)  
-        discord_notify = discord.post_discord()
+        # discord_notify = discord.post_discord()
         #購入手続き
         money = asyncio.run(Auto_purchaser_umaren.Auto_purchase_umaren(race_id=race_id,amount = "2000",amount_num = "20"))
 
 
     elif row["place"] == 36:  
         predict = predict_exe_mizusawa.def_predict_exe_mizusawa(kaisai_date=args.kaisai_date, race_id=race_id)  
-        discord_notify = discord.post_discord()
+        # discord_notify = discord.post_discord()
         #購入手続き
         money = asyncio.run(Auto_purchaser_umaren.Auto_purchase_umaren(race_id=race_id,amount = "600",amount_num = "6"))
 
 
     elif row["place"] == 42:  
         predict = predict_exe_urawa.def_predict_exe_urawa(kaisai_date=args.kaisai_date, race_id=race_id)  
-        discord_notify = discord.post_discord()
+        # discord_notify = discord.post_discord()
         #購入手続き
         money = asyncio.run(Auto_purchaser_sanrenpuku.Auto_purchase_sanrenpuku(race_id=race_id,amount = "1000",amount_num = "10"))
 
     elif row["place"] == 43:  
         predict = predict_exe_funabasi.def_predict_exe_funabasi(kaisai_date=args.kaisai_date, race_id=race_id)  
-        discord_notify = discord.post_discord()
+        # discord_notify = discord.post_discord()
         #購入手続き
         money = asyncio.run(Auto_purchaser_umaren.Auto_purchase_umaren(race_id=race_id,amount = "1400",amount_num = "14"))
 
 
     elif row["place"] == 44:  
         predict = predict_exe_ooi.def_predict_exe_ooi(kaisai_date=args.kaisai_date, race_id=race_id)  
-        discord_notify = discord.post_discord()
+        # discord_notify = discord.post_discord()
         #購入手続き
         money = asyncio.run(Auto_purchaser_sanrenpuku.Auto_purchase_sanrenpuku(race_id=race_id,amount = "2000",amount_num = "20"))
 
 
     elif row["place"] == 45:  
         predict = predict_exe_kawasaki.def_predict_exe_kawasaki(kaisai_date=args.kaisai_date, race_id=race_id)  
-        discord_notify = discord.post_discord()
+        # discord_notify = discord.post_discord()
         #購入手続き
         money = asyncio.run(Auto_purchaser_umaren.Auto_purchase_umaren(race_id=race_id,amount = "600",amount_num = "6"))
 
 
     elif row["place"] == 46:  
         predict = predict_exe_kanazawa.def_predict_exe_kanazawa(kaisai_date=args.kaisai_date, race_id=race_id)  
-        discord_notify = discord.post_discord()
+        # discord_notify = discord.post_discord()
         #購入手続き
         money = asyncio.run(Auto_purchaser_wide.Auto_purchase_wide(race_id=race_id,amount = "1000",amount_num = "10"))
 
@@ -94,14 +94,14 @@ def scrape_job(race_id:str, row: dict):
 
     elif row["place"] == 47:  
         predict = predict_exe_kasamatu.def_predict_exe_kasamatu(kaisai_date=args.kaisai_date, race_id=race_id)  
-        discord_notify = discord.post_discord()
+        # discord_notify = discord.post_discord()
         #購入手続き
         money = asyncio.run(Auto_purchaser_umaren.Auto_purchase_umaren(race_id=race_id,amount = "800",amount_num = "8"))
 
 
     elif row["place"] == 48:  
         predict = predict_exe_nagoya.def_predict_exe_nagoya(kaisai_date=args.kaisai_date, race_id=race_id)  
-        discord_notify = discord.post_discord()
+        # discord_notify = discord.post_discord()
         #購入手続き
         money = asyncio.run(Auto_purchaser_sanrenpuku.Auto_purchase_sanrenpuku(race_id=race_id,amount = "2000",amount_num = "20"))
 
@@ -109,35 +109,36 @@ def scrape_job(race_id:str, row: dict):
 
     elif row["place"] == 50:  
         predict = predict_exe_sonoda.def_predict_exe_sonoda(kaisai_date=args.kaisai_date, race_id=race_id)  
-        discord_notify = discord.post_discord()
+        # discord_notify = discord.post_discord()
         #購入手続き
         money = asyncio.run(Auto_purchaser_umaren.Auto_purchase_umaren(race_id=race_id,amount = "2000",amount_num = "20"))
 
 
     elif row["place"] == 51:  
         predict = predict_exe_sonoda.def_predict_exe_sonoda(kaisai_date=args.kaisai_date, race_id=race_id)  
-        discord_notify = discord.post_discord()
+        # discord_notify = discord.post_discord()
         #購入手続き
         money = asyncio.run(Auto_purchaser_umaren.Auto_purchase_umaren(race_id=race_id,amount = "2000",amount_num = "20"))
 
 
     elif row["place"] == 54:  
         predict = predict_exe_kouti.def_predict_exe_kouti(kaisai_date=args.kaisai_date, race_id=race_id)  
-        discord_notify = discord.post_discord()
+        # discord_notify = discord.post_discord()
         #購入手続き
         money = asyncio.run(Auto_purchaser_sanrenpuku.Auto_purchase_sanrenpuku(race_id=race_id,amount = "600",amount_num = "6"))
 
     elif row["place"] == 55:  
         predict = predict_exe_saga.def_predict_exe_saga(kaisai_date=args.kaisai_date, race_id=race_id)  
-        discord_notify = discord.post_discord()
+        # discord_notify = discord.post_discord()
         #購入手続き
         money = asyncio.run(Auto_purchaser_sanrenpuku.Auto_purchase_sanrenpuku(race_id=race_id,amount = "400",amount_num = "4"))
 
 
     elif row["type"] == "none":  
-        discord_notify = discord.post_discord()
+        # discord_notify = discord.post_discord()
         predict = pre_predict_exe.prepredict(kaisai_date=args.kaisai_date)  
         money = asyncio.run(Auto_in_money.auto_in_money())
+        # print("demo")
         
     elif row["type"] == "end":
         print("スケジューラを停止します...")

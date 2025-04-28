@@ -113,67 +113,162 @@ async def Auto_purchase_sanrentan(race_id:str, top_n: int = 3,amount: str = "200
         today_weekday = weekday_map[datetime.now().weekday()]
         button_name = f"{place_name}（{today_weekday}）"
         race_button_name = f"{place_count}R"
-        await page.goto("https://jra.jp/")
+        try:
+            await page.goto("https://jra.jp/")
 
-        async with page.expect_popup() as page1_info:
-            await page.get_by_role("link", name="JRAの馬券をネット投票 即 PAT A-PAT").click()
-        page1 = await page1_info.value
-        await page1.get_by_role("textbox").click()
-        await page1.get_by_role("textbox").fill(INET_URL)
-        await page1.get_by_role("link", name="ログイン").click()
-        await page1.locator("input[name=\"i\"]").fill(KANYUSYA_URL)
-        await page1.locator("input[name=\"i\"]").click()
-        await page1.locator("input[name=\"p\"]").fill(PASSWORD_URL)
-        await page1.locator("input[name=\"r\"]").click()
-        await page1.locator("input[name=\"r\"]").fill(PARS_URL)
-        await page1.get_by_role("link", name="ネット投票メニューへ").click()
-        await page1.get_by_role("button", name="マークカード投票").click()
-        await page1.get_by_role("button", name=button_name, exact=False).click()
-        await page1.locator('button:has-text("R")').nth(place_count_minus).click()
+            async with page.expect_popup() as page1_info:
+                await page.get_by_role("link", name="JRAの馬券をネット投票 即 PAT A-PAT").click()
+            page1 = await page1_info.value
+            await page1.get_by_role("textbox").click()
+            await page1.get_by_role("textbox").fill(INET_URL)
+            await page1.get_by_role("link", name="ログイン").click()
+            await page1.locator("input[name=\"i\"]").fill(KANYUSYA_URL)
+            await page1.locator("input[name=\"i\"]").click()
+            await page1.locator("input[name=\"p\"]").fill(PASSWORD_URL)
+            await page1.locator("input[name=\"r\"]").click()
+            await page1.locator("input[name=\"r\"]").fill(PARS_URL)
+            await page1.get_by_role("link", name="ネット投票メニューへ").click()
+            await page1.get_by_role("button", name="マークカード投票").click()
+            await page1.get_by_role("button", name=button_name, exact=False).click()
+            await page1.locator('button:has-text("R")').nth(place_count_minus).click()
+            await page1.get_by_role("link", name="フォーメーション").click()
+            # await page1.locator("td:nth-child(6) > .btn-mark").click()
+            try:
+                # まず普通にクリックする
+                await page1.locator("td:nth-child(6) > .btn-mark").click()
+                print("普通にクリック成功しました")
+                await asyncio.sleep(2)  # ★ クリック後に1秒待機
+            except Exception as e:
+                print(f"普通クリック失敗: {e}。三連単を探します。")
+                try:
+                    # ボタン全部取得
+                    buttons = await page1.locator("td:nth-child(6) > .btn-mark").all()
+
+                    if not buttons:
+                        print("ボタンが一個もないのでスキップします")
+                    else:
+                        clicked = False
+                        for button in buttons:
+                            try:
+                                text = await button.inner_text()
+                                if "三連単" in text:
+                                    await button.click()
+                                    print("三連単ボタンをクリックしました")
+                                    await asyncio.sleep(2)  # ★ クリック後に1秒待機
+                                    clicked = True
+                                    break
+                            except Exception as e_inner:
+                                print(f"ボタンテキスト取得エラー: {e_inner}")
+                                continue
+
+                        if not clicked:
+                            # 三連単ボタンがなかったので最初のボタンをクリック
+                            print("三連単が見つからなかったので最初のボタンをクリックします")
+                            await buttons[0].click()
+                            await asyncio.sleep(2)  # ★ クリック後に1秒待機
+
+                except Exception as e2:
+                    print(f"三連単探しも最初のクリックも失敗しました: {e2}")
+                    # ここで諦めてスキップ
+
+            try:
+                # ここでplace_countRをクリック（一定時間だけ待つ）
+                await asyncio.wait_for(
+                    page1.get_by_role("button", name=first_umaban, exact=True).first.click(),
+                    timeout=5 # 秒
+                )
+            except asyncio.TimeoutError:
+                # タイムアウトしたら代わりに「照会」と「開催要領」ボタンをクリック
+                await page1.get_by_role("button", name=first_umaban).first.click()
 
 
 
 
-        await page1.get_by_role("link", name="フォーメーション").click()
-        await page1.locator("td:nth-child(6) > .btn-mark").click()
-        await page1.get_by_role("button", name=first_umaban, exact=True).first.click()
-        await page1.get_by_role("button", name=second_umaban, exact=True).nth(1).click()
-        await page1.get_by_role("button", name=third_umaban, exact=True).nth(1).click()
-        await page1.get_by_role("button", name=second_umaban, exact=True).nth(2).click()
-        await page1.get_by_role("button", name=third_umaban, exact=True).nth(2).click()
+            try:
+                # ここでplace_countRをクリック（一定時間だけ待つ）
+                await asyncio.wait_for(
+                    page1.get_by_role("button", name=second_umaban, exact=True).nth(1).click(),
+                    timeout=5  # 秒
+                )
+            except asyncio.TimeoutError:
+                # タイムアウトしたら代わりに「照会」と「開催要領」ボタンをクリック
+                await page1.get_by_role("button", name=second_umaban).nth(1).click()
 
 
-        await page1.get_by_role("button", name="セット").click()
-
-        await page1.get_by_role("button", name="購入予定リスト").click()
-
-
-        # await page1.get_by_label("円").first.click()
-        # await page1.get_by_label("円").first.fill(amount_num)
-        # await page1.get_by_role("row", name="1").get_by_label("円").dblclick()
-        # await page1.get_by_role("row", name="1").get_by_label("円").fill(amount_num)
-        await page1.get_by_role("button", name="金額セット用テンキ―").first.click()
-        await page1.locator("#bet-list-top").get_by_role("button", name=amount_num).click()
-        await page1.locator("#bet-list-top").get_by_role("button", name="セット", exact=True).click()
-        await page1.get_by_role("button", name="一括セット").click()
-        await asyncio.sleep(2)
-        await page1.get_by_role("cell", name="合計金額入力： 円 金額セット用テンキ―").get_by_role("textbox").click()
-        await page1.get_by_role("cell", name="合計金額入力： 円 金額セット用テンキ―").get_by_role("textbox").fill(amount)
-        await asyncio.sleep(2)
-        await page1.get_by_role("button", name="購入する").click()
-        await asyncio.sleep(1)
-        await page1.get_by_role("button", name="OK").click()
-        # await page1.get_by_role("button", name="閉じる").click()
-        await asyncio.sleep(1)
+            try:
+                # ここでplace_countRをクリック（一定時間だけ待つ）
+                await asyncio.wait_for(
+                    page1.get_by_role("button", name=third_umaban, exact=True).nth(1).click(),
+                    timeout=5 # 秒
+                )
+            except asyncio.TimeoutError:
+                # タイムアウトしたら代わりに「照会」と「開催要領」ボタンをクリック
+                await page1.get_by_role("button", name=third_umaban).nth(1).click()
 
 
 
-        await page1.close()
-        # ---------------------
-        await context.close()
-        await browser.close()
-        print("三連単投票が完了しました")
+            try:
+                # ここでplace_countRをクリック（一定時間だけ待つ）
+                await asyncio.wait_for(
+                    page1.get_by_role("button", name=third_umaban, exact=True).nth(2).click(),
+                    timeout=5  # 秒
+                )
+            except asyncio.TimeoutError:
+                # タイムアウトしたら代わりに「照会」と「開催要領」ボタンをクリック
+                await page1.get_by_role("button", name=third_umaban).nth(2).click()
         
+            try:
+                # ここでplace_countRをクリック（一定時間だけ待つ）
+                await asyncio.wait_for(
+                    page1.get_by_role("button", name=second_umaban, exact=True).nth(2).click(),
+                    timeout=5  # 秒
+                )
+            except asyncio.TimeoutError:
+                # タイムアウトしたら代わりに「照会」と「開催要領」ボタンをクリック
+                await page1.get_by_role("button", name=second_umaban).nth(2).click()
+
+
+
+
+            await page1.get_by_role("button", name="セット").click()
+
+            await page1.get_by_role("button", name="購入予定リスト").click()
+
+
+            # await page1.get_by_label("円").first.click()
+            # await page1.get_by_label("円").first.fill(amount_num)
+            # await page1.get_by_role("row", name="1").get_by_label("円").dblclick()
+            # await page1.get_by_role("row", name="1").get_by_label("円").fill(amount_num)
+            await page1.get_by_role("button", name="金額セット用テンキ―").first.click()
+            await page1.locator("#bet-list-top").get_by_role("button", name=amount_num).click()
+            await page1.locator("#bet-list-top").get_by_role("button", name="セット", exact=True).click()
+            await page1.get_by_role("button", name="一括セット").click()
+            await asyncio.sleep(2)
+            await page1.get_by_role("cell", name="合計金額入力： 円 金額セット用テンキ―").get_by_role("textbox").click()
+            await page1.get_by_role("cell", name="合計金額入力： 円 金額セット用テンキ―").get_by_role("textbox").fill(amount)
+            await asyncio.sleep(2)
+            await page1.get_by_role("button", name="購入する").click()
+            await asyncio.sleep(2)
+            await page1.get_by_role("button", name="OK").click()
+            # await page1.get_by_role("button", name="閉じる").click()
+            await asyncio.sleep(3)
+            await page1.get_by_role("button", name="続けて投票する").click()
+            await asyncio.sleep(2)
+
+
+            await page1.close()
+
+        except asyncio.TimeoutError:
+            print("タイムアウトが発生しました。")
+        except Exception as e:
+            print(f"予期せぬエラー: {e}")
+        finally:
+            await asyncio.sleep(1)
+            await context.close()
+            await browser.close()
+            print("三連単投票が完了しました")
+
+        # ---------------------
 
 if __name__ == "__main__":
     asyncio.run(Auto_purchase_sanrentan())

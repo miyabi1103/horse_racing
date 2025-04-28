@@ -40,13 +40,13 @@ def scrape_job(race_id:str, row: dict):
         predict = predict_exe_turf.def_predict_exe_turf(kaisai_date=args.kaisai_date, race_id=race_id)
         discord_notify = discord.post_discord()
         #購入手続き
-        money = asyncio.run(Auto_purchaser_sanrenpuku.Auto_purchase_sanrenpuku(race_id=race_id,amount = "900",amount_num = "9"))
+        money = asyncio.run(Auto_purchaser_sanrenpuku.Auto_purchase_sanrenpuku(race_id=race_id,amount = "800",amount_num = "8"))
         money = asyncio.run(Auto_purchaser_sanrentan.Auto_purchase_sanrentan(race_id=race_id,amount = "200",amount_num = "1"))
 
         predict = predict_exe_turf.def_predict_exe_turf_ex(kaisai_date=args.kaisai_date, race_id=race_id)
         discord_notify = discord.post_discord()
         #購入手続き
-        money = asyncio.run(Auto_purchaser_sanrenpuku.Auto_purchase_sanrenpuku(race_id=race_id,amount = "500",amount_num = "5"))
+        money = asyncio.run(Auto_purchaser_sanrenpuku.Auto_purchase_sanrenpuku(race_id=race_id,amount = "300",amount_num = "3"))
         money = asyncio.run(Auto_purchaser_sanrentan.Auto_purchase_sanrentan(race_id=race_id,amount = "200",amount_num = "1"))
 
 
@@ -55,21 +55,21 @@ def scrape_job(race_id:str, row: dict):
         predict = predict_exe_turf_nowin.def_predict_exe_turf_nowin(kaisai_date=args.kaisai_date, race_id=race_id)
         discord_notify = discord.post_discord()
         #購入手続き
-        money = asyncio.run(Auto_purchaser_sanrenpuku.Auto_purchase_sanrenpuku(race_id=race_id,amount = "300",amount_num = "3"))
+        money = asyncio.run(Auto_purchaser_sanrenpuku.Auto_purchase_sanrenpuku(race_id=race_id,amount = "200",amount_num = "2"))
         money = asyncio.run(Auto_purchaser_sanrentan.Auto_purchase_sanrentan(race_id=race_id,amount = "200",amount_num = "1"))
 
 
     elif row['EARLY'] == 1 and row["type"] == 0 and row["class"] >= 2:
         predict = predict_exe_dirt.def_predict_exe_dirt(kaisai_date=args.kaisai_date, race_id=race_id)
         discord_notify = discord.post_discord()
-        money = asyncio.run(Auto_purchaser_umaren.Auto_purchase_umaren(race_id=race_id,amount = "300",amount_num = "3"))
+        money = asyncio.run(Auto_purchaser_umaren.Auto_purchase_umaren(race_id=race_id,amount = "200",amount_num = "2"))
         # money = asyncio.run(Auto_purchaser_sanrentan.Auto_purchase_sanrentan(race_id=race_id,amount = "200",amount_num = "1"))
 
 
     elif row['EARLY'] == 1 and row["type"] == 0 and row["class"] < 2:
         predict = predict_exe_dirt_nowin.def_predict_exe_dirt_nowin(kaisai_date=args.kaisai_date, race_id=race_id)
         discord_notify = discord.post_discord()
-        money = asyncio.run(Auto_purchaser_wide.Auto_purchase_wide(race_id=race_id,amount = "300",amount_num = "3"))
+        money = asyncio.run(Auto_purchaser_wide.Auto_purchase_wide(race_id=race_id,amount = "200",amount_num = "2"))
         # money = asyncio.run(Auto_purchaser_sanrentan.Auto_purchase_sanrentan(race_id=race_id,amount = "200",amount_num = "1"))
 
 

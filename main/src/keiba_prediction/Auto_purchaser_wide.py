@@ -50,7 +50,7 @@ if not PARS_URL:
 #     raise ValueError("PARS_NOが設定されていません。'.env'ファイルを確認してください。")
 
 
-async def Auto_purchase_sanrenpuku(race_id:str, top_n: int = 3,amount: str = "100",amount_num: str = "1"):
+async def Auto_purchase_wide(race_id:str, top_n: int = 2,amount: str = "100",amount_num: str = "1"):
     csv_path = Path("../../data/05_prediction_results/prediction_result.csv")
     try:
         # CSVファイルを読み込む
@@ -73,7 +73,7 @@ async def Auto_purchase_sanrenpuku(race_id:str, top_n: int = 3,amount: str = "10
     # top_umabanの一番手前の数字を文字列に変換
     first_umaban = str(top_umaban[0])  # 1番目の要素
     second_umaban = str(top_umaban[1]) if len(top_umaban) > 1 else None  # 2番目の要素（存在する場合）
-    third_umaban = str(top_umaban[2]) if len(top_umaban) > 2 else None  # 3番目の要素（存在する場合）
+    # third_umaban = str(top_umaban[2]) if len(top_umaban) > 2 else None  # 3番目の要素（存在する場合）
 
     # # 開発用
     # ####################################################################
@@ -132,7 +132,8 @@ async def Auto_purchase_sanrenpuku(race_id:str, top_n: int = 3,amount: str = "10
 
 
         await page1.get_by_role("link", name="ボックス").click()
-        await page1.locator("td:nth-child(5) > .btn-mark").click()
+        await page1.locator("td:nth-child(4) > .btn-mark").click()
+
         # パターン①: セルの中のボタン
         try:
             cell = page1.get_by_role("cell", name=first_umaban, exact=True)
@@ -173,24 +174,6 @@ async def Auto_purchase_sanrenpuku(race_id:str, top_n: int = 3,amount: str = "10
                 pass
 
 
-        # パターン①: セルの中のボタン
-        try:
-            cell = page1.get_by_role("cell", name=third_umaban, exact=True)
-            if await cell.is_visible():
-                await cell.get_by_role("button").click()
-                clicked = True  # 成功したらフラグを立てる
-        except:
-            pass
-        
-        # パターン②: 直接ボタン（上で失敗したときだけ）
-        if not clicked:
-            try:
-                btn = page1.get_by_role("button", name=third_umaban)
-                if await btn.is_visible():
-                    await btn.click()
-                    clicked = True
-            except:
-                pass
 
 
 
@@ -241,4 +224,4 @@ async def Auto_purchase_sanrenpuku(race_id:str, top_n: int = 3,amount: str = "10
         print("三連複投票が完了しました")
 
 if __name__ == "__main__":
-    asyncio.run(Auto_purchase_sanrenpuku())
+    asyncio.run(Auto_purchase_wide())

@@ -178,8 +178,8 @@ async def Create_time_table(kaisai_data:str):
     df = df[df["class"] != 0]
 
     # typeが0かつclassが1かつlongが1900未満の行を除外
-    df = df[~((df["type"] == 0) & (df["class"] == 1) & (df["long"] < 1900))]
-
+    df = df[~((df["type"] == 0) & (df["long"] < 1900))]
+    # df = df[~((df["type"] == 0) & (df["class"] == 1) & (df["long"] < 1900))]
 
     place_mapping = {
         '01': 'Sapporo',
