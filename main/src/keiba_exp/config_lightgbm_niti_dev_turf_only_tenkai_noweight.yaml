@@ -2552,8 +2552,8 @@ features:
     # - nobori_condition_index_mean_1races_relative
     # - nobori_condition_index_max_1races_relative
     # - nobori_condition_index_min_1races_relative
-    # - speed_index_mean_1races_relative
-    # - speed_index_max_1races_relative
+    - speed_index_mean_1races_relative
+    - speed_index_max_1races_relative
     # - speed_index_min_1races_relative
     # - nobori_index_mean_1races_relative
     # - nobori_index_max_1races_relative
@@ -2636,8 +2636,8 @@ features:
     # - nobori_condition_index_mean_3races_relative
     # - nobori_condition_index_max_3races_relative
     # - nobori_condition_index_min_3races_relative
-    # - speed_index_mean_3races_relative
-    # - speed_index_max_3races_relative
+    - speed_index_mean_3races_relative
+    - speed_index_max_3races_relative
     # - speed_index_min_3races_relative
     # - nobori_index_mean_3races_relative
     # - nobori_index_max_3races_relative
@@ -2720,8 +2720,8 @@ features:
     # - nobori_condition_index_mean_5races_relative
     # - nobori_condition_index_max_5races_relative
     # - nobori_condition_index_min_5races_relative
-    # - speed_index_mean_5races_relative
-    # - speed_index_max_5races_relative
+    - speed_index_mean_5races_relative
+    - speed_index_max_5races_relative
     # - speed_index_min_5races_relative
     # - nobori_index_mean_5races_relative
     # - nobori_index_max_5races_relative
@@ -2804,8 +2804,8 @@ features:
     # - nobori_condition_index_mean_10races_relative
     # - nobori_condition_index_max_10races_relative
     # - nobori_condition_index_min_10races_relative
-    # - speed_index_mean_10races_relative
-    # - speed_index_max_10races_relative
+    - speed_index_mean_10races_relative
+    - speed_index_max_10races_relative
     # - speed_index_min_10races_relative
     # - nobori_index_mean_10races_relative
     # - nobori_index_max_10races_relative
@@ -3215,10 +3215,10 @@ features:
     # - rush_type_final
     # - rush_advantages_cross
     # - rush_advantages_cross_plus
-    - rush_type_final_standardized
-    - rush_type_Advantages_standardized
-    - rush_advantages_cross_standardized
-    - rush_advantages_cross_plus_standardized
+    # - rush_type_final_standardized
+    # - rush_type_Advantages_standardized
+    # - rush_advantages_cross_standardized
+    # - rush_advantages_cross_plus_standardized
     - tenkai_combined_2_standardized
     - tenkai_place_combined_standardized
     - tenkai_place_start_slope_combined_standardized
@@ -3874,3 +3874,161 @@ features:
     # - time_correction_max_8races_relative
     # - time_correction_mean_8races_relative
 
+
+    - waku_hit_rate_standardized  
+    # - waku_return_rate_standardized
+    - position_hit_rate_standardized
+    # - position_return_rate_standardized
+    - course_len_diff_hit_rate_standardized
+    # - course_len_diff_return_rate_standardized
+    - class_diff_hit_rate_standardized
+    # - class_diff_return_rate_standardized
+    - age_hit_rate_standardized
+    # - age_return_rate_standardized
+    - sex_hit_rate_standardized
+    # - sex_return_rate_standardized
+
+
+    - rank_diff_hosei_mean_1races_per_course_type_hosei_relative
+    - rank_diff_hosei_min_1races_per_course_type_hosei_relative
+    # - nobori_mean_1races_per_course_type_hosei_relative
+    # - nobori_min_1races_per_course_type_hosei_relative
+    - rank_diff_hosei_mean_3races_per_course_type_hosei_relative
+    - rank_diff_hosei_min_3races_per_course_type_hosei_relative
+    # - nobori_mean_3races_per_course_type_hosei_relative
+    # - nobori_min_3races_per_course_type_hosei_relative
+    - rank_diff_hosei_mean_5races_per_course_type_hosei_relative
+    - rank_diff_hosei_min_5races_per_course_type_hosei_relative
+    # - nobori_mean_5races_per_course_type_hosei_relative
+    # - nobori_min_5races_per_course_type_hosei_relative
+    - rank_diff_hosei_mean_10races_per_course_type_hosei_relative
+    - rank_diff_hosei_min_10races_per_course_type_hosei_relative
+    # - nobori_mean_10races_per_course_type_hosei_relative
+    # - nobori_min_10races_per_course_type_hosei_relative
+
+
+    # # - rank_diff_hosei_mean_1races_per_course_type_hosei_relative
+    # # - rank_diff_hosei_min_1races_per_course_type_hosei_relative
+    # - nobori_mean_1races_per_course_type_hosei_relative
+    # - nobori_min_1races_per_course_type_hosei_relative
+    # # - rank_diff_hosei_mean_3races_per_course_type_hosei_relative
+    # # - rank_diff_hosei_min_3races_per_course_type_hosei_relative
+    # - nobori_mean_3races_per_course_type_hosei_relative
+    # - nobori_min_3races_per_course_type_hosei_relative
+    # # - rank_diff_hosei_mean_5races_per_course_type_hosei_relative
+    # # - rank_diff_hosei_min_5races_per_course_type_hosei_relative
+    # - nobori_mean_5races_per_course_type_hosei_relative
+    # - nobori_min_5races_per_course_type_hosei_relative
+    # # - rank_diff_hosei_mean_10races_per_course_type_hosei_relative
+    # # - rank_diff_hosei_min_10races_per_course_type_hosei_relative
+    # - nobori_mean_10races_per_course_type_hosei_relative
+    # - nobori_min_10races_per_course_type_hosei_relative
+
+
+
+
+
+
+
+
+
+    - rank_diff_hosei_mean_1races_per_type_ground_state_hosei_relative
+    - rank_diff_hosei_min_1races_per_type_ground_state_hosei_relative
+    # - nobori_mean_1races_per_type_ground_state_hosei_relative
+    # - nobori_min_1races_per_type_ground_state_hosei_relative
+    - rank_diff_hosei_mean_3races_per_type_ground_state_hosei_relative
+    - rank_diff_hosei_min_3races_per_type_ground_state_hosei_relative
+    # - nobori_mean_3races_per_type_ground_state_hosei_relative
+    # - nobori_min_3races_per_type_ground_state_hosei_relative
+    - rank_diff_hosei_mean_5races_per_type_ground_state_hosei_relative
+    - rank_diff_hosei_min_5races_per_type_ground_state_hosei_relative
+    # - nobori_mean_5races_per_type_ground_state_hosei_relative
+    # - nobori_min_5races_per_type_ground_state_hosei_relative
+    - rank_diff_hosei_mean_10races_per_type_ground_state_hosei_relative
+    - rank_diff_hosei_min_10races_per_type_ground_state_hosei_relative
+    # - nobori_mean_10races_per_type_ground_state_hosei_relative
+    # - nobori_min_10races_per_type_ground_state_hosei_relative
+
+
+
+
+    # # - rank_diff_hosei_mean_1races_per_type_ground_state_hosei_relative
+    # # - rank_diff_hosei_min_1races_per_type_ground_state_hosei_relative
+    # - nobori_mean_1races_per_type_ground_state_hosei_relative
+    # - nobori_min_1races_per_type_ground_state_hosei_relative
+    # # - rank_diff_hosei_mean_3races_per_type_ground_state_hosei_relative
+    # # - rank_diff_hosei_min_3races_per_type_ground_state_hosei_relative
+    # - nobori_mean_3races_per_type_ground_state_hosei_relative
+    # - nobori_min_3races_per_type_ground_state_hosei_relative
+    # # - rank_diff_hosei_mean_5races_per_type_ground_state_hosei_relative
+    # # - rank_diff_hosei_min_5races_per_type_ground_state_hosei_relative
+    # - nobori_mean_5races_per_type_ground_state_hosei_relative
+    # - nobori_min_5races_per_type_ground_state_hosei_relative
+    # # - rank_diff_hosei_mean_10races_per_type_ground_state_hosei_relative
+    # # - rank_diff_hosei_min_10races_per_type_ground_state_hosei_relative
+    # - nobori_mean_10races_per_type_ground_state_hosei_relative
+    # - nobori_min_10races_per_type_ground_state_hosei_relative
+
+
+
+
+
+
+    # - rank_diff_hosei_mean_1races_per_course_type_place_hosei_relative
+    # - rank_diff_hosei_min_1races_per_course_type_place_hosei_relative
+    # # - nobori_mean_1races_per_course_type_place_hosei_relative
+    # # - nobori_min_1races_per_course_type_place_hosei_relative
+    # - rank_diff_hosei_mean_3races_per_course_type_place_hosei_relative
+    # - rank_diff_hosei_min_3races_per_course_type_place_hosei_relative
+    # # - nobori_mean_3races_per_course_type_place_hosei_relative
+    # # - nobori_min_3races_per_course_type_place_hosei_relative
+    # - rank_diff_hosei_mean_5races_per_course_type_place_hosei_relative
+    # - rank_diff_hosei_min_5races_per_course_type_place_hosei_relative
+    # # - nobori_mean_5races_per_course_type_place_hosei_relative
+    # # - nobori_min_5races_per_course_type_place_hosei_relative
+    # - rank_diff_hosei_mean_10races_per_course_type_place_hosei_relative
+    # - rank_diff_hosei_min_10races_per_course_type_place_hosei_relative
+    # # - nobori_mean_10races_per_course_type_place_hosei_relative
+    # # - nobori_min_10races_per_course_type_place_hosei_relative
+
+
+
+    # # - rank_diff_hosei_mean_1races_per_course_type_place_hosei_relative
+    # # - rank_diff_hosei_min_1races_per_course_type_place_hosei_relative
+    # - nobori_mean_1races_per_course_type_place_hosei_relative
+    # - nobori_min_1races_per_course_type_place_hosei_relative
+    # # - rank_diff_hosei_mean_3races_per_course_type_place_hosei_relative
+    # # - rank_diff_hosei_min_3races_per_course_type_place_hosei_relative
+    # - nobori_mean_3races_per_course_type_place_hosei_relative
+    # - nobori_min_3races_per_course_type_place_hosei_relative
+    # # - rank_diff_hosei_mean_5races_per_course_type_place_hosei_relative
+    # # - rank_diff_hosei_min_5races_per_course_type_place_hosei_relative
+    # - nobori_mean_5races_per_course_type_place_hosei_relative
+    # - nobori_min_5races_per_course_type_place_hosei_relative
+    # # - rank_diff_hosei_mean_10races_per_course_type_place_hosei_relative
+    # # - rank_diff_hosei_min_10races_per_course_type_place_hosei_relative
+    # - nobori_mean_10races_per_course_type_place_hosei_relative
+    # - nobori_min_10races_per_course_type_place_hosei_relative
+
+
+
+
+
+
+
+    # - rank_diff_hosei_mean_1races_per_hosei_relative
+    # - rank_diff_hosei_min_1races_per_hosei_relative
+    # # - nobori_mean_1races_per_hosei_relative
+    # # - nobori_min_1races_per_hosei_relative
+    # - rank_diff_hosei_mean_3races_per_hosei_relative
+    # - rank_diff_hosei_min_3races_per_hosei_relative
+    # # - nobori_mean_3races_per_hosei_relative
+    # # - nobori_min_3races_per_hosei_relative
+    # - rank_diff_hosei_mean_5races_per_hosei_relative
+    # - rank_diff_hosei_min_5races_per_hosei_relative
+    # # - nobori_mean_5races_per_hosei_relative
+    # # - nobori_min_5races_per_hosei_relative
+    # - rank_diff_hosei_mean_10races_per_hosei_relative
+    # - rank_diff_hosei_min_10races_per_hosei_relative
+    # # - nobori_mean_10races_per_hosei_relative
+    # # - nobori_min_10races_per_hosei_relative

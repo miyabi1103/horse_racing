@@ -389,7 +389,7 @@ class FeatureCreator:
         直近nレースの平均を集計して標準化した関数。
         """
         baselog_df_info = self.baselog.merge(
-                self.race_info[["race_id", "course_len"]], on="race_id", suffixes=("", "_info")
+                self.race_info[["race_id", "course_len", "race_class"]], on="race_id", suffixes=("", "_info")
             )
         baselog_df = baselog_df_info.merge(
             self.results[["race_id", "n_horses"]], on="race_id", suffixes=("", "_results")
@@ -397,6 +397,7 @@ class FeatureCreator:
                         
         baselog_df["course_len_diff"] = baselog_df["course_len_info"] - baselog_df["course_len"]
         baselog_df["n_horses_diff"] = baselog_df["n_horses_results"] - baselog_df["n_horses"]
+        baselog_df["race_class_diff"] = baselog_df["race_class_info"] - baselog_df["race_class"]
 
         grouped_df = baselog_df.groupby(["race_id", "horse_id"])
         merged_df = self.population.copy()
@@ -410,6 +411,7 @@ class FeatureCreator:
                         "course_len_diff",
                         "n_horses",
                         "n_horses_diff",
+                        "race_class_diff",
                     ]
                 ]
                 .agg(["mean", "max", "min"])
@@ -587,7 +589,7 @@ class FeatureCreator:
                         # "rank",
                         # "rank_per_horse",
                         # "prize",
-                        # "rank_diff",
+                        "rank_diff",
                         "time",
 
                         "nobori",
@@ -1074,6 +1076,7 @@ class FeatureCreator:
         
         def determine_dominant_position(row):
             
+
             # 5racesの中から計算
             if not row[position_columns_5].isnull().all():
                 max_column = row[position_columns_5].idxmax()
@@ -3589,7 +3592,6 @@ class FeatureCreator:
         
         
         def determine_dominant_position(row):
-            
             # 5racesの中から計算
             if not row[position_columns_5].isnull().all():
                 max_column = row[position_columns_5].idxmax()
@@ -5067,7 +5069,6 @@ class FeatureCreator:
             # すべて欠損の場合は1を返す
             else:
                 return 3
-        
         # 各行に対して dominant_position_category を適用
         merged_df["dominant_position_category"] = merged_df.apply(determine_dominant_position, axis=1)
         merged_df1 = merged_df
@@ -6428,13 +6429,13 @@ class FeatureCreator:
         horse_results_baselog['time_diff_grade'] = horse_results_baselog['time_condition_index_shaft'] - horse_results_baselog['adjusted_time']
 
         # 2. time_diffを0.1秒ごとのポイントに変換（1ポイント = 0.1秒）
-        horse_results_baselog['time_points_grade'] = (horse_results_baselog['time_diff_grade'] )*10
+        horse_results_baselog['time_points_grade'] = (horse_results_baselog['time_diff_grade'] )*3+((horse_results_baselog['season_turf_condition']-7)/2)
 
         # 1. final_nobori_avgからnoboriを引いた数値（秒）を計算
         horse_results_baselog['nobori_diff_grade'] = horse_results_baselog['nobori_condition_index_shaft'] 
 
         # 2. nobori_diffを0.1秒ごとのポイントに変換（1ポイント = 0.1秒）
-        horse_results_baselog['nobori_points_grade'] = (horse_results_baselog['time_diff_grade'] ) *10
+        horse_results_baselog['nobori_points_grade'] = (horse_results_baselog['time_diff_grade'] ) *3+((horse_results_baselog['season_turf_condition']-7)/4)
 
         """
         距離指数をかける
@@ -7441,26 +7442,26 @@ class FeatureCreator:
             if row["nobori_diff"] >= 0.6:
                 return -2.5
 
-            if row["nobori_pace_diff_slope_range_groundstate_position_umaban"] >= 35.6 and row["race_type"] == 1 and row["rank"] <= 6:
-                return 4
-            if row["nobori_pace_diff_slope_range_groundstate_position_umaban"] >= 34.5 and row["race_type"] == 1 and row["rank"] <= 6:
-                return 2.5
-            if row["nobori"] >= 34.5 and row["race_type"] == 1 and row["rank"] <= 6:
-                return 2.5
+            # if row["nobori_pace_diff_slope_range_groundstate_position_umaban"] >= 35.6 and row["race_type"] == 1 and row["rank"] <= 6:
+            #     return 4
+            # if row["nobori_pace_diff_slope_range_groundstate_position_umaban"] >= 34.5 and row["race_type"] == 1 and row["rank"] <= 6:
+            #     return 2.5
+            # if row["nobori"] >= 34.5 and row["race_type"] == 1 and row["rank"] <= 6:
+            #     return 2.5
 
-            if row["nobori_pace_diff_slope_range_groundstate_position_umaban"] >= 36.1 and row["race_type"] == 0 and row["course_len"] < 1600 and row["rank"] <= 6:
-                return 4
-            if row["nobori_pace_diff_slope_range_groundstate_position_umaban"] >= 35 and row["race_type"] == 0 and row["course_len"] < 1600 and row["rank"] <= 6:
-                return 2.5
-            if row["nobori"] >= 35 and row["race_type"] == 0 and row["course_len"] < 1600 and row["rank"] <= 6:
-                return 2.5
+            # if row["nobori_pace_diff_slope_range_groundstate_position_umaban"] >= 36.1 and row["race_type"] == 0 and row["course_len"] < 1600 and row["rank"] <= 6:
+            #     return 4
+            # if row["nobori_pace_diff_slope_range_groundstate_position_umaban"] >= 35 and row["race_type"] == 0 and row["course_len"] < 1600 and row["rank"] <= 6:
+            #     return 2.5
+            # if row["nobori"] >= 35 and row["race_type"] == 0 and row["course_len"] < 1600 and row["rank"] <= 6:
+            #     return 2.5
 
-            if row["nobori_pace_diff_slope_range_groundstate_position_umaban"] >= 36.6 and row["race_type"] == 0 and row["course_len"] >= 1600 and row["rank"] <= 6:
-                return 4
-            if row["nobori_pace_diff_slope_range_groundstate_position_umaban"] >= 35.5 and row["race_type"] == 0 and row["course_len"] >= 1600 and row["rank"] <= 6:
-                return 2.5
-            if row["nobori"] >= 35.5 and row["race_type"] == 0 and row["course_len"] >= 1600 and row["rank"] <= 6:
-                return 2.5
+            # if row["nobori_pace_diff_slope_range_groundstate_position_umaban"] >= 36.6 and row["race_type"] == 0 and row["course_len"] >= 1600 and row["rank"] <= 6:
+            #     return 4
+            # if row["nobori_pace_diff_slope_range_groundstate_position_umaban"] >= 35.5 and row["race_type"] == 0 and row["course_len"] >= 1600 and row["rank"] <= 6:
+            #     return 2.5
+            # if row["nobori"] >= 35.5 and row["race_type"] == 0 and row["course_len"] >= 1600 and row["rank"] <= 6:
+            #     return 2.5
             else:
                 return 0
 
@@ -7910,9 +7911,243 @@ class FeatureCreator:
 
 
 
+        # waku_hit_rate
+        base_2['waku_hit_rate'] = np.select(
+            [
+                base_2['wakuban'] == 1,
+                base_2['wakuban'] == 2,
+                base_2['wakuban'] == 3,
+                base_2['wakuban'] == 4,
+                base_2['wakuban'] == 5,
+                base_2['wakuban'] == 6,
+                base_2['wakuban'] == 7,
+                base_2['wakuban'] == 8
+            ],
+            [
+                base_2['waku_1'],
+                base_2['waku_2'],
+                base_2['waku_3'],
+                base_2['waku_4'],
+                base_2['waku_5'],
+                base_2['waku_6'],
+                base_2['waku_7'],
+                base_2['waku_8']
+            ],
+            default=np.nan
+        )
+
+        # waku_return_rate
+        base_2['waku_return_rate'] = np.select(
+            [
+                base_2['wakuban'] == 1,
+                base_2['wakuban'] == 2,
+                base_2['wakuban'] == 3,
+                base_2['wakuban'] == 4,
+                base_2['wakuban'] == 5,
+                base_2['wakuban'] == 6,
+                base_2['wakuban'] == 7,
+                base_2['wakuban'] == 8
+            ],
+            [
+                base_2['waku_1_EX'],
+                base_2['waku_2_EX'],
+                base_2['waku_3_EX'],
+                base_2['waku_4_EX'],
+                base_2['waku_5_EX'],
+                base_2['waku_6_EX'],
+                base_2['waku_7_EX'],
+                base_2['waku_8_EX']
+            ],
+            default=np.nan
+        )
+
+        # position_hit_rate
+        base_2['position_hit_rate'] = np.select(
+            [
+                base_2['race_position'] == 1,
+                base_2['race_position'] == 2,
+                base_2['race_position'] == 3,
+                base_2['race_position'] == 4
+            ],
+            [
+                base_2['position_1'],
+                base_2['position_2'],
+                base_2['position_3'],
+                base_2['position_4']
+            ],
+            default=np.nan
+        )
+
+        # position_return_rate
+        base_2['position_return_rate'] = np.select(
+            [
+                base_2['race_position'] == 1,
+                base_2['race_position'] == 2,
+                base_2['race_position'] == 3,
+                base_2['race_position'] == 4
+            ],
+            [
+                base_2['position_1_EX'],
+                base_2['position_2_EX'],
+                base_2['position_3_EX'],
+                base_2['position_4_EX']
+            ],
+            default=np.nan
+        )
+
+        # # course_len_diff_hit_rate
+        # base_2['course_len_diff_hit_rate'] = np.select(
+        #     [
+        #         base_2['course_len_diff_mean_1races'] <= -500,
+        #         (base_2['course_len_diff_mean_1races'] > -500) & (base_2['course_len_diff_mean_1races'] <= -300),
+        #         (base_2['course_len_diff_mean_1races'] > -300) & (base_2['course_len_diff_mean_1races'] <= -100),
+        #         (base_2['course_len_diff_mean_1races'] > -100) & (base_2['course_len_diff_mean_1races'] < 100),
+        #         (base_2['course_len_diff_mean_1races'] >= 100) & (base_2['course_len_diff_mean_1races'] < 300),
+        #         (base_2['course_len_diff_mean_1races'] >= 300) & (base_2['course_len_diff_mean_1races'] < 500),
+        #         base_2['course_len_diff_mean_1races'] >= 500
+        #     ],
+        #     [
+        #         base_2['course_len_diff_-500'],
+        #         base_2['course_len_diff_-350'],
+        #         base_2['course_len_diff_-150'],
+        #         base_2['course_len_diff_0'],
+        #         base_2['course_len_diff_150'],
+        #         base_2['course_len_diff_350'],
+        #         base_2['course_len_diff_500']
+        #     ],
+        #     default=np.nan
+        # )
+
+        # # course_len_diff_return_rate
+        # base_2['course_len_diff_return_rate'] = np.select(
+        #     [
+        #         base_2['course_len_diff_mean_1races'] <= -500,
+        #         (base_2['course_len_diff_mean_1races'] > -500) & (base_2['course_len_diff_mean_1races'] <= -300),
+        #         (base_2['course_len_diff_mean_1races'] > -300) & (base_2['course_len_diff_mean_1races'] <= -100),
+        #         (base_2['course_len_diff_mean_1races'] > -100) & (base_2['course_len_diff_mean_1races'] < 100),
+        #         (base_2['course_len_diff_mean_1races'] >= 100) & (base_2['course_len_diff_mean_1races'] < 300),
+        #         (base_2['course_len_diff_mean_1races'] >= 300) & (base_2['course_len_diff_mean_1races'] < 500),
+        #         base_2['course_len_diff_mean_1races'] >= 500
+        #     ],
+        #     [
+        #         base_2['course_len_diff_-500_EX'],
+        #         base_2['course_len_diff_-350_EX'],
+        #         base_2['course_len_diff_-150_EX'],
+        #         base_2['course_len_diff_0_EX'],
+        #         base_2['course_len_diff_150_EX'],
+        #         base_2['course_len_diff_350_EX'],
+        #         base_2['course_len_diff_500_EX']
+        #     ],
+        #     default=np.nan
+        # )
+
+        # # class_diff_hit_rate
+        # base_2['class_diff_hit_rate'] = np.select(
+        #     [
+        #         base_2['race_class_diff_mean_1races'] > 0,
+        #         base_2['race_class_diff_mean_1races'] == 0,
+        #         base_2['race_class_diff_mean_1races'] < 0
+        #     ],
+        #     [
+        #         base_2['class_diff_up'],
+        #         base_2['class_diff_stay'],
+        #         base_2['class_diff_down']
+        #     ],
+        #     default=np.nan
+        # )
+
+        # # class_diff_return_rate
+        # base_2['class_diff_return_rate'] = np.select(
+        #     [
+        #         base_2['race_class_diff_mean_1races'] > 0,
+        #         base_2['race_class_diff_mean_1races'] == 0,
+        #         base_2['race_class_diff_mean_1races'] < 0
+        #     ],
+        #     [
+        #         base_2['class_diff_up_EX'],
+        #         base_2['class_diff_stay_EX'],
+        #         base_2['class_diff_down_EX']
+        #     ],
+        #     default=np.nan
+        # )
+
+        # # age_hit_rate
+        # base_2['age_hit_rate'] = np.select(
+        #     [
+        #         base_2['age'] == 3,
+        #         base_2['age'] == 4,
+        #         base_2['age'] == 5,
+        #         base_2['age'] == 6
+        #     ],
+        #     [
+        #         base_2['age_3'],
+        #         base_2['age_4'],
+        #         base_2['age_5'],
+        #         base_2['age_6']
+        #     ],
+        #     default=np.nan
+        # )
+
+        # # age_return_rate
+        # base_2['age_return_rate'] = np.select(
+        #     [
+        #         base_2['age'] == 3,
+        #         base_2['age'] == 4,
+        #         base_2['age'] == 5,
+        #         base_2['age'] == 6
+        #     ],
+        #     [
+        #         base_2['age_3_EX'],
+        #         base_2['age_4_EX'],
+        #         base_2['age_5_EX'],
+        #         base_2['age_6_EX']
+        #     ],
+        #     default=np.nan
+        # )
+
+        # # sex_hit_rate
+        # base_2['sex_hit_rate'] = np.select(
+        #     [
+        #         base_2['sex'] == 0,
+        #         base_2['sex'] == 1,
+        #         base_2['sex'] == 2
+        #     ],
+        #     [
+        #         base_2['sex_men'],
+        #         base_2['sex_women'],
+        #         base_2['sex_nosex']
+        #     ],
+        #     default=np.nan
+        # )
+
+        # # sex_return_rate
+        # base_2['sex_return_rate'] = np.select(
+        #     [
+        #         base_2['sex'] == 0,
+        #         base_2['sex'] == 1,
+        #         base_2['sex'] == 2
+        #     ],
+        #     [
+        #         base_2['sex_men_EX'],
+        #         base_2['sex_women_EX'],
+        #         base_2['sex_nosex_EX']
+        #     ],
+        #     default=np.nan
+        # )
+
+        # 40のとき、0.3くらの差
+        base_2['waku_hit_rate_pre'] = (base_2['waku_hit_rate'] - 25)/50
+        base_2['position_hit_rate_pre'] = (base_2['position_hit_rate'] - 25)/50
 
 
-
+        base_2.loc[
+            (base_2["race_type"] == 0) &(base_2["start_point"] == 2) & (base_2["ground_state"] != 0),
+            "start_point"
+        ] = -3
+        # base_2.loc[
+        #     (base_2["race_type"] == 0) &(base_2["start_point"] == 1) ,
+        #     "start_point"
+        # ] =0
 
 
         # ❶スローペースは着差がつきにくく
@@ -7922,36 +8157,65 @@ class FeatureCreator:
         base_2 = base_2.copy()
         base_2.loc[:, "place_season_condition_type_categori_processed"] = (
             base_2["place_season_condition_type_categori"]
-            .replace({5: -0.3, 4: -0.17, 3: 0, 2: 0.17,1: 0.3, -1: -0.18, -2: 0, -3: 0.18,-4:0.3,-10000:0})
+            .replace({5: -0.4, 4: -0.2, 3: -0.1, 2: 0.15,1: 0.3, -1: -0.18, -2: 0, -3: 0.18,-4:0.3,-10000:0})
         ).astype(float)
 
         #高速馬場だと差がつく
         #着差がつかないのを、１，１倍で掛け算して0.4引く
 
-        base_2["rank_diff_pace_diff"] = base_2["rank_diff"]+ 0.5
+        base_2["rank_diff_pace_diff"] = base_2["rank_diff"]+ 0.8
+
+
 
 
 
         # 条件リスト
         conditions_1 = [
             (base_2["pace_diff"] >= 1),  # pace_diff が 1 以上
+            (base_2["pace_diff"] >= 1.8),
+            (base_2["pace_diff"] >= 2.5),
             (base_2["place_season_condition_type_categori_processed"] <= -0.1),  # place_season_condition_type_categori_processed が -0.1 以下
+            (base_2["place_season_condition_type_categori_processed"] <= -0.4),
             (base_2["course_len"] >= 2400),  # course_len が 2400 以上
+            (base_2["course_len"] >= 2800),  # course_len が 2400 以上
+            (base_2["course_len"] >= 3000),  # course_len が 2400 以上
+            (base_2["course_len"] >= 3200),
+            (base_2["course_len"] >= 3400),
             (base_2["ground_state"] != 0),  # ground_state が 0 以外
+            (base_2["ground_state"] == 3),
+            (base_2["ground_state"] == 1),
+            (base_2["rank_diff"] >= 11),
+            (base_2["rank_diff"] >= 10),
+            (base_2["rank_diff"] >= 9),
+            (base_2["rank_diff"] >= 8),
+            (base_2["rank_diff"] >= 7.5),
+            (base_2["rank_diff"] >= 7),
+            (base_2["rank_diff"] >= 6.5),
+            (base_2["rank_diff"] >= 6),
+            (base_2["rank_diff"] >= 5),
+            (base_2["rank_diff"] >= 4),
+            (base_2["rank_diff"] >= 3),
+            (base_2["rank"] >= 7),
+            (base_2["rank"] >= 11),
         ]
 
         conditions_2 = [
             (base_2["pace_diff"] <= -1),  # pace_diff が -1 以下
+            (base_2["pace_diff"] <= -1.8),
+            (base_2["pace_diff"] <= -2.5),
             (base_2["rank_diff"] >= 0.1),  # rank_diff が 0.1 以上
+            (base_2["course_len"] <= 1800),  # course_len が 1600 以下
             (base_2["course_len"] <= 1600),  # course_len が 1600 以下
+            (base_2["course_len"] <= 1400),  # course_len が 1600 以下
+            # (base_2["course_len"] <= 1200),
         ]
 
         # それぞれの条件に該当する場合の計算
         for cond in conditions_1:
-            base_2.loc[cond, "rank_diff_pace_diff"] = base_2.loc[cond, "rank_diff_pace_diff"] * 0.9 + 0.25
+            base_2.loc[cond, "rank_diff_pace_diff"] = base_2.loc[cond, "rank_diff_pace_diff"] * 0.9 + 0.2
 
         for cond in conditions_2:
-            base_2.loc[cond, "rank_diff_pace_diff"] = base_2.loc[cond, "rank_diff_pace_diff"] * 1.1 - 0.25
+            base_2.loc[cond, "rank_diff_pace_diff"] = base_2.loc[cond, "rank_diff_pace_diff"] * 1.1 - 0.2
 
 
 
@@ -7974,24 +8238,25 @@ class FeatureCreator:
         # 条件ごとに処理を適用
         base_2["rank_diff_pace_diff_slope_range_pace"] = np.where(
             ((base_2['race_position'] == 1)),
-            base_2["rank_diff_pace_diff"] - (base_2["pace_diff"] / 17),
+            base_2["rank_diff_pace_diff"] - (base_2["pace_diff"] / 8) + base_2['position_hit_rate_pre'] ,
             np.where(
                     ((base_2['race_position'] == 2)),
-                    base_2["rank_diff_pace_diff"] - (base_2["pace_diff"] / 30),
+                    base_2["rank_diff_pace_diff"] - (base_2["pace_diff"] / 10)+ base_2['position_hit_rate_pre']/1.3,
                 
                     np.where(
                         (base_2['race_position'] == 3),
-                        base_2["rank_diff_pace_diff"] - ((base_2["pace_diff"] / 20) * -1),
+                        base_2["rank_diff_pace_diff"] - ((base_2["pace_diff"] / 10) * -1)+ base_2['position_hit_rate_pre'],
                         
                         np.where(
                             ((base_2['race_position'] == 4)),
-                            base_2["rank_diff_pace_diff"] - ((base_2["pace_diff"] / 18) * -1),
+                            base_2["rank_diff_pace_diff"] - ((base_2["pace_diff"] / 20) * -1)+ base_2['position_hit_rate_pre']/1.7,
                             base_2["rank_diff_pace_diff"]  # どの条件にも当てはまらない場合は元の値を保持
                         )
                     
                 )
             )
         )
+        
         # # ❹道悪は着差がつきやすい
         # # 条件ごとに適用
         # base_2["rank_diff_pace_diff_slope_range_groundstate"] = np.where(
@@ -8057,7 +8322,7 @@ class FeatureCreator:
 
         base_2["start_range_processed_1"] = (((base_2["start_range"])-360))
         base_2["start_range_processed_1"] = base_2["start_range_processed_1"].apply(
-            lambda x: x if x < 0 else x*0.8
+            lambda x: x if x < 0 else x*1
         )
 
 
@@ -8069,35 +8334,63 @@ class FeatureCreator:
         )
 
 
+        # place_int の変換
+        base_2['place_int'] = pd.to_numeric(base_2['place'], errors='coerce').astype('Int64')
+
+        # 1. season_turf_condition の補正
+        adjusted = base_2['season_turf_condition'].copy()
+        adjusted = np.where(adjusted == 1, -8, adjusted)
+        adjusted = np.where(adjusted == 2, -4   , adjusted)
+
+        # 2. 条件分岐による処理
+        cond_front = base_2['place_int'].isin([1, 2, 3, 4, 10])
+        cond_else = ~cond_front
+
+        # 結果列の初期化
+        result_condition = np.zeros(len(base_2))
+
+        # 差し有利
+        result_condition = np.where(cond_front, (adjusted * 1/2)+2, result_condition)
+
+        # その他
+        other_adjusted = adjusted - 9
+        result_condition = np.where(cond_else, other_adjusted * -1/2, result_condition)
+
+        # 3. 結果を格納
+        base_2['tactics_bias'] = result_condition
+
 
         # ペースに関係ある要素は弱体化
         base_2["rank_diff_pace_diff_slope_range_groundstate_position"] = np.where(
             ((base_2['race_position'] == 1) | (base_2['race_position'] == 2)),
             base_2["rank_diff_pace_diff_slope_range_groundstate"] 
             / ((2000 + base_2["start_range_processed_1"]) / 2000) 
-            * ((100 + base_2["start_slope"]) / 100) 
-            * ((1000 + base_2["curve_processed"]) / 1000) 
-            / ((base_2["goal_range_processed_1"] + 1000) / 1000) 
-            / ((base_2["goal_slope"] + 45) / 45) 
-            / ((base_2["place_season_condition_type_categori_processed"] + 9) / 9) 
-            / ((base_2["race_type"] + 59) / 60)
-            / ((base_2["course_len_processed"] + 400)/400),  # ここでカンマ
+            * ((200 + base_2["start_slope"]) / 200) 
+            * ((2000 + base_2["curve_processed"]) / 2000) 
+            / ((base_2["goal_range_processed_1"] + 2000) / 2000) 
+            / ((base_2["goal_slope"] + 100) / 100) 
+            / ((base_2["place_season_condition_type_categori_processed"] + 7) / 7) 
+            / ((base_2['tactics_bias'] + 70)/70)
+            # / ((base_2["race_type"] + 79) / 80)
+            / ((base_2["course_len_processed"] + 1000)/1000),  # ここでカンマ
 
             np.where(
                 ((base_2['race_position'] == 3) | (base_2['race_position'] == 4)),
                 base_2["rank_diff_pace_diff_slope_range_groundstate"] 
                 * ((2000 + base_2["start_range_processed_1"]) / 2000) 
-                / ((100 + base_2["start_slope"]) / 100) 
-                / ((1000 + base_2["curve_processed"]) / 1000) 
-                * ((base_2["goal_range_processed_1"]+ 1000) / 1000) 
-                * ((base_2["goal_slope"] + 45) / 45) 
-                * ((base_2["place_season_condition_type_categori_processed"] + 9) / 9) 
-                * ((base_2["race_type"] +59) / 60)
-                * ((base_2["course_len_processed"] + 400)/400), 
+                / ((200 + base_2["start_slope"]) / 200) 
+                / ((2000 + base_2["curve_processed"]) / 2000) 
+                * ((base_2["goal_range_processed_1"]+ 2000) / 2000) 
+                * ((base_2["goal_slope"] + 100) / 100) 
+                * ((base_2["place_season_condition_type_categori_processed"] + 7) / 7) 
+                * ((base_2['tactics_bias'] + 70)/70)
+                # * ((base_2["race_type"] +79) / 80)
+                * ((base_2["course_len_processed"] + 1000)/1000), 
 
                 base_2["rank_diff_pace_diff_slope_range_groundstate"]
             )
         )
+
 
 
 
@@ -8142,7 +8435,7 @@ class FeatureCreator:
 
         #-2-2,内がマイナス
         base_2["umaban_processed"] = base_2["umaban"].apply(
-            lambda x: ((x*-1)) if x < 4 else ((x-8)/3)-1
+            lambda x: ((x*-1)) if x < 4 else ((x-6)/3)-1
         ).astype(float)
         #0-0.005
 
@@ -8216,6 +8509,131 @@ class FeatureCreator:
 
         base_2["umaban_processed_abs2"] = base_2["umaban_processed_2"].abs()
 
+
+
+
+        # 1. 補正処理
+        adjusted = base_2["season_turf_condition"].copy()
+        adjusted = np.where(adjusted == 1, -12, adjusted)
+        adjusted = np.where(adjusted == 2, -5, adjusted)
+
+        # 2. place_int 別に処理
+        result_waku = np.zeros(len(base_2))
+
+        # 1, 2, 10
+        cond1 = base_2["place_int"].isin([1, 8, 9])
+        x1 = adjusted - 5
+        x1 = np.where(x1 >= 0, x1 /3, x1)
+        x1 = np.where(x1 <= 0, x1 /2, x1)
+        result_waku = np.where(cond1, x1, result_waku)
+
+        # 3
+        cond2 = base_2["place_int"] == 3
+        x2 = adjusted - 5
+        x2 = np.where(x2 >= 0, x2 * 1, x2)
+        x2 = np.where(x2 <= 0, x2 * 2, x2)
+        result_waku = np.where(cond2, x2, result_waku)
+
+        # 7.10.4
+        cond3 = base_2["place_int"].isin([7, 10])
+        x3 = adjusted - 5
+        x3 = np.where(x3 >= 0, x3 * 1, x3)
+        x3 = np.where(x3 <= 0, x3 * 1.2, x3)
+        result_waku = np.where(cond3, x3, result_waku)
+
+        # 7.10.4
+        cond7 =base_2["place_int"] == 4
+        x7 = adjusted - 5
+        x7 = np.where(x7 >= 0, x7 * 3, x7)
+        x7 = np.where(x7 <= 0, x7 * 1.2, x7)
+        result_waku = np.where(cond7, x7, result_waku)
+
+        # 2
+        cond4 = base_2["place_int"] == 2
+        x4 = adjusted - 5
+        x4 = np.where(x4 >= 0, x4 * 1, x4)
+        x4 = np.where(x4 <= 0, x4 * 1/2, x4)
+        result_waku = np.where(cond4, x4, result_waku)
+
+
+
+        # 5, 6
+        cond5 = base_2["place_int"] == 5
+        x5 = -adjusted - 7
+        result_waku = np.where(cond5, x5 / 2.5, result_waku)
+
+        # 5, 6
+        cond6 = base_2["place_int"] == 6
+        x6 = -adjusted - 6
+        result_waku = np.where(cond6, x6/ 1.5, result_waku)
+
+        # 3. 結果を格納
+        base_2["waku_condition"] = result_waku
+
+
+
+        # ターフ、不良馬場は内側有利、逃げ不利    
+        base_2["turf_short"] = np.where(
+            (base_2["race_type"] == 1) & (base_2["course_len"] < 1200),
+            2,
+            np.where(
+                (base_2["race_type"] == 1) & (1200 <= base_2["course_len"]) & (base_2["course_len"] < 1400),
+                1,
+                np.where(
+                    (base_2["race_type"] == 1) & (1400 <= base_2["course_len"]) & (base_2["course_len"] < 1600),
+                    0,
+                    0
+                )
+            )
+        )
+        base_2["1waku"] = np.where(
+            base_2["umaban"] == 1,
+            -7,
+            np.where(
+                base_2["umaban"] == 2,
+                0,
+                0  # どちらにも合致しない場合
+            )
+        )
+        base_2["nakayama_waku"] = np.where(
+            (base_2["race_type"] == 0) & (base_2["ground_state"] == 2)& (base_2["weather"].isin([0, 1, 2])),
+            5,
+            0  # どちらにも合致しない場合
+            
+        )
+        # ダート、不良馬場は内側不利、逃げ不利    
+        base_2["dirt_uti_ame"] = np.where(
+            (base_2["race_type"] == 0) & (base_2["ground_state"] == 3),
+            2,
+            0  # 条件に合致しないとき
+        )
+
+
+        # ターフ、不良馬場は内側有利、逃げ不利    
+        base_2["turf_uti_ame"] = np.where(
+            (base_2["race_type"] == 1) & (base_2["ground_state"] == 0),
+            0,
+            np.where(
+                (base_2["race_type"] == 1) & (base_2["ground_state"] == 2),
+                -3,
+                np.where(
+                    (base_2["race_type"] == 1) & (base_2["ground_state"] == 1),
+                    -9,
+                    np.where(
+                        (base_2["race_type"] == 1) & (base_2["ground_state"] == 3),
+                        -12,
+                        0
+                    )
+                )
+            )
+        )
+        # start_range_processed_1 の計算
+        base_2["start_range_processed_umaban"] = ((base_2["start_range"] - 500) / 40).apply(lambda x: x * 7 if x < 0 else x * 2)
+
+
+
+
+
         # 内が小さい,最大50くらいになってしまう
         base_2["rank_diff_pace_diff_slope_range_groundstate_position_umaban"] = np.where(
             (base_2["umaban_judge"] < 0),
@@ -8224,14 +8642,20 @@ class FeatureCreator:
                 ((base_2["umaban_processed_abs2"]) # 少ないほうがtimeが増える-4.5 から3
                 * (
                     base_2["umaban_odd_processed_2"]# 奇数不利なので分母を増やして総合を減らす 1
-                        +  (base_2["start_point"] - 1)# 外枠が有利なので分母を増やして総合を減らす 1
-                        +  (base_2["curve_processed"]*1.3)# ラストカーブきついほど数値が減る6
-                        +  (base_2["last_curve_slope"]*1.5)# ラストカーブくだりほど数値が減る4
-                        +  ((base_2["season_turf_condition"] - 7)*1.5)# 馬場状態が良いほど数値が減る 7-7
-                        +  (base_2["race_type"] - 0.5)*4# 芝ほど数値が減る 2
-                        -  ((base_2["first_corner"] - 100)/50)# 最初のコーナーがでかいほど数値が減る1
+                        +  (base_2["start_point"] - 1)*10# 外枠が有利なので分母を増やして総合を減らす 1
+                        +  (base_2["curve_processed"]*1)# ラストカーブきついほど数値が減る6
+                        +  (base_2["last_curve_slope"]*1)# ラストカーブくだりほど数値が減る4
+                        +  ((base_2["waku_condition"])*2)# 馬場状態が良いほど数値が減る 7-7
+                        # +  (base_2["race_type"]+1)*-6# 芝ほど数値が減る 2
+                        # -  ((base_2["first_corner"] - 100)/50)# 最初のコーナーがでかいほど数値が減る1
+                        +(base_2["dirt_uti_ame"])*2
+                        # +base_2["start_range_processed_umaban"]
+                        # -(base_2["curve_amount"]*2)
+                        # +base_2["turf_short"]
+                        +base_2["nakayama_waku"]
+                        +base_2["turf_uti_ame"]*2
                 ) 
-            ) +500) /500)
+            )+300) / 300)
             ,
             
 
@@ -8242,18 +8666,25 @@ class FeatureCreator:
                     ((base_2["umaban_processed_abs2"]) # 少ないほうがtimeが増える-4.5 から3
                     * (
                         base_2["umaban_odd_processed_2"]# 奇数不利なので分母を増やして総合を減らす 1
-                        -  (base_2["start_point"] - 1)# 外枠が有利なので分母を増やして総合を減らす 1
-                        -  (base_2["curve_processed"]*1.3)# ラストカーブきついほど数値が減る4
-                        -  (base_2["last_curve_slope"]*1.5)# ラストカーブくだりほど数値が減る2
-                        -  ((base_2["season_turf_condition"] - 7)*1.5)# 馬場状態が良いほど数値が減る 7-7
-                        -  (base_2["race_type"] - 0.5)*4# 芝ほど数値が減る 2
-                        +  ((base_2["first_corner"] - 100)/50)# 最初のコーナーがでかいほど数値が減る1
+                        -  (base_2["start_point"] - 1)*10# 外枠が有利なので分母を増やして総合を減らす 1
+                        -  (base_2["curve_processed"]*1)# ラストカーブきついほど数値が減る4
+                        -  (base_2["last_curve_slope"]*1)# ラストカーブくだりほど数値が減る2
+                        -  ((base_2["waku_condition"])*2)# 馬場状態が良いほど数値が減る 7-7
+                        # -  (base_2["race_type"]+1)*-6# 芝ほど数値が減る 2
+                        # +  ((base_2["first_corner"] - 100)/50)# 最初のコーナーがでかいほど数値が減る1
+                        - (base_2["dirt_uti_ame"])*2
+                        # -base_2["start_range_processed_umaban"]
+                        # +(base_2["curve_amount"]*2)
+                        # -base_2["turf_short"]
+                        -base_2["nakayama_waku"]
+                        -base_2["turf_uti_ame"]*2
                     ) 
-                ) +500) / 500),
+                ) +300) / 300),
 
                 base_2["rank_diff_pace_diff_slope_range_groundstate_position"]
             )
         )
+        base_2["rank_diff_pace_diff_slope_range_groundstate_position_umaban"] = base_2["rank_diff_pace_diff_slope_range_groundstate_position_umaban"] + base_2['waku_hit_rate_pre']
 
 
 
@@ -8428,77 +8859,77 @@ class FeatureCreator:
 
         def calculate_course_len_pace_diff(row):
             # 初期値として元のrank_diffを設定
-            result = row["rank_diff_pace_diff_slope_range_groundstate_position"]
+            result = row["rank_diff_pace_diff_slope_range_groundstate_position_umaban"]
             
             if row["course_len"] < 1600:
                 if row["race_grade"] < 80 and row["time_class_abs"] > 0.7 and row["time_class"] > 0:
-                    result -= 0.15
+                    result -= 0.22
                 elif row["race_grade"] < 80 and row["time_class_abs"] > 0.7 and row["time_class"] < 0:
-                    result += 0.15
+                    result += 0.22
                 elif 80 <= row["race_grade"] <= 87 and row["time_class_abs"] > 1 and row["time_class"] > 0:
-                    result -= 0.15
+                    result -= 0.22
                 elif 80 <= row["race_grade"] <= 87 and row["time_class_abs"] > 1 and row["time_class"] < 0:
-                    result += 0.15
+                    result += 0.22
                 elif 88 <= row["race_grade"] and row["time_class_abs"] > 1.2 and row["time_class"] > 0:
-                    result -= 0.15
+                    result -= 0.22
                 elif 88 <= row["race_grade"] and row["time_class_abs"] > 1.2 and row["time_class"] < 0:
-                    result += 0.15
+                    result += 0.22
 
             if 1600 <= row["course_len"] and row["race_type"] == 1:
                 if row["race_grade"] < 80 and row["time_class_abs"] > 1.2 and row["time_class"] > 0:
-                    result -= 0.15
+                    result -= 0.22
                 elif row["race_grade"] < 80 and row["time_class_abs"] > 1.2 and row["time_class"] < 0:
-                    result += 0.15
+                    result += 0.22
                 elif 80 <= row["race_grade"] <= 87 and row["time_class_abs"] > 1.5 and row["time_class"] > 0:
-                    result -= 0.15
+                    result -= 0.22
                 elif 80 <= row["race_grade"] <= 87 and row["time_class_abs"] > 1.5 and row["time_class"] < 0:
-                    result += 0.15
+                    result += 0.22
                 elif 88 <= row["race_grade"] and row["time_class_abs"] > 1.7 and row["time_class"] > 0:
-                    result -= 0.15
+                    result -= 0.22
                 elif 88 <= row["race_grade"] and row["time_class_abs"] > 1.7 and row["time_class"] < 0:
-                    result += 0.15
+                    result += 0.22
 
             if 1600 <= row["course_len"] and row["race_type"] == 0:
                 if row["race_grade"] < 80 and row["time_class_abs"] > 1 and row["time_class"] > 0:
-                    result -= 0.15
+                    result -= 0.22
                 elif row["race_grade"] < 80 and row["time_class_abs"] > 1 and row["time_class"] < 0:
-                    result += 0.15
+                    result += 0.22
                 elif 80 <= row["race_grade"] <= 87 and row["time_class_abs"] > 1.3 and row["time_class"] > 0:
-                    result -= 0.15
+                    result -= 0.22
                 elif 80 <= row["race_grade"] <= 87 and row["time_class_abs"] > 1.3 and row["time_class"] < 0:
-                    result += 0.15
+                    result += 0.22
                 elif 88 <= row["race_grade"] and row["time_class_abs"] > 1.5 and row["time_class"] > 0:
-                    result -= 0.15
+                    result -= 0.22
                 elif 88 <= row["race_grade"] and row["time_class_abs"] > 1.5 and row["time_class"] < 0:
-                    result += 0.15
+                    result += 0.22
 
             if 2400 <= row["course_len"] and row["race_type"] == 1:
                 if row["race_grade"] < 80 and row["time_class_abs"] > 1.8 and row["time_class"] > 0:
-                    result -= 0.15
+                    result -= 0.22
                 elif row["race_grade"] < 80 and row["time_class_abs"] > 1.8 and row["time_class"] < 0:
-                    result += 0.15
+                    result += 0.22
                 elif 80 <= row["race_grade"] <= 87 and row["time_class_abs"] > 2.1 and row["time_class"] > 0:
-                    result -= 0.15
+                    result -= 0.22
                 elif 80 <= row["race_grade"] <= 87 and row["time_class_abs"] > 2.1 and row["time_class"] < 0:
-                    result += 0.15
+                    result += 0.22
                 elif 88 <= row["race_grade"] and row["time_class_abs"] > 2.3 and row["time_class"] > 0:
-                    result -= 0.15
+                    result -= 0.22
                 elif 88 <= row["race_grade"] and row["time_class_abs"] > 2.3 and row["time_class"] < 0:
-                    result += 0.15
+                    result += 0.22
 
             if 2400 <= row["course_len"] and row["race_type"] == 0:
                 if row["race_grade"] < 80 and row["time_class_abs"] > 1.5 and row["time_class"] > 0:
-                    result -= 0.15
+                    result -= 0.22
                 elif row["race_grade"] < 80 and row["time_class_abs"] > 1.5 and row["time_class"] < 0:
-                    result += 0.15
+                    result += 0.22
                 elif 80 <= row["race_grade"] <= 87 and row["time_class_abs"] > 1.8 and row["time_class"] > 0:
-                    result -= 0.15
+                    result -= 0.22
                 elif 80 <= row["race_grade"] <= 87 and row["time_class_abs"] > 1.8 and row["time_class"] < 0:
-                    result += 0.15
+                    result += 0.22
                 elif 88 <= row["race_grade"] and row["time_class_abs"] > 2 and row["time_class"] > 0:
-                    result -= 0.15
+                    result -= 0.22
                 elif 88 <= row["race_grade"] and row["time_class_abs"] > 2 and row["time_class"] < 0:
-                    result += 0.15
+                    result += 0.22
 
             return result
 
@@ -8677,13 +9108,13 @@ class FeatureCreator:
         #     (((base_2["race_grade"]-10)) *(1/((base_2["rank_diff_correction_position_rush"]+5)/6)))
         # )
         base_2["rank_diff_position_xxx_race_grade_multi"] = (
-            (((base_2["race_grade"]-10))  * (1/((base_2["rank_diff_pace_diff_slope_range_groundstate_position"]+7)/8)))
+            (((base_2["race_grade"]-10))  * (1/((base_2["rank_diff_pace_diff_slope_range_groundstate_position"]+6.8)/6.8)))
         )
         # base_2["rank_diff_correction_rush_xxx_race_grade_multi"] = (
         #     (((base_2["race_grade"]-10) ) *(1/((base_2["rank_diff_correction_rush"]+5)/6)))
         # )
         base_2["rank_diff_all_xxx_race_grade_multi"] = (
-           (((base_2["race_grade"]-10))  * (1/((base_2["rank_diff_correction"]+7)/8)))
+           (((base_2["race_grade"]-10))  * (1/((base_2["rank_diff_correction"]+6.8)/6.8)))
         )
         #
 
@@ -8692,13 +9123,13 @@ class FeatureCreator:
         #     ((base_2["race_grade"]) + ((base_2["rank_diff_correction_position_rush"])*-8))
         # )
         base_2["rank_diff_position_xxx_race_grade_sum"] = (
-            ((base_2["race_grade"]+25)  + ((base_2["rank_diff_pace_diff_slope_range_groundstate_position"])*-10))
+            ((base_2["race_grade"]+25)  + ((base_2["rank_diff_pace_diff_slope_range_groundstate_position"])*-9.8))
         )
         # base_2["rank_diff_correction_rush_xxx_race_grade_sum"] = (
         #     ((base_2["race_grade"]) + ((base_2["rank_diff_correction_rush"])*-8))
         # )
         base_2["rank_diff_all_xxx_race_grade_sum"] = (
-            ((base_2["race_grade"]+25)  + ((base_2["rank_diff_correction"])*-10))
+            ((base_2["race_grade"]+25)  + ((base_2["rank_diff_correction"])*-9.8))
         )
         #90max
 
@@ -8907,28 +9338,29 @@ class FeatureCreator:
             if row["nobori_diff"] >= 0.6:
                 return -2.5
 
-            if row["nobori_pace_diff_slope_range_groundstate_position_umaban"] >= 35.6 and row["race_type"] == 1 and row["rank"] <= 6:
-                return 4
-            if row["nobori_pace_diff_slope_range_groundstate_position_umaban"] >= 34.5 and row["race_type"] == 1 and row["rank"] <= 6:
-                return 2.5
-            if row["nobori"] >= 34.5 and row["race_type"] == 1 and row["rank"] <= 6:
-                return 2.5
+            # if row["nobori_pace_diff_slope_range_groundstate_position_umaban"] >= 35.6 and row["race_type"] == 1 and row["rank"] <= 6:
+            #     return 4
+            # if row["nobori_pace_diff_slope_range_groundstate_position_umaban"] >= 34.5 and row["race_type"] == 1 and row["rank"] <= 6:
+            #     return 2.5
+            # if row["nobori"] >= 34.5 and row["race_type"] == 1 and row["rank"] <= 6:
+            #     return 2.5
 
-            if row["nobori_pace_diff_slope_range_groundstate_position_umaban"] >= 36.1 and row["race_type"] == 0 and row["course_len"] < 1600 and row["rank"] <= 6:
-                return 4
-            if row["nobori_pace_diff_slope_range_groundstate_position_umaban"] >= 35 and row["race_type"] == 0 and row["course_len"] < 1600 and row["rank"] <= 6:
-                return 2.5
-            if row["nobori"] >= 35 and row["race_type"] == 0 and row["course_len"] < 1600 and row["rank"] <= 6:
-                return 2.5
+            # if row["nobori_pace_diff_slope_range_groundstate_position_umaban"] >= 36.1 and row["race_type"] == 0 and row["course_len"] < 1600 and row["rank"] <= 6:
+            #     return 4
+            # if row["nobori_pace_diff_slope_range_groundstate_position_umaban"] >= 35 and row["race_type"] == 0 and row["course_len"] < 1600 and row["rank"] <= 6:
+            #     return 2.5
+            # if row["nobori"] >= 35 and row["race_type"] == 0 and row["course_len"] < 1600 and row["rank"] <= 6:
+            #     return 2.5
 
-            if row["nobori_pace_diff_slope_range_groundstate_position_umaban"] >= 36.6 and row["race_type"] == 0 and row["course_len"] >= 1600 and row["rank"] <= 6:
-                return 4
-            if row["nobori_pace_diff_slope_range_groundstate_position_umaban"] >= 35.5 and row["race_type"] == 0 and row["course_len"] >= 1600 and row["rank"] <= 6:
-                return 2.5
-            if row["nobori"] >= 35.5 and row["race_type"] == 0 and row["course_len"] >= 1600 and row["rank"] <= 6:
-                return 2.5
+            # if row["nobori_pace_diff_slope_range_groundstate_position_umaban"] >= 36.6 and row["race_type"] == 0 and row["course_len"] >= 1600 and row["rank"] <= 6:
+            #     return 4
+            # if row["nobori_pace_diff_slope_range_groundstate_position_umaban"] >= 35.5 and row["race_type"] == 0 and row["course_len"] >= 1600 and row["rank"] <= 6:
+            #     return 2.5
+            # if row["nobori"] >= 35.5 and row["race_type"] == 0 and row["course_len"] >= 1600 and row["rank"] <= 6:
+            #     return 2.5
+            else:
+                return 0
 
-            return 0
 
         # DataFrame に適用
         base_2["rush_type"] = base_2.apply(calculate_rush_type, axis=1)
@@ -9096,6 +9528,248 @@ class FeatureCreator:
 
 
 
+
+
+        # waku_hit_rate
+        base_2['waku_hit_rate'] = np.select(
+            [
+                base_2['wakuban'] == 1,
+                base_2['wakuban'] == 2,
+                base_2['wakuban'] == 3,
+                base_2['wakuban'] == 4,
+                base_2['wakuban'] == 5,
+                base_2['wakuban'] == 6,
+                base_2['wakuban'] == 7,
+                base_2['wakuban'] == 8
+            ],
+            [
+                base_2['waku_1'],
+                base_2['waku_2'],
+                base_2['waku_3'],
+                base_2['waku_4'],
+                base_2['waku_5'],
+                base_2['waku_6'],
+                base_2['waku_7'],
+                base_2['waku_8']
+            ],
+            default=np.nan
+        )
+
+        # waku_return_rate
+        base_2['waku_return_rate'] = np.select(
+            [
+                base_2['wakuban'] == 1,
+                base_2['wakuban'] == 2,
+                base_2['wakuban'] == 3,
+                base_2['wakuban'] == 4,
+                base_2['wakuban'] == 5,
+                base_2['wakuban'] == 6,
+                base_2['wakuban'] == 7,
+                base_2['wakuban'] == 8
+            ],
+            [
+                base_2['waku_1_EX'],
+                base_2['waku_2_EX'],
+                base_2['waku_3_EX'],
+                base_2['waku_4_EX'],
+                base_2['waku_5_EX'],
+                base_2['waku_6_EX'],
+                base_2['waku_7_EX'],
+                base_2['waku_8_EX']
+            ],
+            default=np.nan
+        )
+
+        # position_hit_rate
+        base_2['position_hit_rate'] = np.select(
+            [
+                base_2['race_position'] == 1,
+                base_2['race_position'] == 2,
+                base_2['race_position'] == 3,
+                base_2['race_position'] == 4
+            ],
+            [
+                base_2['position_1'],
+                base_2['position_2'],
+                base_2['position_3'],
+                base_2['position_4']
+            ],
+            default=np.nan
+        )
+
+        # position_return_rate
+        base_2['position_return_rate'] = np.select(
+            [
+                base_2['race_position'] == 1,
+                base_2['race_position'] == 2,
+                base_2['race_position'] == 3,
+                base_2['race_position'] == 4
+            ],
+            [
+                base_2['position_1_EX'],
+                base_2['position_2_EX'],
+                base_2['position_3_EX'],
+                base_2['position_4_EX']
+            ],
+            default=np.nan
+        )
+
+        # # course_len_diff_hit_rate
+        # base_2['course_len_diff_hit_rate'] = np.select(
+        #     [
+        #         base_2['course_len_diff_mean_1races'] <= -500,
+        #         (base_2['course_len_diff_mean_1races'] > -500) & (base_2['course_len_diff_mean_1races'] <= -300),
+        #         (base_2['course_len_diff_mean_1races'] > -300) & (base_2['course_len_diff_mean_1races'] <= -100),
+        #         (base_2['course_len_diff_mean_1races'] > -100) & (base_2['course_len_diff_mean_1races'] < 100),
+        #         (base_2['course_len_diff_mean_1races'] >= 100) & (base_2['course_len_diff_mean_1races'] < 300),
+        #         (base_2['course_len_diff_mean_1races'] >= 300) & (base_2['course_len_diff_mean_1races'] < 500),
+        #         base_2['course_len_diff_mean_1races'] >= 500
+        #     ],
+        #     [
+        #         base_2['course_len_diff_-500'],
+        #         base_2['course_len_diff_-350'],
+        #         base_2['course_len_diff_-150'],
+        #         base_2['course_len_diff_0'],
+        #         base_2['course_len_diff_150'],
+        #         base_2['course_len_diff_350'],
+        #         base_2['course_len_diff_500']
+        #     ],
+        #     default=np.nan
+        # )
+
+        # # course_len_diff_return_rate
+        # base_2['course_len_diff_return_rate'] = np.select(
+        #     [
+        #         base_2['course_len_diff_mean_1races'] <= -500,
+        #         (base_2['course_len_diff_mean_1races'] > -500) & (base_2['course_len_diff_mean_1races'] <= -300),
+        #         (base_2['course_len_diff_mean_1races'] > -300) & (base_2['course_len_diff_mean_1races'] <= -100),
+        #         (base_2['course_len_diff_mean_1races'] > -100) & (base_2['course_len_diff_mean_1races'] < 100),
+        #         (base_2['course_len_diff_mean_1races'] >= 100) & (base_2['course_len_diff_mean_1races'] < 300),
+        #         (base_2['course_len_diff_mean_1races'] >= 300) & (base_2['course_len_diff_mean_1races'] < 500),
+        #         base_2['course_len_diff_mean_1races'] >= 500
+        #     ],
+        #     [
+        #         base_2['course_len_diff_-500_EX'],
+        #         base_2['course_len_diff_-350_EX'],
+        #         base_2['course_len_diff_-150_EX'],
+        #         base_2['course_len_diff_0_EX'],
+        #         base_2['course_len_diff_150_EX'],
+        #         base_2['course_len_diff_350_EX'],
+        #         base_2['course_len_diff_500_EX']
+        #     ],
+        #     default=np.nan
+        # )
+
+        # # class_diff_hit_rate
+        # base_2['class_diff_hit_rate'] = np.select(
+        #     [
+        #         base_2['race_class_diff_mean_1races'] > 0,
+        #         base_2['race_class_diff_mean_1races'] == 0,
+        #         base_2['race_class_diff_mean_1races'] < 0
+        #     ],
+        #     [
+        #         base_2['class_diff_up'],
+        #         base_2['class_diff_stay'],
+        #         base_2['class_diff_down']
+        #     ],
+        #     default=np.nan
+        # )
+
+        # # class_diff_return_rate
+        # base_2['class_diff_return_rate'] = np.select(
+        #     [
+        #         base_2['race_class_diff_mean_1races'] > 0,
+        #         base_2['race_class_diff_mean_1races'] == 0,
+        #         base_2['race_class_diff_mean_1races'] < 0
+        #     ],
+        #     [
+        #         base_2['class_diff_up_EX'],
+        #         base_2['class_diff_stay_EX'],
+        #         base_2['class_diff_down_EX']
+        #     ],
+        #     default=np.nan
+        # )
+
+        # # age_hit_rate
+        # base_2['age_hit_rate'] = np.select(
+        #     [
+        #         base_2['age'] == 3,
+        #         base_2['age'] == 4,
+        #         base_2['age'] == 5,
+        #         base_2['age'] == 6
+        #     ],
+        #     [
+        #         base_2['age_3'],
+        #         base_2['age_4'],
+        #         base_2['age_5'],
+        #         base_2['age_6']
+        #     ],
+        #     default=np.nan
+        # )
+
+        # # age_return_rate
+        # base_2['age_return_rate'] = np.select(
+        #     [
+        #         base_2['age'] == 3,
+        #         base_2['age'] == 4,
+        #         base_2['age'] == 5,
+        #         base_2['age'] == 6
+        #     ],
+        #     [
+        #         base_2['age_3_EX'],
+        #         base_2['age_4_EX'],
+        #         base_2['age_5_EX'],
+        #         base_2['age_6_EX']
+        #     ],
+        #     default=np.nan
+        # )
+
+        # # sex_hit_rate
+        # base_2['sex_hit_rate'] = np.select(
+        #     [
+        #         base_2['sex'] == 0,
+        #         base_2['sex'] == 1,
+        #         base_2['sex'] == 2
+        #     ],
+        #     [
+        #         base_2['sex_men'],
+        #         base_2['sex_women'],
+        #         base_2['sex_nosex']
+        #     ],
+        #     default=np.nan
+        # )
+
+        # # sex_return_rate
+        # base_2['sex_return_rate'] = np.select(
+        #     [
+        #         base_2['sex'] == 0,
+        #         base_2['sex'] == 1,
+        #         base_2['sex'] == 2
+        #     ],
+        #     [
+        #         base_2['sex_men_EX'],
+        #         base_2['sex_women_EX'],
+        #         base_2['sex_nosex_EX']
+        #     ],
+        #     default=np.nan
+        # )
+
+        # 40のとき、0.3くらの差
+        base_2['waku_hit_rate_pre'] = (base_2['waku_hit_rate'] - 25)/35
+        base_2['position_hit_rate_pre'] = (base_2['position_hit_rate'] - 25)/35
+
+        base_2.loc[
+            (base_2["race_type"] == 0) &(base_2["start_point"] == 2) & (base_2["ground_state"] != 0),
+            "start_point"
+        ] = -2
+        # base_2.loc[
+        #     (base_2["race_type"] == 0) &(base_2["start_point"] == 1) ,
+        #     "start_point"
+        # ] =0
+
+
+
+
         base_2 = base_2.copy()
         base_2.loc[:, "place_season_condition_type_categori_processed"] = (
             base_2["place_season_condition_type_categori"]
@@ -9103,7 +9777,7 @@ class FeatureCreator:
         ).astype(float)
 
 
-        base_2["time_pace_diff"] = base_2["time"] + (base_2["pace_diff"]/2) - (base_2["place_season_condition_type_categori"]*7)
+        base_2["time_pace_diff"] = base_2["time"] + (base_2["pace_diff"]/2) - (base_2["place_season_condition_type_categori"]*9)
 
         base_2["time_pace_diff_slope"] = np.where(
             (base_2["season"] == 1) | (base_2["season"] == 4),
@@ -9132,15 +9806,15 @@ class FeatureCreator:
         # 条件ごとに処理を適用
         base_2["time_pace_diff_slope_range_pace"] = np.where(
             ((base_2['race_position'] == 1) | (base_2['race_position'] == 2)) & (base_2["pace_diff"] >= 0),
-            base_2["time_pace_diff_slope_range"] - (base_2["pace_diff"] / 4),
+            base_2["time_pace_diff_slope_range"] - (base_2["pace_diff"] / 4)+ base_2['position_hit_rate_pre'],
             
             np.where(
                     ((base_2['race_position'] == 2)) & (base_2["pace_diff"] >= 0),
-                    base_2["time_pace_diff_slope_range"] - (base_2["pace_diff"] / 40),
+                    base_2["time_pace_diff_slope_range"] - (base_2["pace_diff"] / 40)+ base_2['position_hit_rate_pre']/1.3,
                 
                 np.where(
                     ((base_2['race_position'] == 1) | (base_2['race_position'] == 2)) & (base_2["pace_diff"] < 0),
-                    base_2["time_pace_diff_slope_range"] - (base_2["pace_diff"] / 10),
+                    base_2["time_pace_diff_slope_range"] - (base_2["pace_diff"] / 10)+ base_2['position_hit_rate_pre'],
                     
                     np.where(
                         ((base_2['race_position'] == 3) | (base_2['race_position'] == 4)) & (base_2["pace_diff"] < 0),
@@ -9149,7 +9823,7 @@ class FeatureCreator:
 
                         np.where(
                             ((base_2['race_position'] == 3) | (base_2['race_position'] == 4)) & (base_2["pace_diff"] >= 0),
-                            base_2["time_pace_diff_slope_range"] - ((base_2["pace_diff"] / 8) * -1),
+                            base_2["time_pace_diff_slope_range"] - ((base_2["pace_diff"] / 8) * -1)+ base_2['position_hit_rate_pre']/1.7,
                             base_2["time_pace_diff_slope_range"]  # どの条件にも当てはまらない場合は元の値を保持
                             )
                     )
@@ -9192,6 +9866,32 @@ class FeatureCreator:
             lambda x: x * 8 if x > 0 else x
         )
 
+        # place_int の変換
+        base_2['place_int'] = pd.to_numeric(base_2['place'], errors='coerce').astype('Int64')
+
+        # 1. season_turf_condition の補正
+        adjusted = base_2['season_turf_condition'].copy()
+        adjusted = np.where(adjusted == 1, -10, adjusted)
+        adjusted = np.where(adjusted == 2, -6, adjusted)
+
+        # 2. 条件分岐による処理
+        cond_front = base_2['place_int'].isin([1, 2, 3, 4, 10])
+        cond_else = ~cond_front
+
+        # 結果列の初期化
+        result_condition = np.zeros(len(base_2))
+
+        # 差し有利
+        result_condition = np.where(cond_front, (adjusted * 1/2)+2, result_condition)
+
+        # その他
+        other_adjusted = adjusted - 9
+        result_condition = np.where(cond_else, other_adjusted * -1/2, result_condition)
+
+        # 3. 結果を格納
+        base_2['tactics_bias'] = result_condition
+
+
 
         # ペースに関係ある要素は弱体化
         base_2["time_pace_diff_slope_range_groundstate_position"] = np.where(
@@ -9202,7 +9902,8 @@ class FeatureCreator:
             * ((2000 + base_2["curve_processed"]) / 2000) 
             / ((base_2["goal_range_processed_1"] + 100000) / 100000) 
             / ((base_2["goal_slope"] + 1600) / 1600) 
-            / ((base_2["place_season_condition_type_categori_processed"] + 500) / 500) 
+            / ((base_2["place_season_condition_type_categori_processed"] + 400) / 400) 
+            / ((base_2['tactics_bias'] +  700)/700)
             / ((base_2["race_type"] + 799) / 800),  # ここでカンマ
 
             np.where(
@@ -9213,7 +9914,8 @@ class FeatureCreator:
                 / ((2000 + base_2["curve_processed"]) / 2000) 
                 * ((base_2["goal_range_processed_1"] + 100000) / 100000) 
                 * ((base_2["goal_slope"] + 1600) / 1600) 
-                * ((base_2["place_season_condition_type_categori_processed"] + 500) / 500) 
+                * ((base_2["place_season_condition_type_categori_processed"] + 400) / 400) 
+                * ((base_2['tactics_bias'] +  700)/700)
                 * ((base_2["race_type"] + 799) / 800), 
 
                 base_2["time_pace_diff_slope_range_groundstate"] # それ以外の場合は NaN
@@ -9298,6 +10000,126 @@ class FeatureCreator:
         )
 
 
+        # 1. 補正処理
+        adjusted = base_2["season_turf_condition"].copy()
+        adjusted = np.where(adjusted == 1, -12, adjusted)
+        adjusted = np.where(adjusted == 2, -5, adjusted)
+
+        # 2. place_int 別に処理
+        result_waku = np.zeros(len(base_2))
+
+        # 1, 2, 10
+        cond1 = base_2["place_int"].isin([1, 8, 9])
+        x1 = adjusted - 5
+        x1 = np.where(x1 >= 0, x1 /3, x1)
+        x1 = np.where(x1 <= 0, x1 /2, x1)
+        result_waku = np.where(cond1, x1, result_waku)
+
+        # 3
+        cond2 = base_2["place_int"] == 3
+        x2 = adjusted - 5
+        x2 = np.where(x2 >= 0, x2 * 1, x2)
+        x2 = np.where(x2 <= 0, x2 * 2, x2)
+        result_waku = np.where(cond2, x2, result_waku)
+
+        # 7.10.4
+        cond3 = base_2["place_int"].isin([7, 10])
+        x3 = adjusted - 5
+        x3 = np.where(x3 >= 0, x3 * 1, x3)
+        x3 = np.where(x3 <= 0, x3 * 1.2, x3)
+        result_waku = np.where(cond3, x3, result_waku)
+
+        # 7.10.4
+        cond7 =base_2["place_int"] == 4
+        x7 = adjusted - 5
+        x7 = np.where(x7 >= 0, x7 * 5, x7)
+        x7 = np.where(x7 <= 0, x7 * 1.2, x7)
+        result_waku = np.where(cond7, x7, result_waku)
+
+        # 2
+        cond4 = base_2["place_int"] == 2
+        x4 = adjusted - 5
+        x4 = np.where(x4 >= 0, x4 * 1, x4)
+        x4 = np.where(x4 <= 0, x4 * 1/2, x4)
+        result_waku = np.where(cond4, x4, result_waku)
+
+
+
+        # 5, 6
+        cond5 = base_2["place_int"] == 5
+        x5 = -adjusted - 7
+        result_waku = np.where(cond5, x5 / 2.5, result_waku)
+
+        # 5, 6
+        cond6 = base_2["place_int"] == 6
+        x6 = -adjusted - 6
+        result_waku = np.where(cond6, x6/ 1.5, result_waku)
+
+        # 3. 結果を格納
+        base_2["waku_condition"] = result_waku
+
+
+
+
+
+        # ターフ、不良馬場は内側有利、逃げ不利    
+        base_2["turf_short"] = np.where(
+            (base_2["race_type"] == 1) & (base_2["course_len"] < 1200),
+            2,
+            np.where(
+                (base_2["race_type"] == 1) & (1200 <= base_2["course_len"]) & (base_2["course_len"] < 1400),
+                1,
+                np.where(
+                    (base_2["race_type"] == 1) & (1400 <= base_2["course_len"]) & (base_2["course_len"] < 1600),
+                    0,
+                    0
+                )
+            )
+        )
+        base_2["1waku"] = np.where(
+            base_2["umaban"] == 1,
+            -7,
+            np.where(
+                base_2["umaban"] == 2,
+                0,
+                0  # どちらにも合致しない場合
+            )
+        )
+        base_2["nakayama_waku"] = np.where(
+            (base_2["race_type"] == 0) &base_2["ground_state"] == 2& (base_2["weather"].isin([0, 1, 2])),
+            10,
+            0  # どちらにも合致しない場合
+            
+        )
+        # ダート、不良馬場は内側不利、逃げ不利    
+        base_2["dirt_uti_ame"] = np.where(
+            (base_2["race_type"] == 0) & (base_2["ground_state"] == 3),
+            5,
+            0  # 条件に合致しないとき
+        )
+
+
+        # ターフ、不良馬場は内側有利、逃げ不利    
+        base_2["turf_uti_ame"] = np.where(
+            (base_2["race_type"] == 1) & (base_2["ground_state"] == 0),
+            0,
+            np.where(
+                (base_2["race_type"] == 1) & (base_2["ground_state"] == 2),
+                -3,
+                np.where(
+                    (base_2["race_type"] == 1) & (base_2["ground_state"] == 1),
+                    -9,
+                    np.where(
+                        (base_2["race_type"] == 1) & (base_2["ground_state"] == 3),
+                        -12,
+                        0
+                    )
+                )
+            )
+        )
+        # start_range_processed_1 の計算
+        base_2["start_range_processed_umaban"] = ((base_2["start_range"] - 500) / 40).apply(lambda x: x * 7 if x < 0 else x * 2)
+
 
         base_2["umaban_processed_abs2"] = base_2["umaban_processed_2"].abs()
 
@@ -9309,12 +10131,18 @@ class FeatureCreator:
                 ((base_2["umaban_processed_abs2"]) # 少ないほうがtimeが増える-4.5 から3
                 * (
                     base_2["umaban_odd_processed_2"]# 奇数不利なので分母を増やして総合を減らす 1
-                      +  (base_2["start_point"] - 1)# 外枠が有利なので分母を増やして総合を減らす 1
+                      +  (base_2["start_point"] - 1)*15# 外枠が有利なので分母を増やして総合を減らす 1
                       +  base_2["curve_processed"]# ラストカーブきついほど数値が減る4
                       +  base_2["last_curve_slope"]# ラストカーブくだりほど数値が減る2
-                      +  (base_2["season_turf_condition"] - 7)# 馬場状態が良いほど数値が減る 7-7
-                      +  (base_2["race_type"] - 0.5)*4# 芝ほど数値が減る 2
-                      -  ((base_2["first_corner"] - 100)/50)# 最初のコーナーがでかいほど数値が減る1
+                      +  (base_2["waku_condition"] *1)# 馬場状態が良いほど数値が減る 7-7
+                    #   +  (base_2["race_type"]+1)*-6# 芝ほど数値が減る 2
+                    #   -  ((base_2["first_corner"] - 100)/50)# 最初のコーナーがでかいほど数値が減る1
+                      +(base_2["dirt_uti_ame"])*2
+                    #   +base_2["start_range_processed_umaban"]
+                    #   -(base_2["curve_amount"]*2)
+                    #   +base_2["turf_short"]*2
+                      +base_2["nakayama_waku"]*2
+                      +base_2["turf_uti_ame"]*2
                 ) 
             ) + 2500) / 2500)
             ,
@@ -9327,18 +10155,26 @@ class FeatureCreator:
                     ((base_2["umaban_processed_abs2"]) # 少ないほうがtimeが増える-4.5 から3
                     * (
                         base_2["umaban_odd_processed_2"]# 奇数不利なので分母を増やして総合を減らす 1
-                        -  (base_2["start_point"] - 1)# 外枠が有利なので分母を増やして総合を減らす 1
+                        -  (base_2["start_point"] - 1)*15# 外枠が有利なので分母を増やして総合を減らす 1
                         -  base_2["curve_processed"]# ラストカーブきついほど数値が減る4
                         -  base_2["last_curve_slope"]# ラストカーブくだりほど数値が減る2
-                        -  (base_2["season_turf_condition"] - 7)# 馬場状態が良いほど数値が減る 7-7
-                        -  (base_2["race_type"] - 0.5)*4# 芝ほど数値が減る 2
-                        +  ((base_2["first_corner"] - 100)/50)# 最初のコーナーがでかいほど数値が減る1
+                        -  (base_2["waku_condition"] *2)# 馬場状態が良いほど数値が減る 7-7
+                        # -  (base_2["race_type"]+1)*-6# 芝ほど数値が減る 2
+                        # +  ((base_2["first_corner"] - 100)/50)# 最初のコーナーがでかいほど数値が減る1
+                        - (base_2["dirt_uti_ame"])*2
+                        # -base_2["start_range_processed_umaban"]
+                        # +(base_2["curve_amount"]*2)
+                        # -base_2["turf_short"]*2
+                        -base_2["nakayama_waku"]*2
+                        -base_2["turf_uti_ame"]*2
                     ) 
                 ) + 2500) / 2500),
 
                 base_2["time_pace_diff_slope_range_groundstate_position"]
             )
         )
+
+        base_2["time_pace_diff_slope_range_groundstate_position_umaban"] = base_2["time_pace_diff_slope_range_groundstate_position_umaban"] + base_2['waku_hit_rate_pre']
 
 
 
@@ -9725,6 +10561,9 @@ class FeatureCreator:
 
         # # ## # ## # ## # ## # ## # ## # ## # ## # ## # ## # ## # ## # ## # ## # ## # ## # ## # ## # ## # ## # ## # ## # ## # ## # #
 
+        class_course_len_diff = self.course_len_df[["race_id","horse_id", "course_len_diff_mean_1races", "race_class_diff_mean_1races"]]
+
+
 
 
         merged_df = self.population.copy()  
@@ -9878,7 +10717,6 @@ class FeatureCreator:
         def calculate_pace_category(row):
             escape_count = row.get("escape_count", 0)
             taking_lead_per = row.get("taking_lead_per", 0)
-        
             if escape_count >= 3:
                 return 4  # ハイペース
             elif escape_count == 2:
@@ -10105,7 +10943,7 @@ class FeatureCreator:
         # print(merged_df2.columns)
         # print(merged_df3.columns)
 
-        merged_df_3rd = merged_df3[["race_id","date","horse_id","dominant_position_category","pace_category","mean_ground_state_time_diff","ground_state_level"]]
+        merged_df_3rd = merged_df3[["race_id","date","horse_id","dominant_position_category","pace_category","escape_1races","mean_ground_state_time_diff","ground_state_level"]]
 
 
         # merged_df_all = merged_df_all.merge(
@@ -10402,15 +11240,27 @@ class FeatureCreator:
                 df_rush_type[["race_id","date","horse_id","rush_type_Advantages","rush_type_final"]], 
                 on=["race_id","date","horse_id"],
             )
-
+        
 
         merged_df_all = merged_df_all.merge(
-                self.race_info[["race_id", "goal_range_100","curve","weather",'start_point','ground_state','curve_R12', 'curve_R34',"curve_amount","season_turf_condition","season","day" ,'flont_slope',"goal_slope",'first_curve_slope', 'goal_range',"course_len","place_season_condition_type_categori","start_slope","start_range","race_grade","race_type","last_curve_slope"]], 
+                self.race_info[["race_id","place","race_class", "goal_range_100","curve","weather",'ground_state','start_point','curve_R12','curve_R34', "curve_amount","season_turf_condition",'flont_slope',"goal_slope",'first_curve_slope', 'goal_range',"course_len","place_season_condition_type_categori","start_slope","start_range","race_grade","race_type","last_curve_slope","season","day",'waku_1', 'waku_2', 'waku_3', 'waku_4', 'waku_5', 'waku_6', 'waku_7', 'waku_8',
+        'position_1', 'position_2', 'position_3', 'position_4','course_len_diff_-500', 'course_len_diff_-350', 'course_len_diff_-150',
+        'course_len_diff_0', 'course_len_diff_150', 'course_len_diff_350', 'course_len_diff_500',
+        'class_diff_up', 'class_diff_stay', 'class_diff_down',
+        'age_3', 'age_4', 'age_5', 'age_6',
+        'sex_men', 'sex_women', 'sex_nosex','waku_1_EX', 'waku_2_EX', 'waku_3_EX', 'waku_4_EX', 'waku_5_EX', 'waku_6_EX', 'waku_7_EX', 'waku_8_EX',
+        'position_1_EX', 'position_2_EX', 'position_3_EX', 'position_4_EX',
+        'course_len_diff_-500_EX', 'course_len_diff_-350_EX', 'course_len_diff_-150_EX', 'course_len_diff_0_EX',
+        'course_len_diff_150_EX', 'course_len_diff_350_EX', 'course_len_diff_500_EX',
+        'class_diff_up_EX', 'class_diff_stay_EX', 'class_diff_down_EX',
+        'age_3_EX', 'age_4_EX', 'age_5_EX', 'age_6_EX',
+        'sex_men_EX', 'sex_women_EX', 'sex_nosex_EX']], 
+                # self.race_info, 
                 on="race_id",
             )
 
         merged_df_all = merged_df_all.merge(
-                self.results[["race_id","horse_id","umaban","n_horses",'umaban_odd']], 
+                self.results[["race_id","horse_id","umaban","age",'sex',"wakuban","n_horses",'umaban_odd']], 
                 on=["race_id","horse_id"],
             )
 
@@ -10419,6 +11269,288 @@ class FeatureCreator:
 
         self.all_position = merged_df_all
 
+        merged_df_all = merged_df_all.merge(
+            class_course_len_diff,
+            on = ["race_id","horse_id"],
+        )
+
+
+
+
+
+        # waku_hit_rate
+        merged_df_all['waku_hit_rate'] = np.select(
+            [
+                merged_df_all['wakuban'] == 1,
+                merged_df_all['wakuban'] == 2,
+                merged_df_all['wakuban'] == 3,
+                merged_df_all['wakuban'] == 4,
+                merged_df_all['wakuban'] == 5,
+                merged_df_all['wakuban'] == 6,
+                merged_df_all['wakuban'] == 7,
+                merged_df_all['wakuban'] == 8
+            ],
+            [
+                merged_df_all['waku_1'],
+                merged_df_all['waku_2'],
+                merged_df_all['waku_3'],
+                merged_df_all['waku_4'],
+                merged_df_all['waku_5'],
+                merged_df_all['waku_6'],
+                merged_df_all['waku_7'],
+                merged_df_all['waku_8']
+            ],
+            default=np.nan
+        )
+
+        # waku_return_rate
+        merged_df_all['waku_return_rate'] = np.select(
+            [
+                merged_df_all['wakuban'] == 1,
+                merged_df_all['wakuban'] == 2,
+                merged_df_all['wakuban'] == 3,
+                merged_df_all['wakuban'] == 4,
+                merged_df_all['wakuban'] == 5,
+                merged_df_all['wakuban'] == 6,
+                merged_df_all['wakuban'] == 7,
+                merged_df_all['wakuban'] == 8
+            ],
+            [
+                merged_df_all['waku_1_EX'],
+                merged_df_all['waku_2_EX'],
+                merged_df_all['waku_3_EX'],
+                merged_df_all['waku_4_EX'],
+                merged_df_all['waku_5_EX'],
+                merged_df_all['waku_6_EX'],
+                merged_df_all['waku_7_EX'],
+                merged_df_all['waku_8_EX']
+            ],
+            default=np.nan
+        )
+
+        # position_hit_rate
+        merged_df_all['position_hit_rate'] = np.select(
+            [
+                merged_df_all["dominant_position_category"] == 1,
+                merged_df_all["dominant_position_category"] == 2,
+                merged_df_all["dominant_position_category"] == 3,
+                merged_df_all["dominant_position_category"] == 4
+            ],
+            [
+                merged_df_all['position_1'],
+                merged_df_all['position_2'],
+                merged_df_all['position_3'],
+                merged_df_all['position_4']
+            ],
+            default=np.nan
+        )
+
+        # position_return_rate
+        merged_df_all['position_return_rate'] = np.select(
+            [
+                merged_df_all["dominant_position_category"] == 1,
+                merged_df_all["dominant_position_category"] == 2,
+                merged_df_all["dominant_position_category"] == 3,
+                merged_df_all["dominant_position_category"] == 4
+            ],
+            [
+                merged_df_all['position_1_EX'],
+                merged_df_all['position_2_EX'],
+                merged_df_all['position_3_EX'],
+                merged_df_all['position_4_EX']
+            ],
+            default=np.nan
+        )
+
+        # course_len_diff_hit_rate
+        merged_df_all['course_len_diff_hit_rate'] = np.select(
+            [
+                merged_df_all['course_len_diff_mean_1races'] <= -500,
+                (merged_df_all['course_len_diff_mean_1races'] > -500) & (merged_df_all['course_len_diff_mean_1races'] <= -300),
+                (merged_df_all['course_len_diff_mean_1races'] > -300) & (merged_df_all['course_len_diff_mean_1races'] <= -100),
+                (merged_df_all['course_len_diff_mean_1races'] > -100) & (merged_df_all['course_len_diff_mean_1races'] < 100),
+                (merged_df_all['course_len_diff_mean_1races'] >= 100) & (merged_df_all['course_len_diff_mean_1races'] < 300),
+                (merged_df_all['course_len_diff_mean_1races'] >= 300) & (merged_df_all['course_len_diff_mean_1races'] < 500),
+                merged_df_all['course_len_diff_mean_1races'] >= 500
+            ],
+            [
+                merged_df_all['course_len_diff_500'],
+                merged_df_all['course_len_diff_350'],
+                merged_df_all['course_len_diff_150'],
+                merged_df_all['course_len_diff_0'],
+                merged_df_all['course_len_diff_-150'],
+                merged_df_all['course_len_diff_-350'],
+                merged_df_all['course_len_diff_-500']
+            ],
+            default=np.nan
+        )
+
+        # course_len_diff_return_rate
+        merged_df_all['course_len_diff_return_rate'] = np.select(
+            [
+                merged_df_all['course_len_diff_mean_1races'] <= -500,
+                (merged_df_all['course_len_diff_mean_1races'] > -500) & (merged_df_all['course_len_diff_mean_1races'] <= -300),
+                (merged_df_all['course_len_diff_mean_1races'] > -300) & (merged_df_all['course_len_diff_mean_1races'] <= -100),
+                (merged_df_all['course_len_diff_mean_1races'] > -100) & (merged_df_all['course_len_diff_mean_1races'] < 100),
+                (merged_df_all['course_len_diff_mean_1races'] >= 100) & (merged_df_all['course_len_diff_mean_1races'] < 300),
+                (merged_df_all['course_len_diff_mean_1races'] >= 300) & (merged_df_all['course_len_diff_mean_1races'] < 500),
+                merged_df_all['course_len_diff_mean_1races'] >= 500
+            ],
+            [
+                merged_df_all['course_len_diff_500_EX'],
+                merged_df_all['course_len_diff_350_EX'],
+                merged_df_all['course_len_diff_150_EX'],
+                merged_df_all['course_len_diff_0_EX'],
+                merged_df_all['course_len_diff_-150_EX'],
+                merged_df_all['course_len_diff_-350_EX'],
+                merged_df_all['course_len_diff_-500_EX']
+            ],
+            default=np.nan
+        )
+
+        # class_diff_hit_rate
+        merged_df_all['class_diff_hit_rate'] = np.select(
+            [
+                merged_df_all['race_class_diff_mean_1races'] > 0,
+                merged_df_all['race_class_diff_mean_1races'] == 0,
+                merged_df_all['race_class_diff_mean_1races'] < 0
+            ],
+            [
+                merged_df_all['class_diff_up'],
+                merged_df_all['class_diff_stay'],
+                merged_df_all['class_diff_down']
+            ],
+            default=np.nan
+        )
+
+        # class_diff_return_rate
+        merged_df_all['class_diff_return_rate'] = np.select(
+            [
+                merged_df_all['race_class_diff_mean_1races'] > 0,
+                merged_df_all['race_class_diff_mean_1races'] == 0,
+                merged_df_all['race_class_diff_mean_1races'] < 0
+            ],
+            [
+                merged_df_all['class_diff_up_EX'],
+                merged_df_all['class_diff_stay_EX'],
+                merged_df_all['class_diff_down_EX']
+            ],
+            default=np.nan
+        )
+
+        # age_hit_rate
+        merged_df_all['age_hit_rate'] = np.select(
+            [
+                merged_df_all['age'] == 3,
+                merged_df_all['age'] == 4,
+                merged_df_all['age'] == 5,
+                merged_df_all['age'] == 6
+            ],
+            [
+                merged_df_all['age_3'],
+                merged_df_all['age_4'],
+                merged_df_all['age_5'],
+                merged_df_all['age_6']
+            ],
+            default=np.nan
+        )
+
+        # age_return_rate
+        merged_df_all['age_return_rate'] = np.select(
+            [
+                merged_df_all['age'] == 3,
+                merged_df_all['age'] == 4,
+                merged_df_all['age'] == 5,
+                merged_df_all['age'] == 6
+            ],
+            [
+                merged_df_all['age_3_EX'],
+                merged_df_all['age_4_EX'],
+                merged_df_all['age_5_EX'],
+                merged_df_all['age_6_EX']
+            ],
+            default=np.nan
+        )
+
+        # sex_hit_rate
+        merged_df_all['sex_hit_rate'] = np.select(
+            [
+                merged_df_all['sex'] == 0,
+                merged_df_all['sex'] == 1,
+                merged_df_all['sex'] == 2
+            ],
+            [
+                merged_df_all['sex_men'],
+                merged_df_all['sex_women'],
+                merged_df_all['sex_nosex']
+            ],
+            default=np.nan
+        )
+
+        # sex_return_rate
+        merged_df_all['sex_return_rate'] = np.select(
+            [
+                merged_df_all['sex'] == 0,
+                merged_df_all['sex'] == 1,
+                merged_df_all['sex'] == 2
+            ],
+            [
+                merged_df_all['sex_men_EX'],
+                merged_df_all['sex_women_EX'],
+                merged_df_all['sex_nosex_EX']
+            ],
+            default=np.nan
+        )
+
+        # # 40のとき、0.3くらの差
+        # merged_df_all['waku_hit_rate_pre'] = ((merged_df_all['waku_hit_rate'] - 25)+100)/100
+        # merged_df_all['position_hit_rate_pre'] = ((merged_df_all['position_hit_rate'] - 25)+150)/150
+        # merged_df_all['course_len_diff_hit_rate_pre'] = ((merged_df_all['course_len_diff_hit_rate'] - 25)+150)/150
+        # merged_df_all['class_diff_hit_rate_pre'] = ((merged_df_all['class_diff_hit_rate'] - 25)+200)/200
+        # merged_df_all['age_hit_rate_pre'] = ((merged_df_all['age_hit_rate'] - 25)+200)/200
+        # merged_df_all['sex_hit_rate_pre'] = ((merged_df_all['sex_hit_rate'] - 25)+300)/300
+        
+        # merged_df_all['waku_return_rate_pre'] = ((merged_df_all['waku_return_rate'] - 80)+250)/250
+        # merged_df_all['position_return_rate_pre'] = ((merged_df_all['position_return_rate']- 80)+400)/400
+        # merged_df_all['course_len_diff_return_rate_pre'] = ((merged_df_all['course_len_diff_return_rate'] - 80)+300)/300
+        # merged_df_all['class_diff_return_rate_pre'] = ((merged_df_all['class_diff_return_rate'] - 80)+400)/400
+        # merged_df_all['age_return_rate_pre'] = ((merged_df_all['age_return_rate'] - 80)+500)/500
+        # merged_df_all['sex_return_rate_pre'] = ((merged_df_all['sex_return_rate'] - 80)+600)/600
+
+
+
+        # 40のとき、0.3くらの差
+        merged_df_all['waku_hit_rate_pre'] = ((merged_df_all['waku_hit_rate'] - 25)+100)/100
+        merged_df_all['position_hit_rate_pre'] = ((merged_df_all['position_hit_rate'] - 25)+150)/150
+        merged_df_all['course_len_diff_hit_rate_pre'] = ((merged_df_all['course_len_diff_hit_rate'] - 25)+200)/200
+        merged_df_all['class_diff_hit_rate_pre'] = ((merged_df_all['class_diff_hit_rate'] - 25)+200)/200
+        merged_df_all['age_hit_rate_pre'] = ((merged_df_all['age_hit_rate'] - 25)+250)/250
+        merged_df_all['sex_hit_rate_pre'] = ((merged_df_all['sex_hit_rate'] - 25)+350)/350
+        
+        merged_df_all['waku_return_rate_pre'] = ((merged_df_all['waku_return_rate'] - 80)+250)/250
+        merged_df_all['position_return_rate_pre'] = ((merged_df_all['position_return_rate']- 80)+400)/400
+        merged_df_all['course_len_diff_return_rate_pre'] = ((merged_df_all['course_len_diff_return_rate'] - 80)+300)/300
+        merged_df_all['class_diff_return_rate_pre'] = ((merged_df_all['class_diff_return_rate'] - 80)+400)/400
+        merged_df_all['age_return_rate_pre'] = ((merged_df_all['age_return_rate'] - 80)+500)/500
+        merged_df_all['sex_return_rate_pre'] = ((merged_df_all['sex_return_rate'] - 80)+600)/600
+
+
+
+        # # 40のとき、0.3くらの差
+        # merged_df_all['waku_hit_rate_pre'] = ((merged_df_all['waku_hit_rate'] - 25)+120)/120
+        # merged_df_all['position_hit_rate_pre'] = ((merged_df_all['position_hit_rate'] - 25)+180)/180
+        # merged_df_all['course_len_diff_hit_rate_pre'] = ((merged_df_all['course_len_diff_hit_rate'] - 25)+200)/200
+        # merged_df_all['class_diff_hit_rate_pre'] = ((merged_df_all['class_diff_hit_rate'] - 25)+250)/250
+        # merged_df_all['age_hit_rate_pre'] = ((merged_df_all['age_hit_rate'] - 25)+300)/300
+        # merged_df_all['sex_hit_rate_pre'] = ((merged_df_all['sex_hit_rate'] - 25)+350)/350
+        
+        
+        # merged_df_all['waku_return_rate_pre'] = ((merged_df_all['waku_return_rate'] - 80)+250)/250
+        # merged_df_all['position_return_rate_pre'] = ((merged_df_all['position_return_rate']- 80)+400)/400
+        # merged_df_all['course_len_diff_return_rate_pre'] = ((merged_df_all['course_len_diff_return_rate'] - 80)+400)/400
+        # merged_df_all['class_diff_return_rate_pre'] = ((merged_df_all['class_diff_return_rate'] - 80)+450)/450
+        # merged_df_all['age_return_rate_pre'] = ((merged_df_all['age_return_rate'] - 80)+550)/550
+        # merged_df_all['sex_return_rate_pre'] = ((merged_df_all['sex_return_rate'] - 80)+650)/650
         """
         展開
         馬場状態
@@ -10438,6 +11570,42 @@ class FeatureCreator:
         """
 
 
+        # 条件を満たすかどうかのブール列を作成
+        merged_df_all["course_minus100"] = merged_df_all["course_len_diff_mean_1races"] >= 100
+
+        # 各 race_id ごとの割合を計算
+        ratio_per_race = (
+            merged_df_all
+            .groupby("race_id")["course_minus100"]
+            .mean()  # True=1, False=0 なので mean() で割合になる
+            .rename("course_minus100_ratio")
+        )
+        
+        # オリジナルのデータフレームに結合（race_idで結合）
+        merged_df_all = merged_df_all.merge(ratio_per_race, on="race_id", how="left")
+
+
+
+        # 条件を満たすかどうかのブール列を作成
+        merged_df_all["course_plus100"] = merged_df_all["course_len_diff_mean_1races"] <= -100
+
+        # 各 race_id ごとの割合を計算
+        ratio_per_race2 = (
+            merged_df_all
+            .groupby("race_id")["course_plus100"]
+            .mean()  # True=1, False=0 なので mean() で割合になる
+            .rename("course_plus100_ratio")
+        )
+
+
+
+        # オリジナルのデータフレームに結合（race_idで結合）
+        merged_df_all = merged_df_all.merge(ratio_per_race2, on="race_id", how="left")
+
+        
+        merged_df_all['place_int'] = pd.to_numeric(merged_df_all['place'], errors='coerce').astype('Int64')
+
+
 
         # merged_df_all.loc[(merged_df_all['race_type'] == 0) & (merged_df_all['weather'].isin([1, 2])) & (merged_df_all['ground_state'] == 2), "ground_state_level_processed"] =  12
         # merged_df_all.loc[(merged_df_all['ground_state'] == 2), "ground_state_level_processed"] = -14
@@ -10450,39 +11618,164 @@ class FeatureCreator:
         # 初期化（すべてNaNにする）
         merged_df_all["ground_state_level_processed"] = np.nan  
 
-        # 条件を適用
-        merged_df_all.loc[(merged_df_all['race_type'] == 0) & (merged_df_all['weather'].isin([1, 2])) & (merged_df_all['ground_state'] == 2), "ground_state_level_processed"] = 12
+        # 条件を適用,12は重馬場
+        merged_df_all.loc[(merged_df_all['race_type'] == 0) & (merged_df_all['weather'].isin([1, 2])) & (merged_df_all['ground_state'].isin([1, 2])), "ground_state_level_processed"] = 25
+        
+        merged_df_all.loc[(merged_df_all['race_type'] == 0) & (merged_df_all['weather'].isin([3,4,5]))  & (merged_df_all['ground_state'].isin([1, 2])), "ground_state_level_processed"] = -22
 
-        merged_df_all.loc[(merged_df_all['race_type'] == 0) & (merged_df_all['ground_state'] == 2) & merged_df_all["ground_state_level_processed"].isna(), "ground_state_level_processed"] = -6
+        merged_df_all.loc[(merged_df_all['race_type'] == 0) & (merged_df_all['ground_state'] ==3) & merged_df_all["ground_state_level_processed"].isna(), "ground_state_level_processed"] = -25
 
-        merged_df_all.loc[(merged_df_all['race_type'] == 0) & merged_df_all['ground_state'].isin([1, 3]) & merged_df_all["ground_state_level_processed"].isna(), "ground_state_level_processed"] = -10
+        merged_df_all.loc[(merged_df_all['race_type'] == 0) & merged_df_all['ground_state'].isin([1, 2]) & merged_df_all["ground_state_level_processed"].isna(), "ground_state_level_processed"] = -22
 
 
-        merged_df_all.loc[(merged_df_all['ground_state'] == 2) & merged_df_all["ground_state_level_processed"].isna(), "ground_state_level_processed"] = -14
+        # merged_df_all.loc[(merged_df_all['ground_state'] == 2) & merged_df_all["ground_state_level_processed"].isna(), "ground_state_level_processed"] = -14 + ((merged_df_all["season_turf_condition"] -7)*2/1)
 
-        merged_df_all.loc[merged_df_all['ground_state'].isin([1, 3]) & merged_df_all["ground_state_level_processed"].isna(), "ground_state_level_processed"] = -24
-
-        # `NaN` の場合のみ計算
-        merged_df_all.loc[(merged_df_all['race_type'] == 0) & merged_df_all["ground_state_level_processed"].isna() & merged_df_all["mean_ground_state_time_diff"].isna(), "ground_state_level_processed"] = (merged_df_all["ground_state_level"] - 4) * 3
-
-        merged_df_all.loc[(merged_df_all['race_type'] == 0) & merged_df_all["ground_state_level_processed"].isna() & ~merged_df_all['ground_state'].isin([1, 2, 3]), "ground_state_level_processed"] = merged_df_all["mean_ground_state_time_diff"] * -3
-
+        merged_df_all.loc[merged_df_all['ground_state'].isin([1, 3]) & merged_df_all["ground_state_level_processed"].isna(), "ground_state_level_processed"] = -24+ ((merged_df_all["season_turf_condition"] - 7)*1.5/1)
 
         # `NaN` の場合のみ計算
-        merged_df_all.loc[merged_df_all["ground_state_level_processed"].isna() & merged_df_all["mean_ground_state_time_diff"].isna(), "ground_state_level_processed"] = (merged_df_all["ground_state_level"] - 4) * 8
+        merged_df_all.loc[(merged_df_all['race_type'] == 0) &(merged_df_all['place_int'].isin([3,4]))& merged_df_all["ground_state_level_processed"].isna() & merged_df_all["mean_ground_state_time_diff"].isna(), "ground_state_level_processed"] = -10
 
-        merged_df_all.loc[merged_df_all["ground_state_level_processed"].isna() & ~merged_df_all['ground_state'].isin([1, 2, 3]), "ground_state_level_processed"] = merged_df_all["mean_ground_state_time_diff"] * -7
+        merged_df_all.loc[(merged_df_all['race_type'] == 0) &(merged_df_all['place_int'].isin([3,4]))& merged_df_all["ground_state_level_processed"].isna() & ~merged_df_all['ground_state'].isin([1, 2]), "ground_state_level_processed"] = -10
+
+        # `NaN` の場合のみ計算
+        merged_df_all.loc[(merged_df_all['race_type'] == 0) &(merged_df_all['place_int'].isin([5,6]))& merged_df_all["ground_state_level_processed"].isna() & merged_df_all["mean_ground_state_time_diff"].isna(), "ground_state_level_processed"] = -15
+
+        merged_df_all.loc[(merged_df_all['race_type'] == 0) &(merged_df_all['place_int'].isin([5,6]))& merged_df_all["ground_state_level_processed"].isna() & ~merged_df_all['ground_state'].isin([1, 2]), "ground_state_level_processed"] = -15
+
+        # `NaN` の場合のみ計算
+        merged_df_all.loc[(merged_df_all['race_type'] == 0) &(merged_df_all['place_int']==2 )& merged_df_all["ground_state_level_processed"].isna() & merged_df_all["mean_ground_state_time_diff"].isna(), "ground_state_level_processed"] = -5
+
+        merged_df_all.loc[(merged_df_all['race_type'] == 0) &(merged_df_all['place_int']==2)& merged_df_all["ground_state_level_processed"].isna() & ~merged_df_all['ground_state'].isin([1, 2]), "ground_state_level_processed"] = -5
+
+        # `NaN` の場合のみ計算
+        merged_df_all.loc[(merged_df_all['race_type'] == 0) &(merged_df_all['place_int']==1 )& merged_df_all["ground_state_level_processed"].isna() & merged_df_all["mean_ground_state_time_diff"].isna(), "ground_state_level_processed"] = -30
+
+        merged_df_all.loc[(merged_df_all['race_type'] == 0) &(merged_df_all['place_int']==1)& merged_df_all["ground_state_level_processed"].isna() & ~merged_df_all['ground_state'].isin([1, 2]), "ground_state_level_processed"] = -30
+
+
+        # `NaN` の場合のみ計算
+        merged_df_all.loc[(merged_df_all['race_type'] == 0) &(merged_df_all['place_int']==7 )& merged_df_all["ground_state_level_processed"].isna() & merged_df_all["mean_ground_state_time_diff"].isna(), "ground_state_level_processed"] = 20
+
+        merged_df_all.loc[(merged_df_all['race_type'] == 0) &(merged_df_all['place_int']==7)& merged_df_all["ground_state_level_processed"].isna() & ~merged_df_all['ground_state'].isin([1, 2]), "ground_state_level_processed"] = 20
 
 
 
-        merged_df_all["pace_category_processed"]  = (merged_df_all["pace_category"]  - 2.5) *20
+        # `NaN` の場合のみ計算
+        merged_df_all.loc[(merged_df_all['race_type'] == 0) &(merged_df_all['place_int']==8 )& merged_df_all["ground_state_level_processed"].isna() & merged_df_all["mean_ground_state_time_diff"].isna(), "ground_state_level_processed"] = 10
+
+        merged_df_all.loc[(merged_df_all['race_type'] == 0) &(merged_df_all['place_int']==8)& merged_df_all["ground_state_level_processed"].isna() & ~merged_df_all['ground_state'].isin([1, 2]), "ground_state_level_processed"] = 10
+
+
+        # `NaN` の場合のみ計算
+        merged_df_all.loc[(merged_df_all['race_type'] == 0) &(merged_df_all['place_int']==10 )& merged_df_all["ground_state_level_processed"].isna() & merged_df_all["mean_ground_state_time_diff"].isna(), "ground_state_level_processed"] = 7
+
+        merged_df_all.loc[(merged_df_all['race_type'] == 0) &(merged_df_all['place_int']==10 )& merged_df_all["ground_state_level_processed"].isna() & ~merged_df_all['ground_state'].isin([1, 2]), "ground_state_level_processed"] = 7
+
+
+
+
+
+        # `NaN` の場合のみ計算
+        # →芝が重い→上がらない→差しが有利
+        # →軽い→逃げ先行が有利
+
+
+        # ・1,2日目
+        # 逃げ先行有利
+
+        # ・開催前半
+        # 内枠有利（かなり）
+        # 差し有利（柔らかいので）
+
+        # ・開催後半
+        # 枠の有利不利なし、一枠は不利
+        # 札幌・函館・小倉は変化なし、若干外枠有利
+        # 新潟・東京・中山は外枠不利になっていく
+        # 福島、中京、京都、阪神は外枠有利になっていく
+
+        # 先行有利（硬いので）
+        # 札幌、函館、福島、新潟、小倉などは馬場が傷みやすく、差し有利
+
+
+        merged_df_all.loc[merged_df_all["ground_state_level_processed"].isna() & (merged_df_all['season_turf_condition'] == 1)  & merged_df_all["mean_ground_state_time_diff"].isna(), "ground_state_level_processed"] = (merged_df_all["ground_state_level"] - 4) * 1 + ((merged_df_all["season_turf_condition"] -5)*4/1)
+        merged_df_all.loc[merged_df_all["ground_state_level_processed"].isna() & (merged_df_all['season_turf_condition'] == 2)  & merged_df_all["mean_ground_state_time_diff"].isna(), "ground_state_level_processed"] = (merged_df_all["ground_state_level"] - 4) * 1 + ((merged_df_all["season_turf_condition"] - 5)*2/1)
+
+
+        merged_df_all.loc[merged_df_all["ground_state_level_processed"].isna() & (merged_df_all['season_turf_condition'] == 1)& ~merged_df_all['ground_state'].isin([1, 3]), "ground_state_level_processed"] = merged_df_all["mean_ground_state_time_diff"] * -1 + ((merged_df_all["season_turf_condition"] - 5)*4/1)
+        merged_df_all.loc[merged_df_all["ground_state_level_processed"].isna() & (merged_df_all['season_turf_condition'] == 2)& ~merged_df_all['ground_state'].isin([1, 3]), "ground_state_level_processed"] = merged_df_all["mean_ground_state_time_diff"] * -1 + ((merged_df_all["season_turf_condition"] - 5)*2/1)
+
+
+        merged_df_all.loc[merged_df_all["ground_state_level_processed"].isna()  & (merged_df_all['season_turf_condition'] < 7) &(merged_df_all['place_int'].isin([1,2,3,4,10])) & merged_df_all["mean_ground_state_time_diff"].isna(), "ground_state_level_processed"] = (merged_df_all["ground_state_level"] - 4) * 1 + ((merged_df_all["season_turf_condition"] - 5)*1.5/1)
+        merged_df_all.loc[merged_df_all["ground_state_level_processed"].isna()& (merged_df_all['season_turf_condition'] < 7) &(merged_df_all['place_int'].isin([1,2,3,4,10]))  & ~merged_df_all['ground_state'].isin([1, 3]), "ground_state_level_processed"] = merged_df_all["mean_ground_state_time_diff"] * -1 + ((merged_df_all["season_turf_condition"] - 5)*1.5/1)
+                    
+
+        merged_df_all.loc[merged_df_all["ground_state_level_processed"].isna()  & (merged_df_all['season_turf_condition'] > 6) &(merged_df_all['place_int'].isin([1,2,3,4,10])) & merged_df_all["mean_ground_state_time_diff"].isna(), "ground_state_level_processed"] = (merged_df_all["ground_state_level"] - 4) * 1 + ((merged_df_all["season_turf_condition"] - 5)*3.5/1)
+        merged_df_all.loc[merged_df_all["ground_state_level_processed"].isna()& (merged_df_all['season_turf_condition'] > 6) &(merged_df_all['place_int'].isin([1,2,3,4,10]))  & ~merged_df_all['ground_state'].isin([1, 3]), "ground_state_level_processed"] = merged_df_all["mean_ground_state_time_diff"] * -1 + ((merged_df_all["season_turf_condition"] - 5)*3.5/1)
+                    
+        # merged_df_all.loc[merged_df_all["ground_state_level_processed"].isna()  & (merged_df_all['season_turf_condition'] > 6) &(merged_df_all['place_int'] ==3) & merged_df_all["mean_ground_state_time_diff"].isna(), "ground_state_level_processed"] = (merged_df_all["ground_state_level"] - 4) * 1 + ((merged_df_all["season_turf_condition"] - 4)*4/1)
+        # merged_df_all.loc[merged_df_all["ground_state_level_processed"].isna()& (merged_df_all['season_turf_condition'] > 6) &(merged_df_all['place_int'] ==3)  & ~merged_df_all['ground_state'].isin([1, 3]), "ground_state_level_processed"] = merged_df_all["mean_ground_state_time_diff"] * -1 + ((merged_df_all["season_turf_condition"] - 4)*4/1)
+                    
+
+
+        merged_df_all.loc[merged_df_all["ground_state_level_processed"].isna()&(merged_df_all['place_int'] ==6)& merged_df_all["mean_ground_state_time_diff"].isna(), "ground_state_level_processed"] = (merged_df_all["ground_state_level"] - 4) * 1 - ((merged_df_all["season_turf_condition"] - 7)*2/1)
+        merged_df_all.loc[merged_df_all["ground_state_level_processed"].isna()&(merged_df_all['place_int'] ==6)& ~merged_df_all['ground_state'].isin([1, 3]), "ground_state_level_processed"] = merged_df_all["mean_ground_state_time_diff"] * -1 - ((merged_df_all["season_turf_condition"] - 7)*2/1)
+
+        merged_df_all.loc[merged_df_all["ground_state_level_processed"].isna()&(merged_df_all['place_int'] ==8)& merged_df_all["mean_ground_state_time_diff"].isna(), "ground_state_level_processed"] = (merged_df_all["ground_state_level"] - 4) * 1 + ((merged_df_all["season_turf_condition"] - 6)*3/1)
+        merged_df_all.loc[merged_df_all["ground_state_level_processed"].isna()&(merged_df_all['place_int'] ==8)& ~merged_df_all['ground_state'].isin([1, 3]), "ground_state_level_processed"] = merged_df_all["mean_ground_state_time_diff"] * -1 + ((merged_df_all["season_turf_condition"] - 6)*3/1)
+        
+        merged_df_all.loc[merged_df_all["ground_state_level_processed"].isna()& merged_df_all["mean_ground_state_time_diff"].isna(), "ground_state_level_processed"] = (merged_df_all["ground_state_level"] - 4) * 1 - ((merged_df_all["season_turf_condition"] - 6)*1.5/1)
+        merged_df_all.loc[merged_df_all["ground_state_level_processed"].isna()& ~merged_df_all['ground_state'].isin([1, 3]), "ground_state_level_processed"] = merged_df_all["mean_ground_state_time_diff"] * -1 - ((merged_df_all["season_turf_condition"] - 6)*1.5/1)
+                    
+
+
+
+            
+
+            
+        merged_df_all.loc[ (merged_df_all['race_class'] == 8) &  (merged_df_all["course_len"] <= 1600) , "pace_category_processed"] = (merged_df_all["pace_category"]  - 2.5) *-20+ 10
+        merged_df_all.loc[ (merged_df_all['race_class'] == 8) , "pace_category_processed"] = (merged_df_all["pace_category"]  - 2.5) *-20 + 5
+        merged_df_all.loc[merged_df_all["pace_category_processed"].isna()&  (merged_df_all["course_len"] <= 1600) , "pace_category_processed"]= (merged_df_all["pace_category"]  - 2.5) *22 +5
+        merged_df_all.loc[merged_df_all["pace_category_processed"].isna() , "pace_category_processed"]= (merged_df_all["pace_category"]  - 2.5) *20    
+            
+
+
+
+        merged_df_all.loc[(merged_df_all["dominant_position_category"] == 1)|(merged_df_all["dominant_position_category"] == 2), "pace_category_processed"] = merged_df_all["pace_category_processed"]  - ((merged_df_all['position_hit_rate']-25)*1)
+        merged_df_all.loc[(merged_df_all["dominant_position_category"] == 3)|(merged_df_all["dominant_position_category"] == 4), "pace_category_processed"] = merged_df_all["pace_category_processed"]  + ((merged_df_all['position_hit_rate']-25)*1)
+
+        merged_df_all.loc[(merged_df_all["dominant_position_category"] == 1)|(merged_df_all["dominant_position_category"] == 2), "pace_category_processed"] = merged_df_all["pace_category_processed"]  - ((merged_df_all['position_return_rate'] - 80)/4)
+        merged_df_all.loc[(merged_df_all["dominant_position_category"] == 3)|(merged_df_all["dominant_position_category"] == 4), "pace_category_processed"] = merged_df_all["pace_category_processed"]  + ((merged_df_all['position_return_rate'] - 80)/4)
+
+
+
+        merged_df_all.loc[ (merged_df_all["course_minus100_ratio"] >= 0)  &  (merged_df_all["course_len"] <= 2200),"pace_category_processed"] = merged_df_all["pace_category_processed"]  + ((merged_df_all["course_minus100_ratio"] - 0)*30)
+
+        merged_df_all.loc[ (merged_df_all["course_plus100_ratio"] >= 0.2) &  (merged_df_all["course_len"] >= 1800) ,"pace_category_processed"] = merged_df_all["pace_category_processed"]  + ((merged_df_all["course_plus100_ratio"] - 0.2)*-15)
+
+
+
+        # merged_df_all.loc[(merged_df_all['race_type'] == 0) &  (merged_df_all['place_int'].isin([4,6,7,8,9])), "pace_category_processed"] = merged_df_all["pace_category_processed"]  - 10
+        # merged_df_all.loc[(merged_df_all['race_type'] == 0) &  (merged_df_all['place_int'].isin([2,3,5])), "pace_category_processed"] = merged_df_all["pace_category_processed"]  + 10
+        # merged_df_all.loc[(merged_df_all['race_type'] == 1) &  (merged_df_all['place_int'] == 4), "pace_category_processed"] = merged_df_all["pace_category_processed"]  + 20
+        # merged_df_all.loc[(merged_df_all['race_type'] == 1) &  (merged_df_all['place_int'].isin([5,6])), "pace_category_processed"] = merged_df_all["pace_category_processed"]  - 20
+
+
+
+
+
+
+
+
+
+
+        # merged_df_all["pace_category_processed"]  = (merged_df_all["pace_category"]  - 2.5) *22
         # dominant_position_category_processed 列の処理
-        merged_df_all["ground_state_level_processed"] = merged_df_all["ground_state_level_processed"] + ((merged_df_all["season_turf_condition"] - 7)*1.5/1)
+        # merged_df_all["ground_state_level_processed"] = merged_df_all["ground_state_level_processed"] 
 
 
         # tenkai_sumed の計算
         merged_df_all["tenkai_sumed"] = (
-            merged_df_all["ground_state_level_processed"] + merged_df_all["pace_category_processed"]
+            merged_df_all["ground_state_level_processed"]*1.5 + merged_df_all["pace_category_processed"]
         )
 
         # 条件に応じて dominant_position_category_processed を更新
@@ -10506,7 +11799,7 @@ class FeatureCreator:
 
         # place_season_condition_type_categori の処理
         merged_df_all["place_season_condition_type_categori_processed_z"] = merged_df_all["place_season_condition_type_categori"].replace(
-            {5: -2.3, 4: -1.4, 3: 0, 2: 1.4, 1: 2.3, -1: -1.4, -2: 0, -3: 1.4, -4: 1.8, -10000: 0}
+            {5: -4.7, 4: -3.4, 3: -1, 2: 1, 1: 2.3, -1: -1.4, -2: 0, -3: 1.4, -4: 1.8, -10000: 0}
         ).astype(float)
 
         # tenkai_place_sumed の計算
@@ -10533,7 +11826,7 @@ class FeatureCreator:
 
 
         # start_slope の処理
-        merged_df_all["start_slope_abs_processed"] = merged_df_all["start_slope"] * -2
+        merged_df_all["start_slope_abs_processed"] = merged_df_all["start_slope"] * -5
 
         # tenkai_place_start_slope_sumed の計算
         merged_df_all["tenkai_place_start_slope_sumed"] = merged_df_all["tenkai_place_sumed"] + merged_df_all["start_slope_abs_processed"]
@@ -10558,10 +11851,10 @@ class FeatureCreator:
 
 
         # start_range_processed_1 の計算
-        merged_df_all["start_range_processed_1"] = ((merged_df_all["start_range"] - 360) / 30).apply(lambda x: x * 4 if x < 0 else x * 0.7)
+        merged_df_all["start_range_processed_1"] = ((merged_df_all["start_range"] - 400) / 30).apply(lambda x: x * 4 if x < 0 else x * 2)
 
         # tenkai_place_start_slope_range_sumed の計算
-        merged_df_all["tenkai_place_start_slope_range_sumed"] = merged_df_all["tenkai_place_start_slope_sumed"] + merged_df_all["start_range_processed_1"]
+        merged_df_all["tenkai_place_start_slope_range_sumed"] = merged_df_all["tenkai_place_start_slope_sumed"] + (merged_df_all["start_range_processed_1"]* 4)
 
         # 条件に応じて dominant_position_category_processed を更新
         merged_df_all.loc[merged_df_all["tenkai_place_start_slope_range_sumed"] < 0, "dominant_position_category_processed"] = (
@@ -10606,7 +11899,7 @@ class FeatureCreator:
 
 
         # tenkai_place_start_slope_range_grade_lcurve_slope_sumed の計算
-        merged_df_all["tenkai_place_start_slope_range_grade_lcurve_slope_sumed"] = merged_df_all["tenkai_place_start_slope_range_grade_sumed"] + (merged_df_all["last_curve_slope"] * 2.5)
+        merged_df_all["tenkai_place_start_slope_range_grade_lcurve_slope_sumed"] = merged_df_all["tenkai_place_start_slope_range_grade_sumed"] + (merged_df_all["last_curve_slope"] * 3)
 
         # 条件に応じて dominant_position_category_processed を更新
         merged_df_all.loc[merged_df_all["tenkai_place_start_slope_range_grade_lcurve_slope_sumed"] < 0, "dominant_position_category_processed"] = (
@@ -10627,7 +11920,7 @@ class FeatureCreator:
 
 
 
-        merged_df_all["tenkai_place_start_slope_range_grade_lcurve_slope_type_sumed"] = merged_df_all["tenkai_place_start_slope_range_grade_lcurve_slope_sumed"] + (merged_df_all["race_type"]-1)*4
+        merged_df_all["tenkai_place_start_slope_range_grade_lcurve_slope_type_sumed"] = merged_df_all["tenkai_place_start_slope_range_grade_lcurve_slope_sumed"] + (merged_df_all["race_type"]-1)
 
         # 条件に応じて dominant_position_category_processed を更新
         merged_df_all.loc[merged_df_all["tenkai_place_start_slope_range_grade_lcurve_slope_type_sumed"] < 0, "dominant_position_category_processed"] = (
@@ -10655,7 +11948,7 @@ class FeatureCreator:
             lambda x: x * 8 if x > 0 else x
         )
 
-        merged_df_all["tenkai_place_start_slope_range_grade_lcurve_slope_type_curve_sumed"] = merged_df_all["tenkai_place_start_slope_range_grade_lcurve_slope_type_sumed"] + (merged_df_all["curve_processed"]*2.5)
+        merged_df_all["tenkai_place_start_slope_range_grade_lcurve_slope_type_curve_sumed"] = merged_df_all["tenkai_place_start_slope_range_grade_lcurve_slope_type_sumed"] + (merged_df_all["curve_processed"]*3)
 
         # dominant_position_category_processed の更新 (再利用)
         merged_df_all.loc[merged_df_all["tenkai_place_start_slope_range_grade_lcurve_slope_type_curve_sumed"] < 0, "dominant_position_category_processed"] = merged_df_all["dominant_position_category"].replace(
@@ -10676,7 +11969,7 @@ class FeatureCreator:
         )
 
 
-        merged_df_all["tenkai_place_start_slope_range_grade_lcurve_slope_type_curve_goal_range_sumed"] = merged_df_all["tenkai_place_start_slope_range_grade_lcurve_slope_type_curve_sumed"] + (merged_df_all["goal_range_processed_1"]*3)
+        merged_df_all["tenkai_place_start_slope_range_grade_lcurve_slope_type_curve_goal_range_sumed"] = merged_df_all["tenkai_place_start_slope_range_grade_lcurve_slope_type_curve_sumed"] + (merged_df_all["goal_range_processed_1"]*4)
 
         # dominant_position_category_processed の更新 (再利用)
         merged_df_all.loc[merged_df_all["tenkai_place_start_slope_range_grade_lcurve_slope_type_curve_goal_range_sumed"] < 0, "dominant_position_category_processed"] = merged_df_all["dominant_position_category"].replace(
@@ -10710,7 +12003,7 @@ class FeatureCreator:
 
 
 
-        merged_df_all["tenkai_place_start_slope_range_grade_lcurve_slope_type_curve_goal_range_slope_first_curve_sumed"] = merged_df_all["tenkai_place_start_slope_range_grade_lcurve_slope_type_curve_goal_range_slope_sumed"] + (merged_df_all["first_curve_slope"]*-5)
+        merged_df_all["tenkai_place_start_slope_range_grade_lcurve_slope_type_curve_goal_range_slope_first_curve_sumed"] = merged_df_all["tenkai_place_start_slope_range_grade_lcurve_slope_type_curve_goal_range_slope_sumed"] + (merged_df_all["first_curve_slope"]*-4)
 
         # dominant_position_category_processed の更新 (再利用)
         merged_df_all.loc[merged_df_all["tenkai_place_start_slope_range_grade_lcurve_slope_type_curve_goal_range_slope_first_curve_sumed"] < 0, "dominant_position_category_processed"] = merged_df_all["dominant_position_category"].replace(
@@ -10795,7 +12088,7 @@ class FeatureCreator:
 
 
 
-        merged_df_all2 = merged_df_all.copy()
+        # merged_df_all2 = merged_df_all.copy()
 
         
 
@@ -10860,7 +12153,7 @@ class FeatureCreator:
 
         #-3,2内がマイナス
         merged_df_all["umaban_processed_100"] = merged_df_all["umaban"].apply(
-            lambda x: ((x*-1)) if x < 4 else ((x-8)/3)-1
+            lambda x: ((x*-1)) if x < 4 else ((x-8)/2)-1
         ).astype(float)
         #0-0.005
 
@@ -10868,7 +12161,7 @@ class FeatureCreator:
 
         #1（偶数）または 0（奇数）偶数有利
         merged_df_all.loc[:, "umaban_odd_processed_100"] = (
-            (merged_df_all["umaban_odd"]-1)*-1
+            (merged_df_all["umaban_odd"]-1)*-3
         ).astype(float)
 
         # 1600で正規化,-0.5 - 1
@@ -10876,7 +12169,7 @@ class FeatureCreator:
 
         # ,-1.5 - 10
         merged_df_all["course_len_processed_100"] = merged_df_all["course_len_processed_22"].apply(
-            lambda x: x*3 if x <= 0 else x*10
+            lambda x: (x+1)*3 if x <= 0 else x*15
         )
         merged_df_all["course_len_processed_100"] = ((merged_df_all["course_len_processed_22"] + 3)/3)
 
@@ -10894,6 +12187,10 @@ class FeatureCreator:
                 0  # それ以外のとき 0
             )
         )
+        
+        # start_range_processed_1 の計算
+        merged_df_all["start_range_processed_umaban"] = ((merged_df_all["start_range"] - 500) / 40).apply(lambda x: x * 7 if x < 0 else x * 2)
+
 
         """
         内枠有利ならマイナス方面とumaban_processed_100を足し算する、そこにoddを足し算する
@@ -10903,84 +12200,613 @@ class FeatureCreator:
         merged_df_all.loc[
             (merged_df_all["start_point"] == 2) & (merged_df_all["ground_state"] != 0),
             "start_point"
-        ] = -1
+        ] = -3
+
+        # 'start_point'が2の行だけに対して処理を行う
+        merged_df_all.loc[
+            (merged_df_all["start_point"] == 1),
+            "start_point"
+        ] = 1.5
+        # 'start_point'が2の行だけに対して処理を行う
+        merged_df_all.loc[
+            (merged_df_all["start_point"] == 2) & (merged_df_all["ground_state"] == 0),
+            "start_point"
+        ] =3
+
+
+        # ダート、不良馬場は内側不利、逃げ不利    
+        merged_df_all["dirt_uti_ame"] = np.where(
+            (merged_df_all["race_type"] == 0) & (merged_df_all["ground_state"] == 3),
+            10,
+            0  # 条件に合致しないとき
+        )
+        # ターフ、不良馬場は内側有利、逃げ不利    
+        merged_df_all["turf_uti_ame"] = np.where(
+            (merged_df_all["race_type"] == 1) & (merged_df_all["ground_state"] == 0),
+            0,
+            np.where(
+                (merged_df_all["race_type"] == 1) & (merged_df_all["ground_state"] == 2),
+                -3,
+                np.where(
+                    (merged_df_all["race_type"] == 1) & (merged_df_all["ground_state"] == 1),
+                    -9,
+                    np.where(
+                        (merged_df_all["race_type"] == 1) & (merged_df_all["ground_state"] == 3),
+                        -12,
+                        0
+                    )
+                )
+            )
+        )
+
+
+        # ダート、不良馬場は内側不利、逃げ不利    
+        merged_df_all["1waku"] = np.where(
+            merged_df_all["umaban"] == 1,
+            -1 * merged_df_all["season_turf_condition"],
+            np.where(
+                merged_df_all["umaban"] == 2,
+                -1 * (merged_df_all["season_turf_condition"]/3),
+                0  # どちらにも合致しない場合
+            )
+        )
+        # ターフ、不良馬場は内側有利、逃げ不利    
+        merged_df_all["turf_short"] = np.where(
+            (merged_df_all["race_type"] == 1) & (merged_df_all["course_len"] < 1200),
+            3,
+            np.where(
+                (merged_df_all["race_type"] == 1) & (1200 <= merged_df_all["course_len"]) & (merged_df_all["course_len"] < 1400),
+                2,
+                np.where(
+                    (merged_df_all["race_type"] == 1) & (1400 <= merged_df_all["course_len"]) & (merged_df_all["course_len"] < 1600),
+                    1,
+                    0
+                )
+            )
+        )
+
+
+        merged_df_all["nakayama_waku"] = np.where(
+            (merged_df_all["race_type"] == 0) & (merged_df_all["ground_state"] == 2)& (merged_df_all["weather"].isin([0, 1, 2])),
+            3,
+            np.where(
+                (merged_df_all["race_type"] == 0) & (merged_df_all["course_len"] < 1800),
+                12,
+                0  # どちらにも合致しない場合
+            )
+        )
+
+
+        # 札幌・函館・小倉は変化なし、若干外枠有利
+        # 新潟・東京・中山は外枠不利になっていく
+        # 福島、中京、京都、阪神は外枠有利になっていく
+
+        #
+        # 変わりなし
+        # 札幌、京都、阪神
+
+        # 外有利に変わる
+        # 福島、中京、小倉、新潟
+
+        # 若干
+        # 函館
+
+
+        # 外フリに
+        # 、中山
+
+        # 若干内有利になっていく
+        # 東京、
+
+
+        # ローカルは差し有利になっていく
+        # →結構強く
+        # 東京、中山、阪神、京都、中京は先行有利になっていく
+        # →ちょびっとにする
+
+        # 1. 補正処理
+        adjusted = merged_df_all["season_turf_condition"].copy()
+        adjusted = np.where(adjusted == 1, -9, adjusted)
+        adjusted = np.where(adjusted == 2, -4, adjusted)
+
+
+        # 2. place_int 別に処理
+        result_waku = np.zeros(len(merged_df_all))
+
+        # 1, 2, 10
+        cond1 = merged_df_all["place_int"].isin([1, 8, 9])
+        x1 = adjusted - 5
+        x1 = np.where(x1 >= 0, x1 /3, x1)
+        x1 = np.where(x1 <= 0, x1 /2, x1)
+        result_waku = np.where(cond1, x1, result_waku)
+
+        # 3
+        cond2 = merged_df_all["place_int"] == 3
+        x2 = adjusted - 5
+        x2 = np.where(x2 >= 0, x2 * 1, x2)
+        x2 = np.where(x2 <= 0, x2 * 2, x2)
+        result_waku = np.where(cond2, x2, result_waku)
+
+        # 7.10.4
+        cond3 = merged_df_all["place_int"].isin([7, 10])
+        x3 = adjusted - 5
+        x3 = np.where(x3 >= 0, x3 * 1, x3)
+        x3 = np.where(x3 <= 0, x3 * 1.2, x3)
+        result_waku = np.where(cond3, x3, result_waku)
+
+        # 7.10.4
+        cond7 = merged_df_all["place_int"] == 4
+        x7 = adjusted - 5
+        x7 = np.where(x7 >= 0, x7 * 2, x7)
+        x7 = np.where(x7 <= 0, x7 * 1.2, x7)
+        result_waku = np.where(cond7, x7, result_waku)
+
+        # 2
+        cond4 = merged_df_all["place_int"] == 2
+        x4 = adjusted - 5
+        x4 = np.where(x4 >= 0, x4 * 1, x4)
+        x4 = np.where(x4 <= 0, x4 * 1/2, x4)
+        result_waku = np.where(cond4, x4, result_waku)
+
+
+
+        # 5, 6
+        cond5 = merged_df_all["place_int"] == 5
+        x5 = -adjusted - 7
+        result_waku = np.where(cond5, x5 / 2.5, result_waku)
+
+        # 5, 6
+        cond6 = merged_df_all["place_int"] == 6
+        x6 = -adjusted - 6
+        result_waku = np.where(cond6, x6/ 1.5, result_waku)
+
+        # 3. 結果を格納
+        merged_df_all["waku_condition"] = result_waku
+
+
+
+
+        merged_df_all["niigata_waku"] = np.where(
+            (merged_df_all["race_type"] ==1) & (merged_df_all["ground_state"] != 0),
+            20,
+            0  # どちらにも合致しない場合
+            
+        )
+
+
+
+        merged_df_all['wakuwaku_hit']= ((merged_df_all['waku_hit_rate'] - 25)*2)
+        merged_df_all['wakuwaku_return']= ((merged_df_all['waku_return_rate'] - 80))
+
+
 
         #2
         merged_df_all["umaban_combined"] = (
             (merged_df_all["umaban_processed_100"]* (
-                (merged_df_all["start_point"] - 1.5)*3
+                (merged_df_all["start_point"] - 1.5)*6
+                +(merged_df_all["dirt_uti_ame"])
+                +merged_df_all["start_range_processed_umaban"]
+                -(merged_df_all["curve_amount"]*2)
+                # +merged_df_all["turf_short"]
+                +merged_df_all["nakayama_waku"]
+                +merged_df_all["turf_uti_ame"]
+                +merged_df_all["niigata_waku"]
                 )
-                )
-            /2
+                )/1.8
+            
             + merged_df_all["umaban_odd_processed_100"]
+            + merged_df_all["1waku"]
+            +merged_df_all['wakuwaku_hit']
+            +merged_df_all['wakuwaku_return']
+            
             )
 
         #5
         merged_df_all["umaban_curve_combined"] = (
             (merged_df_all["umaban_processed_100"]* (
-                (merged_df_all["start_point"] - 1.5)*3#1.5
-                +((merged_df_all["curve"]-4.5)*2) #8
+                (merged_df_all["start_point"] - 1.5)*6#1.5
+                +((merged_df_all["curve"]-4.5)*6) #8
+                +(merged_df_all["dirt_uti_ame"])
+                +merged_df_all["start_range_processed_umaban"]
+                -(merged_df_all["curve_amount"]*2)
+                # +merged_df_all["turf_short"]
+                +merged_df_all["nakayama_waku"]
+                +merged_df_all["turf_uti_ame"]
+                +merged_df_all["niigata_waku"]
                 )
-                )
-            /2
+                )/1.8
+            
             + merged_df_all["umaban_odd_processed_100"]
+            + merged_df_all["1waku"]
+            +merged_df_all['wakuwaku_hit']
+            +merged_df_all['wakuwaku_return']
+            
             )
 
         #5
         merged_df_all["umaban_curve_lcurves_combined"] = (
             (merged_df_all["umaban_processed_100"]* (
-                (merged_df_all["start_point"] - 1.5)*4#2
-                +((merged_df_all["curve"]-4.5)*2) #8
-                + (merged_df_all["last_curve_slope"])*4 #8
+                (merged_df_all["start_point"] - 1.5)*6#2
+                +((merged_df_all["curve"]-4.5)*6) #8
+                + (merged_df_all["last_curve_slope"])*9 #8
+                +(merged_df_all["dirt_uti_ame"])
+                +merged_df_all["start_range_processed_umaban"]
+                -(merged_df_all["curve_amount"]*2)
+                # +merged_df_all["turf_short"]
+                +merged_df_all["nakayama_waku"]
+                +merged_df_all["turf_uti_ame"]
+                +merged_df_all["niigata_waku"]
                 )
-                )
-            /2
+                )/1.8
+            
             + merged_df_all["umaban_odd_processed_100"]
+            + merged_df_all["1waku"]
+            +merged_df_all['wakuwaku_hit']
+            +merged_df_all['wakuwaku_return']
+            
             )
         
         #5
         merged_df_all["umaban_curve_lcurves_condition_combined"] = (
             (merged_df_all["umaban_processed_100"]* (
-                (merged_df_all["start_point"] - 1.5)*4#2
-                +((merged_df_all["curve"]-4.5)*2) #8
-                + (merged_df_all["last_curve_slope"])*4 #8
-                + (merged_df_all["season_turf_condition"]-7)*3.2 #14
+                (merged_df_all["start_point"] - 1.5)*6#2
+                +((merged_df_all["curve"]-4.5)*6) #8
+                + (merged_df_all["last_curve_slope"])*9 #8
+                + (merged_df_all["waku_condition"]*1.5) #14
+                +(merged_df_all["dirt_uti_ame"])
+                +merged_df_all["start_range_processed_umaban"]
+                -(merged_df_all["curve_amount"]*2)
+                # +merged_df_all["turf_short"]
+                +merged_df_all["nakayama_waku"]
+                +merged_df_all["turf_uti_ame"]
+                +merged_df_all["niigata_waku"]
                 )
-                )
-            /2
+                )/1.8
+            
             + merged_df_all["umaban_odd_processed_100"]
+            + merged_df_all["1waku"]
+            +merged_df_all['wakuwaku_hit']
+            +merged_df_all['wakuwaku_return']
             )
         
         #2
         merged_df_all["umaban_curve_lcurves_condition_type_combined"] = (
             (merged_df_all["umaban_processed_100"]* (
-                (merged_df_all["start_point"] - 1.5)*4#2
-                +((merged_df_all["curve"]-4.5)*2) #8
-                + (merged_df_all["last_curve_slope"])*4 #8
-                + (merged_df_all["season_turf_condition"]-7)*3.2 #14
-                + (merged_df_all["race_type"] - 0.5)*-6
+                (merged_df_all["start_point"] - 1.5)*6#2
+                +((merged_df_all["curve"]-4.5)*6) #8
+                + (merged_df_all["last_curve_slope"])*9 #8
+                + (merged_df_all["waku_condition"]*1.5) #14
+                # + (merged_df_all["race_type"] + 0.5)*-10
+                +(merged_df_all["dirt_uti_ame"])
+                +merged_df_all["start_range_processed_umaban"]
+                -(merged_df_all["curve_amount"]*2)
+                # +merged_df_all["turf_short"]
+                +merged_df_all["nakayama_waku"]
+                +merged_df_all["turf_uti_ame"]
+                +merged_df_all["niigata_waku"]
                 )
-                )
-            /2
+                )/1.8
+            
             + merged_df_all["umaban_odd_processed_100"]
+            + merged_df_all["1waku"]
+            +merged_df_all['wakuwaku_hit']
+            +merged_df_all['wakuwaku_return']
             )
         #2
         merged_df_all["umaban_curve_lcurves_condition_type_corner_combined"] = (
             (merged_df_all["umaban_processed_100"]* (
-                (merged_df_all["start_point"] - 1.5)*4#2
-                +((merged_df_all["curve"]-4.5)*2) #8
-                + (merged_df_all["last_curve_slope"])*4 #8
-                + (merged_df_all["season_turf_condition"]-7)*3.2 #14
-                + (merged_df_all["race_type"] - 0.5)*-6
+                (merged_df_all["start_point"] - 1.5)*6#2
+                +((merged_df_all["curve"]-4.5)*6) #8
+                + (merged_df_all["last_curve_slope"])*9 #8
+                + (merged_df_all["waku_condition"]*1.5) #14
+                # + (merged_df_all["race_type"] + 0.5)*-10
                 + (merged_df_all["first_corner"] - 100)/-20
-
+                +(merged_df_all["dirt_uti_ame"])
+                +merged_df_all["start_range_processed_umaban"]
+                -(merged_df_all["curve_amount"]*2)
+                # +merged_df_all["turf_short"]
+                +merged_df_all["nakayama_waku"]
+                +merged_df_all["turf_uti_ame"]
+                +merged_df_all["niigata_waku"]
                 )
-                )
-            /2
+                )/1.8
+            
             + merged_df_all["umaban_odd_processed_100"]
+            + merged_df_all["1waku"]
+            +merged_df_all['wakuwaku_hit']
+            +merged_df_all['wakuwaku_return']
             )
-        
+            
+            
+        # --- 対象列 -----------------------------------------------------------
+        combined_columns_2 = [
+            "tenkai_combined_2","tenkai_place_combined","tenkai_place_start_slope_combined",
+            "tenkai_place_start_slope_range_combined","tenkai_place_start_slope_range_grade_combined",
+            "tenkai_place_start_slope_range_grade_lcurve_slope_combined",
+            "tenkai_place_start_slope_range_grade_lcurve_slope_type_combined",
+            "tenkai_place_start_slope_range_grade_lcurve_slope_type_curve_combined",
+            "tenkai_place_start_slope_range_grade_lcurve_slope_type_curve_goal_range_combined",
+            "tenkai_place_start_slope_range_grade_lcurve_slope_type_curve_goal_range_slope_combined",
+            "tenkai_place_start_slope_range_grade_lcurve_slope_type_curve_goal_range_slope_first_curve_combined",
+            "tenkai_place_start_slope_range_grade_lcurve_slope_type_curve_goal_range_slope_first_curve_front_combined",
+            "tenkai_place_start_slope_range_grade_lcurve_slope_type_curve_goal_range_slope_first_curve_front_len_combined",
+            "tenkai_place_start_slope_range_grade_lcurve_slope_type_curve_goal_range_slope_first_curve_front_len_umaban_combined",
+            # "umaban_combined","umaban_curve_combined","umaban_curve_lcurves_combined",
+            # "umaban_curve_lcurves_condition_combined","umaban_curve_lcurves_condition_type_combined",
+            # "umaban_curve_lcurves_condition_type_corner_combined"
+        ]
 
+        # --- rate 列（6 + 6） ---------------------------------------------------
+        rate_hit_cols = [
+            "waku_hit_rate_pre","position_hit_rate_pre","course_len_diff_hit_rate_pre",
+            "class_diff_hit_rate_pre","age_hit_rate_pre","sex_hit_rate_pre"
+        ]
+        rate_ret_cols = [
+            "waku_return_rate_pre","position_return_rate_pre","course_len_diff_return_rate_pre",
+            "class_diff_return_rate_pre","age_return_rate_pre","sex_return_rate_pre"
+        ]
+
+        # # --- 1 行ずつ処理：スケールして掛ける ------------------------------------
+        # for col in combined_columns_2:
+
+        #     # hit 系 6 本 → (x + 3)/3 を掛ける
+        #     for h in rate_hit_cols:
+        #         zero_up = merged_df_all[col] > 0
+        #         zero_down = merged_df_all[col] <= 0
+        #         merged_df_all.loc[zero_up,col] *= (merged_df_all.loc[zero_up,h] + 1.5) / 1.5
+        #         merged_df_all.loc[zero_down,col] /= (merged_df_all.loc[zero_down,h] + 1.5) / 1.5
+
+        #     # return 系 6 本 → (x + 2)/2 を掛ける
+        #     for r in rate_ret_cols:
+        #         zero_up = merged_df_all[col] > 0
+        #         zero_down = merged_df_all[col] <= 0
+        #         merged_df_all.loc[zero_up,col] *= (merged_df_all.loc[zero_up,r] + 2) / 2
+        #         merged_df_all.loc[zero_down,col] /= (merged_df_all.loc[zero_down,r] + 2) / 2
+
+
+        combined_columns_3 = [
+            "umaban_combined","umaban_curve_combined","umaban_curve_lcurves_combined",
+            "umaban_curve_lcurves_condition_combined","umaban_curve_lcurves_condition_type_combined",
+            "umaban_curve_lcurves_condition_type_corner_combined" 
+        ]
+        rate_hit_cols_3 = [
+            "waku_hit_rate_pre","waku_return_rate_pre"
+        ]
+        # for col in combined_columns_3:
+        #     for r in rate_hit_cols_3:
+        #         zero_up = merged_df_all[col] > 0
+        #         zero_down = merged_df_all[col] <= 0
+        #         merged_df_all.loc[zero_up,col] *= (merged_df_all.loc[zero_up,r])
+        #         merged_df_all.loc[zero_down,col] /= (merged_df_all.loc[zero_down,r])
+
+
+
+
+
+
+        for col in combined_columns_2:
+            col_vals = merged_df_all[col].values  # ベクトル参照（高速）
+            
+            for h in rate_hit_cols:
+                h_vals = merged_df_all[h].values
+                scale = h_vals
+
+                merged_df_all[col] = np.where(
+                    col_vals > 0,
+                    col_vals * scale,
+                    col_vals / scale,
+                )
+                col_vals = merged_df_all[col].values  # 更新後の値で次に進む
+
+            for r in rate_ret_cols:
+                r_vals = merged_df_all[r].values
+                scale = r_vals
+
+                merged_df_all[col] = np.where(
+                    col_vals > 0,
+                    col_vals * scale,
+                    col_vals / scale,
+                )
+                col_vals = merged_df_all[col].values  # 更新後の値で次に進む
+
+        for col in combined_columns_3:
+            col_vals = merged_df_all[col].values
+            
+            for r in rate_hit_cols_3:
+                r_vals = merged_df_all[r].values
+                scale = r_vals
+
+                merged_df_all[col] = np.where(
+                    col_vals > 0,
+                    col_vals * scale,
+                    col_vals / scale
+                )
+                col_vals = merged_df_all[col].values
+
+
+
+
+        # すべて 1 回実⾏が基本
+        merged_df_all["repeat"] = 0
+
+        # ── race_type==1 ─────────────────────────────────────────────
+        mask_r1_d1 = (merged_df_all["race_type"] == 1) \
+                & (merged_df_all["course_len"] <= 1500) \
+                & (merged_df_all["place"].isin([1, 2, 5,9]))
+        merged_df_all.loc[mask_r1_d1, "repeat"] = 22   # 例: 2 回
+
+
+        # ── race_type==1 ─────────────────────────────────────────────
+        mask_r1_d4 = (merged_df_all["race_type"] == 1) \
+                & (merged_df_all["course_len"] <= 1500) \
+                & (merged_df_all["place"] == 8)
+        merged_df_all.loc[mask_r1_d4, "repeat"] = 10        # 例: 2 回
+
+
+        # ── race_type==1 ─────────────────────────────────────────────
+        mask_r1_d5 = (merged_df_all["race_type"] == 1) \
+                & (merged_df_all["course_len"] <= 1500) \
+                & (merged_df_all["place"] == 3)
+        merged_df_all.loc[mask_r1_d5, "repeat"] = 26
+
+
+
+
+
+
+        mask_r1_d2 = (merged_df_all["race_type"] == 1) \
+                & (merged_df_all["course_len"].between(1500, 1900, inclusive="neither")) \
+                & (merged_df_all["place"].isin([4 ,6,8]))
+        merged_df_all.loc[mask_r1_d2, "repeat"] = 4
+
+        mask_r1_d3 = (merged_df_all["race_type"] == 1) \
+                & (merged_df_all["course_len"].between(1500, 1900, inclusive="neither")) \
+                & (merged_df_all["place"] == 3)
+        merged_df_all.loc[mask_r1_d3, "repeat"] = 8 
+
+
+
+
+
+
+        # ── race_type==1 ─────────────────────────────────────────────
+        mask_r1_d6 = (merged_df_all["race_type"] == 1) \
+                & (merged_df_all["course_len"] >= 1900) \
+                & (merged_df_all["place"] == 3)
+        merged_df_all.loc[mask_r1_d6, "repeat"] = 12
+
+
+        mask_r1_d3 = (merged_df_all["race_type"] == 1) \
+                & (merged_df_all["course_len"] >= 1900) \
+                & (merged_df_all["place"] == 5)
+        merged_df_all.loc[mask_r1_d3, "repeat"] = 2      # ← 3 回にしてみた例
+
+
+
+
+
+
+        # ── race_type==0 ─────────────────────────────────────────────
+        mask_r0_d1 = (merged_df_all["race_type"] == 0) \
+                & (merged_df_all["course_len"] <= 1500) \
+                & (merged_df_all["place"].isin([1, 2, 4, 6,  10]))
+        merged_df_all.loc[mask_r0_d1, "repeat"] = 12
+
+        mask_r0_d4 = (merged_df_all["race_type"] == 0) \
+                & (merged_df_all["course_len"] <= 1500) \
+                & (merged_df_all["place"]== 7)
+        merged_df_all.loc[mask_r0_d4, "repeat"] = 8
+
+
+        mask_r0_d2 = (merged_df_all["race_type"] == 0) \
+                & (merged_df_all["course_len"].between(1500, 1900, inclusive="neither")) \
+                & (merged_df_all["place"].isin([2, 4, 5, 7, 8]))
+        merged_df_all.loc[mask_r0_d2, "repeat"] = 12
+
+        mask_r0_d3 = (merged_df_all["race_type"] == 0) \
+                & (merged_df_all["course_len"] >= 1900) \
+                & (merged_df_all["place"].isin([  6, 8]))
+        merged_df_all.loc[mask_r0_d3, "repeat"] = 12
+
+        mask_r0_d5 = (merged_df_all["race_type"] == 0) \
+                & (merged_df_all["course_len"] >= 1900) \
+                & (merged_df_all["place"].isin([1,4,10]))
+        merged_df_all.loc[mask_r0_d5, "repeat"] = 16
+
+
+
+
+        max_iter = int(merged_df_all["repeat"].max())   # いちばん多い回数だけ回す
+
+        # ---------- combined_columns_2 --------------------------------
+        for col in combined_columns_2:
+            for i in range(max_iter):
+                row_mask = merged_df_all["repeat"] > i  # まだ「残り」がある行だけ対象
+
+                if not row_mask.any():      # この周で対象なしならスキップ
+                    continue
+
+                col_vals = merged_df_all.loc[row_mask, col].values
+
+                # --- hit 系 --------------------------------------------------------
+                for h in rate_hit_cols:
+                    h_vals = merged_df_all.loc[row_mask, h].values
+                    scale  = (h_vals -1)*30
+                    up_mask   = col_vals > 0
+                    down_mask = ~up_mask
+
+                    col_vals[up_mask]   += scale[up_mask] 
+                    col_vals[down_mask] += scale[down_mask] 
+
+                # --- return 系 -----------------------------------------------------
+                for r in rate_ret_cols:
+                    r_vals = merged_df_all.loc[row_mask, r].values
+                    scale  = (r_vals -1)*30
+                    up_mask   = col_vals > 0
+                    down_mask = ~up_mask
+
+                    col_vals[up_mask]   += scale[up_mask] 
+                    col_vals[down_mask] += scale[down_mask] 
+
+                # 更新
+                merged_df_all.loc[row_mask, col] = col_vals
+
+        # ---------- combined_columns_3（例: repeat=1 でも 2 でも 3 でも同じ書き⽅） -----
+        for col in combined_columns_3:
+            for i in range(max_iter):
+                row_mask = merged_df_all["repeat"] > i
+                if not row_mask.any():
+                    continue
+
+                col_vals = merged_df_all.loc[row_mask, col].values
+                for r in rate_hit_cols_3:
+                    r_vals = merged_df_all.loc[row_mask, r].values
+                    scale  = (r_vals -1)*30
+                    up_mask   = col_vals > 0
+                    down_mask = ~up_mask
+
+                    col_vals[up_mask]   += scale[up_mask]
+                    col_vals[down_mask] += scale[down_mask]
+
+                merged_df_all.loc[row_mask, col] = col_vals
+
+
+
+
+
+
+        merged_df_all = merged_df_all.copy()
+        # 対象列リスト
+        tenkai_cols = [
+            "tenkai_combined_2", "tenkai_place_combined", "tenkai_place_start_slope_combined",
+            "tenkai_place_start_slope_range_combined", "tenkai_place_start_slope_range_grade_combined",
+            "tenkai_place_start_slope_range_grade_lcurve_slope_combined",
+            "tenkai_place_start_slope_range_grade_lcurve_slope_type_combined",
+            "tenkai_place_start_slope_range_grade_lcurve_slope_type_curve_combined",
+            "tenkai_place_start_slope_range_grade_lcurve_slope_type_curve_goal_range_combined",
+            "tenkai_place_start_slope_range_grade_lcurve_slope_type_curve_goal_range_slope_combined",
+            "tenkai_place_start_slope_range_grade_lcurve_slope_type_curve_goal_range_slope_first_curve_combined",
+            "tenkai_place_start_slope_range_grade_lcurve_slope_type_curve_goal_range_slope_first_curve_front_combined",
+            "tenkai_place_start_slope_range_grade_lcurve_slope_type_curve_goal_range_slope_first_curve_front_len_combined",
+            "tenkai_place_start_slope_range_grade_lcurve_slope_type_curve_goal_range_slope_first_curve_front_len_umaban_combined",
+        ]
+
+        # 条件
+        cond_add  = (merged_df_all["course_len_diff_mean_1races"] <= -100) & (merged_df_all["escape_1races"] == 1)
+        cond_sub  = (merged_df_all["course_len_diff_mean_1races"] >= 100)  & (merged_df_all["escape_1races"] == 1)
+
+        # +20
+        merged_df_all.loc[cond_add, tenkai_cols] += 20
+
+        # -5
+        merged_df_all.loc[cond_sub, tenkai_cols] -= 3
+
+        # # どちらの条件にも当てはまらない行 → 0 にする
+        # # merged_df_all.loc[~(cond_add | cond_sub), tenkai_cols] += 0
+
+        merged_df_all = merged_df_all.copy()
+
+        
 
 
         # _combined系の列をリストで指定
@@ -10988,15 +12814,19 @@ class FeatureCreator:
             "rush_type_final","rush_type_Advantages","rush_advantages_cross","rush_advantages_cross_plus","tenkai_combined_2","tenkai_place_combined","tenkai_place_start_slope_combined","tenkai_place_start_slope_range_combined","tenkai_place_start_slope_range_grade_combined","tenkai_place_start_slope_range_grade_lcurve_slope_combined","tenkai_place_start_slope_range_grade_lcurve_slope_type_combined",
             "tenkai_place_start_slope_range_grade_lcurve_slope_type_curve_combined","tenkai_place_start_slope_range_grade_lcurve_slope_type_curve_goal_range_combined","tenkai_place_start_slope_range_grade_lcurve_slope_type_curve_goal_range_slope_combined","tenkai_place_start_slope_range_grade_lcurve_slope_type_curve_goal_range_slope_first_curve_combined",
             "tenkai_place_start_slope_range_grade_lcurve_slope_type_curve_goal_range_slope_first_curve_front_combined","tenkai_place_start_slope_range_grade_lcurve_slope_type_curve_goal_range_slope_first_curve_front_len_combined","tenkai_place_start_slope_range_grade_lcurve_slope_type_curve_goal_range_slope_first_curve_front_len_umaban_combined","umaban_combined",
-            "umaban_curve_combined","umaban_curve_lcurves_combined","umaban_curve_lcurves_condition_combined","umaban_curve_lcurves_condition_type_combined","umaban_curve_lcurves_condition_type_corner_combined"
-        ]
-        # 各_combined列を標準化
-        for col in combined_columns:
-            merged_df_all[f"{col}_standardized"] = (
-                merged_df_all[col] - merged_df_all.groupby("race_id")[col].transform("mean")
-            ) / merged_df_all.groupby("race_id")[col].transform("std")
-        
+            "umaban_curve_combined","umaban_curve_lcurves_combined","umaban_curve_lcurves_condition_combined","umaban_curve_lcurves_condition_type_combined","umaban_curve_lcurves_condition_type_corner_combined",
+            'waku_hit_rate','waku_return_rate','position_hit_rate','position_return_rate','course_len_diff_hit_rate','course_len_diff_return_rate','class_diff_hit_rate','class_diff_return_rate','age_hit_rate','age_return_rate','sex_hit_rate','sex_return_rate'
 
+        ]
+        grouped = merged_df_all.groupby("race_id")
+
+        for col in combined_columns:
+            mean_col = grouped[col].transform("mean")
+            std_col = grouped[col].transform("std")
+            merged_df_all[f"{col}_standardized"] = (merged_df_all[col] - mean_col) / std_col
+            merged_df_all = merged_df_all.copy()  # 断片化抑制のため毎回コピー
+            
+        
         merged_df_all= merged_df_all.merge(
             self.agg_rank_diff[['race_id',
             'date',
@@ -11065,7 +12895,7 @@ class FeatureCreator:
 
 
             ]],
-            on=["race_id","date","horse_id"],
+            on=["race_id",'date',"horse_id"],
         )
 
 
@@ -11140,13 +12970,13 @@ class FeatureCreator:
         new_columns = []
 
         # 計算する変数
-        t1 = merged_df_all["tenkai_combined_2"] / 40
-        t2 = merged_df_all["tenkai_place_start_slope_range_grade_lcurve_slope_type_curve_goal_range_slope_first_curve_front_len_umaban_combined"] / 100
-        t3 = merged_df_all["umaban_curve_lcurves_condition_type_corner_combined"] / 20
+        t1 = merged_df_all["tenkai_combined_2"] / 30
+        t2 = merged_df_all["tenkai_place_start_slope_range_grade_lcurve_slope_type_curve_goal_range_slope_first_curve_front_len_umaban_combined"] / 80
+        t3 = merged_df_all["umaban_curve_lcurves_condition_type_corner_combined"] / 15
 
         m1 = (merged_df_all["tenkai_combined_2"] + 1200) / 1200
         m2 = (merged_df_all["tenkai_place_start_slope_range_grade_lcurve_slope_type_curve_goal_range_slope_first_curve_front_len_umaban_combined"] + 3000) / 3000
-        m3 = (merged_df_all["umaban_curve_lcurves_condition_type_corner_combined"] + 600) / 600
+        m3 = (merged_df_all["umaban_curve_lcurves_condition_type_corner_combined"]  + 400) / 400
 
         # 100種類の列との組み合わせ
         for col in columns:
@@ -11972,7 +13802,6 @@ class FeatureCreator:
         
         
         def determine_dominant_position(row):
-            
             # 5racesの中から計算
             if not row[position_columns_5].isnull().all():
                 max_column = row[position_columns_5].idxmax()
@@ -12222,7 +14051,7 @@ class FeatureCreator:
         ).astype(float)
 
         baselog_1["course_len_diff_grade_slope_range_pace_12curve_front_R_height_groundstate_place"] = (
-            baselog_1["course_len_diff_grade_slope_range_pace_12curve_front_R_height_groundstate"] * ((baselog_1["place_season_condition_type_categori_processed"]+3)/3)
+            baselog_1["course_len_diff_grade_slope_range_pace_12curve_front_R_height_groundstate"] * ((baselog_1["place_season_condition_type_categori_processed"]+2)/2)
             )
 
         #最大0.05くらい
@@ -12589,6 +14418,1824 @@ class FeatureCreator:
 
 
 
+
+        
+    def agg_horse_per_course_type_hosei(
+        self, n_races: list[int] = [1,  3, 5, 10]
+    ) -> None:
+        """
+        直近nレースの馬の過去成績を距離・race_typeごとに集計し、相対値に変換する関数。
+        """
+        baselog = (
+            self.population.merge(
+                self.race_info[["race_id", "course_len", "race_type"]], on="race_id"
+            )
+            .merge(
+                self.horse_results,
+                on=["horse_id", "course_len", "race_type"],
+                suffixes=("", "_horse"),
+            )
+            .query("date_horse < date")
+            .sort_values("date_horse", ascending=False)
+        )
+
+        
+
+
+
+
+
+        # waku_hit_rate
+        baselog['waku_hit_rate'] = np.select(
+            [
+                baselog['wakuban'] == 1,
+                baselog['wakuban'] == 2,
+                baselog['wakuban'] == 3,
+                baselog['wakuban'] == 4,
+                baselog['wakuban'] == 5,
+                baselog['wakuban'] == 6,
+                baselog['wakuban'] == 7,
+                baselog['wakuban'] == 8
+            ],
+            [
+                baselog['waku_1'],
+                baselog['waku_2'],
+                baselog['waku_3'],
+                baselog['waku_4'],
+                baselog['waku_5'],
+                baselog['waku_6'],
+                baselog['waku_7'],
+                baselog['waku_8']
+            ],
+            default=np.nan
+        )
+
+        # waku_return_rate
+        baselog['waku_return_rate'] = np.select(
+            [
+                baselog['wakuban'] == 1,
+                baselog['wakuban'] == 2,
+                baselog['wakuban'] == 3,
+                baselog['wakuban'] == 4,
+                baselog['wakuban'] == 5,
+                baselog['wakuban'] == 6,
+                baselog['wakuban'] == 7,
+                baselog['wakuban'] == 8
+            ],
+            [
+                baselog['waku_1_EX'],
+                baselog['waku_2_EX'],
+                baselog['waku_3_EX'],
+                baselog['waku_4_EX'],
+                baselog['waku_5_EX'],
+                baselog['waku_6_EX'],
+                baselog['waku_7_EX'],
+                baselog['waku_8_EX']
+            ],
+            default=np.nan
+        )
+
+        # position_hit_rate
+        baselog['position_hit_rate'] = np.select(
+            [
+                baselog['race_position'] == 1,
+                baselog['race_position'] == 2,
+                baselog['race_position'] == 3,
+                baselog['race_position'] == 4
+            ],
+            [
+                baselog['position_1'],
+                baselog['position_2'],
+                baselog['position_3'],
+                baselog['position_4']
+            ],
+            default=np.nan
+        )
+
+        # position_return_rate
+        baselog['position_return_rate'] = np.select(
+            [
+                baselog['race_position'] == 1,
+                baselog['race_position'] == 2,
+                baselog['race_position'] == 3,
+                baselog['race_position'] == 4
+            ],
+            [
+                baselog['position_1_EX'],
+                baselog['position_2_EX'],
+                baselog['position_3_EX'],
+                baselog['position_4_EX']
+            ],
+            default=np.nan
+        )
+
+        # 40のとき、0.3くらの差
+        baselog['waku_hit_rate_pre'] = (baselog['waku_hit_rate'] - 25)/50
+        baselog['position_hit_rate_pre'] = (baselog['position_hit_rate'] - 25)/50
+
+
+        baselog.loc[
+            (baselog["race_type"] == 0) &(baselog["start_point"] == 2) & (baselog["ground_state"] != 0),
+            "start_point"
+        ] = -3
+
+        baselog.loc[:, "place_season_condition_type_categori_processed"] = (
+            baselog["place_season_condition_type_categori"]
+            .replace({5: -0.4, 4: -0.2, 3: -0.1, 2: 0.15,1: 0.3, -1: -0.18, -2: 0, -3: 0.18,-4:0.3,-10000:0})
+        ).astype(float)
+
+        baselog["rank_diff_pace_diff"] = baselog["rank_diff"]+ 0.8
+        
+        
+
+
+
+
+        # 条件リスト
+        conditions_1 = [
+            (baselog["pace_diff"] >= 1),  # pace_diff が 1 以上
+            (baselog["pace_diff"] >= 1.8),
+            (baselog["pace_diff"] >= 2.5),
+            (baselog["place_season_condition_type_categori_processed"] <= -0.1),  # place_season_condition_type_categori_processed が -0.1 以下
+            (baselog["place_season_condition_type_categori_processed"] <= -0.4),
+            (baselog["course_len"] >= 2400),  # course_len が 2400 以上
+            (baselog["course_len"] >= 2800),  # course_len が 2400 以上
+            (baselog["course_len"] >= 3000),  # course_len が 2400 以上
+            (baselog["course_len"] >= 3200),
+            (baselog["course_len"] >= 3400),
+            (baselog["ground_state"] != 0),  # ground_state が 0 以外
+            (baselog["ground_state"] == 3),
+            (baselog["ground_state"] == 1),
+            (baselog["rank_diff"] >= 11),
+            (baselog["rank_diff"] >= 10),
+            (baselog["rank_diff"] >= 9),
+            (baselog["rank_diff"] >= 8),
+            (baselog["rank_diff"] >= 7.5),
+            (baselog["rank_diff"] >= 7),
+            (baselog["rank_diff"] >= 6.5),
+            (baselog["rank_diff"] >= 6),
+            (baselog["rank_diff"] >= 5),
+            (baselog["rank_diff"] >= 4),
+            (baselog["rank_diff"] >= 3),
+            (baselog["rank"] >= 7),
+            (baselog["rank"] >= 11),
+        ]
+
+        conditions_2 = [
+            (baselog["pace_diff"] <= -1),  # pace_diff が -1 以下
+            (baselog["pace_diff"] <= -1.8),
+            (baselog["pace_diff"] <= -2.5),
+            (baselog["rank_diff"] >= 0.1),  # rank_diff が 0.1 以上
+            (baselog["course_len"] <= 1800),  # course_len が 1600 以下
+            (baselog["course_len"] <= 1600),  # course_len が 1600 以下
+            (baselog["course_len"] <= 1400),  # course_len が 1600 以下
+            # (baselog["course_len"] <= 1200),
+        ]
+
+        # それぞれの条件に該当する場合の計算
+        for cond in conditions_1:
+            baselog.loc[cond, "rank_diff_pace_diff"] = baselog.loc[cond, "rank_diff_pace_diff"] * 0.9 + 0.2
+
+        for cond in conditions_2:
+            baselog.loc[cond, "rank_diff_pace_diff"] = baselog.loc[cond, "rank_diff_pace_diff"] * 1.1 - 0.2
+
+
+
+
+        baselog["goal_range_processed_1"] = (((baselog["goal_range"])-360))
+        baselog["goal_range_processed_1"] = baselog["goal_range_processed_1"].apply(
+            lambda x: x*2 if x < 0 else x*0.5
+        )
+
+        """
+        ハイスロー、脚質修正
+        コーナー順位が前（先行）で、ハイペースの場合、rank_diffをさらに-0.5する（不利条件）
+        前でローペースの場合、rank_diffを+0.2する(ペースによる)有利
+        後ろで、ローペースの場合、rank_diffを-0.1する（作っておけばrankdiffで使える）不利
+        後ろでハイの場合、rank_diffを+0.3する(ハイスローの分を相殺する)有利
+        #+だとハイペース、ーだとスローペース
+        """
+        #着差がつかない,不利を-側へ
+        # 条件ごとに処理を適用
+        baselog["rank_diff_pace_diff_slope_range_pace"] = np.where(
+            ((baselog['race_position'] == 1)),
+            baselog["rank_diff_pace_diff"] - (baselog["pace_diff"] / 8) + baselog['position_hit_rate_pre'] ,
+            np.where(
+                    ((baselog['race_position'] == 2)),
+                    baselog["rank_diff_pace_diff"] - (baselog["pace_diff"] / 10)+ baselog['position_hit_rate_pre']/1.3,
+                
+                    np.where(
+                        (baselog['race_position'] == 3),
+                        baselog["rank_diff_pace_diff"] - ((baselog["pace_diff"] / 10) * -1)+ baselog['position_hit_rate_pre'],
+                        
+                        np.where(
+                            ((baselog['race_position'] == 4)),
+                            baselog["rank_diff_pace_diff"] - ((baselog["pace_diff"] / 20) * -1)+ baselog['position_hit_rate_pre']/1.7,
+                            baselog["rank_diff_pace_diff"]  # どの条件にも当てはまらない場合は元の値を保持
+                        )
+                    
+                )
+            )
+
+        )
+        
+
+        baselog["rank_diff_pace_diff_slope_range_groundstate"] = baselog["rank_diff_pace_diff_slope_range_pace"]
+
+        # 1600で正規化,-0.5 - 1
+        baselog["course_len_processed"] = (baselog["course_len"] / 1700)-1
+
+        # ,-1.5 - 4
+        baselog["course_len_processed"] = baselog["course_len_processed"].apply(
+            lambda x: x*3 if x <= 0 else x*4
+        )
+        baselog["course_len_processed_rank_diff"] = ((baselog["course_len_processed"] + 10)/10)
+
+
+
+
+
+        baselog["start_range_processed_1"] = (((baselog["start_range"])-360))
+        baselog["start_range_processed_1"] = baselog["start_range_processed_1"].apply(
+            lambda x: x if x < 0 else x*1
+        )
+
+
+        # -4.5 を行う
+        baselog["curve_processed"] = baselog["curve"] - 4.5
+        # +の場合は数値を8倍する
+        baselog["curve_processed"] = baselog["curve_processed"].apply(
+            lambda x: x * 8 if x > 0 else x
+        )
+
+
+        # place_int の変換
+        baselog['place_int'] = pd.to_numeric(baselog['place'], errors='coerce').astype('Int64')
+
+        # 1. season_turf_condition の補正
+        adjusted = baselog['season_turf_condition'].copy()
+        adjusted = np.where(adjusted == 1, -8, adjusted)
+        adjusted = np.where(adjusted == 2, -4   , adjusted)
+
+        # 2. 条件分岐による処理
+        cond_front = baselog['place_int'].isin([1, 2, 3, 4, 10])
+        cond_else = ~cond_front
+
+        # 結果列の初期化
+        result_condition = np.zeros(len(baselog))
+
+        # 差し有利
+        result_condition = np.where(cond_front, (adjusted * 1/2)+2, result_condition)
+
+        # その他
+        other_adjusted = adjusted - 9
+        result_condition = np.where(cond_else, other_adjusted * -1/2, result_condition)
+
+        # 3. 結果を格納
+        baselog['tactics_bias'] = result_condition
+
+
+        # ペースに関係ある要素は弱体化
+        baselog["rank_diff_pace_diff_slope_range_groundstate_position"] = np.where(
+            ((baselog['race_position'] == 1) | (baselog['race_position'] == 2)),
+            baselog["rank_diff_pace_diff_slope_range_groundstate"] 
+            / ((2000 + baselog["start_range_processed_1"]) / 2000) 
+            * ((200 + baselog["start_slope"]) / 200) 
+            * ((2000 + baselog["curve_processed"]) / 2000) 
+            / ((baselog["goal_range_processed_1"] + 2000) / 2000) 
+            / ((baselog["goal_slope"] + 100) / 100) 
+            / ((baselog["place_season_condition_type_categori_processed"] + 7) / 7) 
+            / ((baselog['tactics_bias'] + 70)/70)
+            # / ((baselog["race_type"] + 79) / 80)
+            / ((baselog["course_len_processed"] + 1000)/1000),  # ここでカンマ
+
+            np.where(
+                ((baselog['race_position'] == 3) | (baselog['race_position'] == 4)),
+                baselog["rank_diff_pace_diff_slope_range_groundstate"] 
+                * ((2000 + baselog["start_range_processed_1"]) / 2000) 
+                / ((200 + baselog["start_slope"]) / 200) 
+                / ((2000 + baselog["curve_processed"]) / 2000) 
+                * ((baselog["goal_range_processed_1"]+ 2000) / 2000) 
+                * ((baselog["goal_slope"] + 100) / 100) 
+                * ((baselog["place_season_condition_type_categori_processed"] + 7) / 7) 
+                * ((baselog['tactics_bias'] + 70)/70)
+                # * ((baselog["race_type"] +79) / 80)
+                * ((baselog["course_len_processed"] + 1000)/1000), 
+
+                baselog["rank_diff_pace_diff_slope_range_groundstate"]
+            )
+        )
+
+
+
+
+
+        #-2-2,内がマイナス
+        baselog["umaban_processed"] = baselog["umaban"].apply(
+            lambda x: ((x*-1)) if x < 4 else ((x-6)/3)-1
+        ).astype(float)
+        #0-0.005
+
+        baselog["umaban_judge"] = (baselog["umaban"].astype(float)/baselog["n_horses"].astype(float))-0.55
+
+        #1（奇数）または 0（偶数）
+        baselog.loc[:, "umaban_odd_processed"] = (
+            (baselog["umaban_odd"]-1)
+        ).astype(float)
+
+        baselog["course_len_processed_2"] = ((baselog["course_len_processed"] + 3)/3)
+
+
+        baselog["umaban_processed_2"] = baselog["umaban_processed"] / baselog["course_len_processed_2"]
+        baselog["umaban_odd_processed_2"] = baselog["umaban_odd_processed"] / baselog["course_len_processed_2"]
+
+
+
+        baselog["first_corner"] = np.where(
+            (baselog["curve_amount"] == 2) | (baselog["curve_amount"] == 6),
+            baselog["curve_R34"],
+            np.where(
+                (baselog["curve_amount"] == 4) | (baselog["curve_amount"] == 8),
+                baselog["curve_R12"],
+                0  # それ以外のとき 0
+            )
+        )
+
+        baselog["umaban_processed_abs2"] = baselog["umaban_processed_2"].abs()
+
+
+
+
+        # 1. 補正処理
+        adjusted = baselog["season_turf_condition"].copy()
+        adjusted = np.where(adjusted == 1, -12, adjusted)
+        adjusted = np.where(adjusted == 2, -5, adjusted)
+
+        # 2. place_int 別に処理
+        result_waku = np.zeros(len(baselog))
+
+        # 1, 2, 10
+        cond1 = baselog["place_int"].isin([1, 8, 9])
+        x1 = adjusted - 5
+        x1 = np.where(x1 >= 0, x1 /3, x1)
+        x1 = np.where(x1 <= 0, x1 /2, x1)
+        result_waku = np.where(cond1, x1, result_waku)
+
+        # 3
+        cond2 = baselog["place_int"] == 3
+        x2 = adjusted - 5
+        x2 = np.where(x2 >= 0, x2 * 1, x2)
+        x2 = np.where(x2 <= 0, x2 * 2, x2)
+        result_waku = np.where(cond2, x2, result_waku)
+
+        # 7.10.4
+        cond3 = baselog["place_int"].isin([7, 10])
+        x3 = adjusted - 5
+        x3 = np.where(x3 >= 0, x3 * 1, x3)
+        x3 = np.where(x3 <= 0, x3 * 1.2, x3)
+        result_waku = np.where(cond3, x3, result_waku)
+
+        # 7.10.4
+        cond7 =baselog["place_int"] == 4
+        x7 = adjusted - 5
+        x7 = np.where(x7 >= 0, x7 * 3, x7)
+        x7 = np.where(x7 <= 0, x7 * 1.2, x7)
+        result_waku = np.where(cond7, x7, result_waku)
+
+        # 2
+        cond4 = baselog["place_int"] == 2
+        x4 = adjusted - 5
+        x4 = np.where(x4 >= 0, x4 * 1, x4)
+        x4 = np.where(x4 <= 0, x4 * 1/2, x4)
+        result_waku = np.where(cond4, x4, result_waku)
+
+
+
+        # 5, 6
+        cond5 = baselog["place_int"] == 5
+        x5 = -adjusted - 7
+        result_waku = np.where(cond5, x5 / 2.5, result_waku)
+
+        # 5, 6
+        cond6 = baselog["place_int"] == 6
+        x6 = -adjusted - 6
+        result_waku = np.where(cond6, x6/ 1.5, result_waku)
+
+        # 3. 結果を格納
+        baselog["waku_condition"] = result_waku
+
+
+
+        # ターフ、不良馬場は内側有利、逃げ不利    
+        baselog["turf_short"] = np.where(
+            (baselog["race_type"] == 1) & (baselog["course_len"] < 1200),
+            2,
+            np.where(
+                (baselog["race_type"] == 1) & (1200 <= baselog["course_len"]) & (baselog["course_len"] < 1400),
+                1,
+                np.where(
+                    (baselog["race_type"] == 1) & (1400 <= baselog["course_len"]) & (baselog["course_len"] < 1600),
+                    0,
+                    0
+                )
+            )
+        )
+        baselog["1waku"] = np.where(
+            baselog["umaban"] == 1,
+            -7,
+            np.where(
+                baselog["umaban"] == 2,
+                0,
+                0  # どちらにも合致しない場合
+            )
+        )
+        baselog["nakayama_waku"] = np.where(
+            (baselog["race_type"] == 0) & (baselog["ground_state"] == 2)& (baselog["weather"].isin([0, 1, 2])),
+            5,
+            0  # どちらにも合致しない場合
+            
+        )
+        # ダート、不良馬場は内側不利、逃げ不利    
+        baselog["dirt_uti_ame"] = np.where(
+            (baselog["race_type"] == 0) & (baselog["ground_state"] == 3),
+            2,
+            0  # 条件に合致しないとき
+        )
+
+
+        # ターフ、不良馬場は内側有利、逃げ不利    
+        baselog["turf_uti_ame"] = np.where(
+            (baselog["race_type"] == 1) & (baselog["ground_state"] == 0),
+            0,
+            np.where(
+                (baselog["race_type"] == 1) & (baselog["ground_state"] == 2),
+                -3,
+                np.where(
+                    (baselog["race_type"] == 1) & (baselog["ground_state"] == 1),
+                    -9,
+                    np.where(
+                        (baselog["race_type"] == 1) & (baselog["ground_state"] == 3),
+                        -12,
+                        0
+                    )
+                )
+            )
+        )
+        # start_range_processed_1 の計算
+        baselog["start_range_processed_umaban"] = ((baselog["start_range"] - 500) / 40).apply(lambda x: x * 7 if x < 0 else x * 2)
+
+
+
+
+
+        # 内が小さい,最大50くらいになってしまう
+        baselog["rank_diff_pace_diff_slope_range_groundstate_position_umaban"] = np.where(
+            (baselog["umaban_judge"] < 0),
+            baselog["rank_diff_pace_diff_slope_range_groundstate_position"] /
+            ((
+                ((baselog["umaban_processed_abs2"]) # 少ないほうがtimeが増える-4.5 から3
+                * (
+                    baselog["umaban_odd_processed_2"]# 奇数不利なので分母を増やして総合を減らす 1
+                        +  (baselog["start_point"] - 1)*10# 外枠が有利なので分母を増やして総合を減らす 1
+                        +  (baselog["curve_processed"]*1)# ラストカーブきついほど数値が減る6
+                        +  (baselog["last_curve_slope"]*1)# ラストカーブくだりほど数値が減る4
+                        +  ((baselog["waku_condition"])*2)# 馬場状態が良いほど数値が減る 7-7
+                        # +  (baselog["race_type"]+1)*-6# 芝ほど数値が減る 2
+                        # -  ((baselog["first_corner"] - 100)/50)# 最初のコーナーがでかいほど数値が減る1
+                        +(baselog["dirt_uti_ame"])*2
+                        # +baselog["start_range_processed_umaban"]
+                        # -(baselog["curve_amount"]*2)
+                        # +baselog["turf_short"]
+                        +baselog["nakayama_waku"]
+                        +baselog["turf_uti_ame"]*2
+                ) 
+            )+300) / 300)
+            ,
+            
+
+            np.where(
+                (baselog["umaban_judge"] >= 0),
+                baselog["rank_diff_pace_diff_slope_range_groundstate_position"] /
+                ((
+                    ((baselog["umaban_processed_abs2"]) # 少ないほうがtimeが増える-4.5 から3
+                    * (
+                        baselog["umaban_odd_processed_2"]# 奇数不利なので分母を増やして総合を減らす 1
+                        -  (baselog["start_point"] - 1)*10# 外枠が有利なので分母を増やして総合を減らす 1
+                        -  (baselog["curve_processed"]*1)# ラストカーブきついほど数値が減る4
+                        -  (baselog["last_curve_slope"]*1)# ラストカーブくだりほど数値が減る2
+                        -  ((baselog["waku_condition"])*2)# 馬場状態が良いほど数値が減る 7-7
+                        # -  (baselog["race_type"]+1)*-6# 芝ほど数値が減る 2
+                        # +  ((baselog["first_corner"] - 100)/50)# 最初のコーナーがでかいほど数値が減る1
+                        - (baselog["dirt_uti_ame"])*2
+                        # -baselog["start_range_processed_umaban"]
+                        # +(baselog["curve_amount"]*2)
+                        # -baselog["turf_short"]
+                        -baselog["nakayama_waku"]
+                        -baselog["turf_uti_ame"]*2
+                    ) 
+                ) +300) / 300),
+
+                baselog["rank_diff_pace_diff_slope_range_groundstate_position"]
+            )
+        )
+        baselog["rank_diff_pace_diff_slope_range_groundstate_position_umaban"] = baselog["rank_diff_pace_diff_slope_range_groundstate_position_umaban"] + baselog['waku_hit_rate_pre']
+
+
+
+
+
+
+
+
+        baselog["nobori"]= np.where(
+            ((baselog['race_position'] == 1)),
+            baselog["nobori"] - (baselog["pace_diff"] / 30),
+            np.where(
+                    ((baselog['race_position'] == 2)),
+                    baselog["nobori"] - (baselog["pace_diff"] / 30),
+                
+                    np.where(
+                        (baselog['race_position'] == 3),
+                        baselog["nobori"] - ((baselog["pace_diff"] / 30)* -1) ,
+                        
+                        np.where(
+                            ((baselog['race_position'] == 4)),
+                            baselog["nobori"] - ((baselog["pace_diff"] / 30)* -1) ,
+                            baselog["nobori"]  # どの条件にも当てはまらない場合は元の値を保持
+                        )
+                    
+                )
+            )
+
+        )
+        baselog["nobori"] = baselog["nobori"]+ (baselog["pace_diff"]/3.5) +  (baselog["place_season_condition_type_categori_processed"]/3) + (baselog["goal_range_processed_1"]/700) - (baselog["goal_slope"]/40)
+
+
+        baselog["rank_diff_hosei"] = baselog["rank_diff_pace_diff_slope_range_groundstate_position_umaban"]
+
+        grouped_df = baselog.groupby(["race_id", "horse_id"])
+        merged_df = self.population.copy()
+        for n_race in tqdm(n_races, desc="agg_horse_per_course_len"):
+            df = (
+                grouped_df.head(n_race)
+                .groupby(["race_id", "horse_id"])[
+                    [
+                        # "rank",
+                        # "rank_per_horse",
+                        # "prize",
+                        # "rank_diff",
+                        "rank_diff_hosei",
+                        # "time_courselen",
+                        "nobori",
+                        # # "corner_1",
+                        # # "corner_2",
+                        # # "corner_3",
+                        # # "corner_4",
+                        # "corner_1_per_horse",
+                        # "corner_2_per_horse",
+                        # "corner_3_per_horse",
+                        # "corner_4_per_horse",                        
+                        # "pace_1",
+                        # "pace_2",                        
+                        # "win",
+                        # "show",
+                    ]
+                ]
+                .agg(["mean", "min"])
+            )
+            df.columns = [
+                "_".join(col) + f"_{n_race}races_per_course_type_hosei" for col in df.columns
+            ]
+            # レースごとの相対値に変換
+            tmp_df = df.groupby(["race_id"])
+            relative_df = ((df - tmp_df.mean()) / tmp_df.std()).add_suffix("_relative")
+            merged_df = merged_df.merge(
+                relative_df, on=["race_id", "horse_id"], how="left"
+            )
+            
+        # merged_df = merged_df.astype({col: 'float32' for col in merged_df.select_dtypes('float64').columns})
+        # merged_df = merged_df.astype({col: 'int32' for col in merged_df.select_dtypes('int64').columns})
+        
+        self.agg_horse_per_course_type_hosei_df = merged_df
+
+
+
+
+
+
+        
+    def agg_horse_per_type_ground_state_hosei(
+        self, n_races: list[int] = [1,  3, 5, 10]
+    ) -> None:
+        """
+        直近nレースの馬の過去成績を距離・race_typeごとに集計し、相対値に変換する関数。
+        """
+        baselog = (
+            self.population.merge(
+                self.race_info[["race_id","race_type", "ground_state"]], on="race_id"
+            )
+            .merge(
+                self.horse_results,
+                on=["horse_id",  "race_type", "ground_state"],
+                suffixes=("", "_horse"),
+            )
+            .query("date_horse < date")
+            .sort_values("date_horse", ascending=False)
+        )
+
+        
+
+
+
+
+
+        # waku_hit_rate
+        baselog['waku_hit_rate'] = np.select(
+            [
+                baselog['wakuban'] == 1,
+                baselog['wakuban'] == 2,
+                baselog['wakuban'] == 3,
+                baselog['wakuban'] == 4,
+                baselog['wakuban'] == 5,
+                baselog['wakuban'] == 6,
+                baselog['wakuban'] == 7,
+                baselog['wakuban'] == 8
+            ],
+            [
+                baselog['waku_1'],
+                baselog['waku_2'],
+                baselog['waku_3'],
+                baselog['waku_4'],
+                baselog['waku_5'],
+                baselog['waku_6'],
+                baselog['waku_7'],
+                baselog['waku_8']
+            ],
+            default=np.nan
+        )
+
+        # waku_return_rate
+        baselog['waku_return_rate'] = np.select(
+            [
+                baselog['wakuban'] == 1,
+                baselog['wakuban'] == 2,
+                baselog['wakuban'] == 3,
+                baselog['wakuban'] == 4,
+                baselog['wakuban'] == 5,
+                baselog['wakuban'] == 6,
+                baselog['wakuban'] == 7,
+                baselog['wakuban'] == 8
+            ],
+            [
+                baselog['waku_1_EX'],
+                baselog['waku_2_EX'],
+                baselog['waku_3_EX'],
+                baselog['waku_4_EX'],
+                baselog['waku_5_EX'],
+                baselog['waku_6_EX'],
+                baselog['waku_7_EX'],
+                baselog['waku_8_EX']
+            ],
+            default=np.nan
+        )
+
+        # position_hit_rate
+        baselog['position_hit_rate'] = np.select(
+            [
+                baselog['race_position'] == 1,
+                baselog['race_position'] == 2,
+                baselog['race_position'] == 3,
+                baselog['race_position'] == 4
+            ],
+            [
+                baselog['position_1'],
+                baselog['position_2'],
+                baselog['position_3'],
+                baselog['position_4']
+            ],
+            default=np.nan
+        )
+
+        # position_return_rate
+        baselog['position_return_rate'] = np.select(
+            [
+                baselog['race_position'] == 1,
+                baselog['race_position'] == 2,
+                baselog['race_position'] == 3,
+                baselog['race_position'] == 4
+            ],
+            [
+                baselog['position_1_EX'],
+                baselog['position_2_EX'],
+                baselog['position_3_EX'],
+                baselog['position_4_EX']
+            ],
+            default=np.nan
+        )
+
+        # 40のとき、0.3くらの差
+        baselog['waku_hit_rate_pre'] = (baselog['waku_hit_rate'] - 25)/50
+        baselog['position_hit_rate_pre'] = (baselog['position_hit_rate'] - 25)/50
+
+
+        baselog.loc[
+            (baselog["race_type"] == 0) &(baselog["start_point"] == 2) & (baselog["ground_state"] != 0),
+            "start_point"
+        ] = -3
+
+        baselog.loc[:, "place_season_condition_type_categori_processed"] = (
+            baselog["place_season_condition_type_categori"]
+            .replace({5: -0.4, 4: -0.2, 3: -0.1, 2: 0.15,1: 0.3, -1: -0.18, -2: 0, -3: 0.18,-4:0.3,-10000:0})
+        ).astype(float)
+
+        baselog["rank_diff_pace_diff"] = baselog["rank_diff"]+ 0.8
+        
+        
+
+
+
+
+        # 条件リスト
+        conditions_1 = [
+            (baselog["pace_diff"] >= 1),  # pace_diff が 1 以上
+            (baselog["pace_diff"] >= 1.8),
+            (baselog["pace_diff"] >= 2.5),
+            (baselog["place_season_condition_type_categori_processed"] <= -0.1),  # place_season_condition_type_categori_processed が -0.1 以下
+            (baselog["place_season_condition_type_categori_processed"] <= -0.4),
+            (baselog["course_len"] >= 2400),  # course_len が 2400 以上
+            (baselog["course_len"] >= 2800),  # course_len が 2400 以上
+            (baselog["course_len"] >= 3000),  # course_len が 2400 以上
+            (baselog["course_len"] >= 3200),
+            (baselog["course_len"] >= 3400),
+            (baselog["ground_state"] != 0),  # ground_state が 0 以外
+            (baselog["ground_state"] == 3),
+            (baselog["ground_state"] == 1),
+            (baselog["rank_diff"] >= 11),
+            (baselog["rank_diff"] >= 10),
+            (baselog["rank_diff"] >= 9),
+            (baselog["rank_diff"] >= 8),
+            (baselog["rank_diff"] >= 7.5),
+            (baselog["rank_diff"] >= 7),
+            (baselog["rank_diff"] >= 6.5),
+            (baselog["rank_diff"] >= 6),
+            (baselog["rank_diff"] >= 5),
+            (baselog["rank_diff"] >= 4),
+            (baselog["rank_diff"] >= 3),
+            (baselog["rank"] >= 7),
+            (baselog["rank"] >= 11),
+        ]
+
+        conditions_2 = [
+            (baselog["pace_diff"] <= -1),  # pace_diff が -1 以下
+            (baselog["pace_diff"] <= -1.8),
+            (baselog["pace_diff"] <= -2.5),
+            (baselog["rank_diff"] >= 0.1),  # rank_diff が 0.1 以上
+            (baselog["course_len"] <= 1800),  # course_len が 1600 以下
+            (baselog["course_len"] <= 1600),  # course_len が 1600 以下
+            (baselog["course_len"] <= 1400),  # course_len が 1600 以下
+            # (baselog["course_len"] <= 1200),
+        ]
+
+        # それぞれの条件に該当する場合の計算
+        for cond in conditions_1:
+            baselog.loc[cond, "rank_diff_pace_diff"] = baselog.loc[cond, "rank_diff_pace_diff"] * 0.9 + 0.2
+
+        for cond in conditions_2:
+            baselog.loc[cond, "rank_diff_pace_diff"] = baselog.loc[cond, "rank_diff_pace_diff"] * 1.1 - 0.2
+
+
+
+
+        baselog["goal_range_processed_1"] = (((baselog["goal_range"])-360))
+        baselog["goal_range_processed_1"] = baselog["goal_range_processed_1"].apply(
+            lambda x: x*2 if x < 0 else x*0.5
+        )
+
+        """
+        ハイスロー、脚質修正
+        コーナー順位が前（先行）で、ハイペースの場合、rank_diffをさらに-0.5する（不利条件）
+        前でローペースの場合、rank_diffを+0.2する(ペースによる)有利
+        後ろで、ローペースの場合、rank_diffを-0.1する（作っておけばrankdiffで使える）不利
+        後ろでハイの場合、rank_diffを+0.3する(ハイスローの分を相殺する)有利
+        #+だとハイペース、ーだとスローペース
+        """
+        #着差がつかない,不利を-側へ
+        # 条件ごとに処理を適用
+        baselog["rank_diff_pace_diff_slope_range_pace"] = np.where(
+            ((baselog['race_position'] == 1)),
+            baselog["rank_diff_pace_diff"] - (baselog["pace_diff"] / 8) + baselog['position_hit_rate_pre'] ,
+            np.where(
+                    ((baselog['race_position'] == 2)),
+                    baselog["rank_diff_pace_diff"] - (baselog["pace_diff"] / 10)+ baselog['position_hit_rate_pre']/1.3,
+                
+                    np.where(
+                        (baselog['race_position'] == 3),
+                        baselog["rank_diff_pace_diff"] - ((baselog["pace_diff"] / 10) * -1)+ baselog['position_hit_rate_pre'],
+                        
+                        np.where(
+                            ((baselog['race_position'] == 4)),
+                            baselog["rank_diff_pace_diff"] - ((baselog["pace_diff"] / 20) * -1)+ baselog['position_hit_rate_pre']/1.7,
+                            baselog["rank_diff_pace_diff"]  # どの条件にも当てはまらない場合は元の値を保持
+                        )
+                    
+                )
+            )
+
+        )
+        
+
+        baselog["rank_diff_pace_diff_slope_range_groundstate"] = baselog["rank_diff_pace_diff_slope_range_pace"]
+
+        # 1600で正規化,-0.5 - 1
+        baselog["course_len_processed"] = (baselog["course_len"] / 1700)-1
+
+        # ,-1.5 - 4
+        baselog["course_len_processed"] = baselog["course_len_processed"].apply(
+            lambda x: x*3 if x <= 0 else x*4
+        )
+        baselog["course_len_processed_rank_diff"] = ((baselog["course_len_processed"] + 10)/10)
+
+
+
+
+
+        baselog["start_range_processed_1"] = (((baselog["start_range"])-360))
+        baselog["start_range_processed_1"] = baselog["start_range_processed_1"].apply(
+            lambda x: x if x < 0 else x*1
+        )
+
+
+        # -4.5 を行う
+        baselog["curve_processed"] = baselog["curve"] - 4.5
+        # +の場合は数値を8倍する
+        baselog["curve_processed"] = baselog["curve_processed"].apply(
+            lambda x: x * 8 if x > 0 else x
+        )
+
+
+        # place_int の変換
+        baselog['place_int'] = pd.to_numeric(baselog['place'], errors='coerce').astype('Int64')
+
+        # 1. season_turf_condition の補正
+        adjusted = baselog['season_turf_condition'].copy()
+        adjusted = np.where(adjusted == 1, -8, adjusted)
+        adjusted = np.where(adjusted == 2, -4   , adjusted)
+
+        # 2. 条件分岐による処理
+        cond_front = baselog['place_int'].isin([1, 2, 3, 4, 10])
+        cond_else = ~cond_front
+
+        # 結果列の初期化
+        result_condition = np.zeros(len(baselog))
+
+        # 差し有利
+        result_condition = np.where(cond_front, (adjusted * 1/2)+2, result_condition)
+
+        # その他
+        other_adjusted = adjusted - 9
+        result_condition = np.where(cond_else, other_adjusted * -1/2, result_condition)
+
+        # 3. 結果を格納
+        baselog['tactics_bias'] = result_condition
+
+
+        # ペースに関係ある要素は弱体化
+        baselog["rank_diff_pace_diff_slope_range_groundstate_position"] = np.where(
+            ((baselog['race_position'] == 1) | (baselog['race_position'] == 2)),
+            baselog["rank_diff_pace_diff_slope_range_groundstate"] 
+            / ((2000 + baselog["start_range_processed_1"]) / 2000) 
+            * ((200 + baselog["start_slope"]) / 200) 
+            * ((2000 + baselog["curve_processed"]) / 2000) 
+            / ((baselog["goal_range_processed_1"] + 2000) / 2000) 
+            / ((baselog["goal_slope"] + 100) / 100) 
+            / ((baselog["place_season_condition_type_categori_processed"] + 7) / 7) 
+            / ((baselog['tactics_bias'] + 70)/70)
+            # / ((baselog["race_type"] + 79) / 80)
+            / ((baselog["course_len_processed"] + 1000)/1000),  # ここでカンマ
+
+            np.where(
+                ((baselog['race_position'] == 3) | (baselog['race_position'] == 4)),
+                baselog["rank_diff_pace_diff_slope_range_groundstate"] 
+                * ((2000 + baselog["start_range_processed_1"]) / 2000) 
+                / ((200 + baselog["start_slope"]) / 200) 
+                / ((2000 + baselog["curve_processed"]) / 2000) 
+                * ((baselog["goal_range_processed_1"]+ 2000) / 2000) 
+                * ((baselog["goal_slope"] + 100) / 100) 
+                * ((baselog["place_season_condition_type_categori_processed"] + 7) / 7) 
+                * ((baselog['tactics_bias'] + 70)/70)
+                # * ((baselog["race_type"] +79) / 80)
+                * ((baselog["course_len_processed"] + 1000)/1000), 
+
+                baselog["rank_diff_pace_diff_slope_range_groundstate"]
+            )
+        )
+
+
+
+
+
+        #-2-2,内がマイナス
+        baselog["umaban_processed"] = baselog["umaban"].apply(
+            lambda x: ((x*-1)) if x < 4 else ((x-6)/3)-1
+        ).astype(float)
+        #0-0.005
+
+        baselog["umaban_judge"] = (baselog["umaban"].astype(float)/baselog["n_horses"].astype(float))-0.55
+
+        #1（奇数）または 0（偶数）
+        baselog.loc[:, "umaban_odd_processed"] = (
+            (baselog["umaban_odd"]-1)
+        ).astype(float)
+
+        baselog["course_len_processed_2"] = ((baselog["course_len_processed"] + 3)/3)
+
+
+        baselog["umaban_processed_2"] = baselog["umaban_processed"] / baselog["course_len_processed_2"]
+        baselog["umaban_odd_processed_2"] = baselog["umaban_odd_processed"] / baselog["course_len_processed_2"]
+
+
+
+        baselog["first_corner"] = np.where(
+            (baselog["curve_amount"] == 2) | (baselog["curve_amount"] == 6),
+            baselog["curve_R34"],
+            np.where(
+                (baselog["curve_amount"] == 4) | (baselog["curve_amount"] == 8),
+                baselog["curve_R12"],
+                0  # それ以外のとき 0
+            )
+        )
+
+        baselog["umaban_processed_abs2"] = baselog["umaban_processed_2"].abs()
+
+
+
+
+        # 1. 補正処理
+        adjusted = baselog["season_turf_condition"].copy()
+        adjusted = np.where(adjusted == 1, -12, adjusted)
+        adjusted = np.where(adjusted == 2, -5, adjusted)
+
+        # 2. place_int 別に処理
+        result_waku = np.zeros(len(baselog))
+
+        # 1, 2, 10
+        cond1 = baselog["place_int"].isin([1, 8, 9])
+        x1 = adjusted - 5
+        x1 = np.where(x1 >= 0, x1 /3, x1)
+        x1 = np.where(x1 <= 0, x1 /2, x1)
+        result_waku = np.where(cond1, x1, result_waku)
+
+        # 3
+        cond2 = baselog["place_int"] == 3
+        x2 = adjusted - 5
+        x2 = np.where(x2 >= 0, x2 * 1, x2)
+        x2 = np.where(x2 <= 0, x2 * 2, x2)
+        result_waku = np.where(cond2, x2, result_waku)
+
+        # 7.10.4
+        cond3 = baselog["place_int"].isin([7, 10])
+        x3 = adjusted - 5
+        x3 = np.where(x3 >= 0, x3 * 1, x3)
+        x3 = np.where(x3 <= 0, x3 * 1.2, x3)
+        result_waku = np.where(cond3, x3, result_waku)
+
+        # 7.10.4
+        cond7 =baselog["place_int"] == 4
+        x7 = adjusted - 5
+        x7 = np.where(x7 >= 0, x7 * 3, x7)
+        x7 = np.where(x7 <= 0, x7 * 1.2, x7)
+        result_waku = np.where(cond7, x7, result_waku)
+
+        # 2
+        cond4 = baselog["place_int"] == 2
+        x4 = adjusted - 5
+        x4 = np.where(x4 >= 0, x4 * 1, x4)
+        x4 = np.where(x4 <= 0, x4 * 1/2, x4)
+        result_waku = np.where(cond4, x4, result_waku)
+
+
+
+        # 5, 6
+        cond5 = baselog["place_int"] == 5
+        x5 = -adjusted - 7
+        result_waku = np.where(cond5, x5 / 2.5, result_waku)
+
+        # 5, 6
+        cond6 = baselog["place_int"] == 6
+        x6 = -adjusted - 6
+        result_waku = np.where(cond6, x6/ 1.5, result_waku)
+
+        # 3. 結果を格納
+        baselog["waku_condition"] = result_waku
+
+
+
+        # ターフ、不良馬場は内側有利、逃げ不利    
+        baselog["turf_short"] = np.where(
+            (baselog["race_type"] == 1) & (baselog["course_len"] < 1200),
+            2,
+            np.where(
+                (baselog["race_type"] == 1) & (1200 <= baselog["course_len"]) & (baselog["course_len"] < 1400),
+                1,
+                np.where(
+                    (baselog["race_type"] == 1) & (1400 <= baselog["course_len"]) & (baselog["course_len"] < 1600),
+                    0,
+                    0
+                )
+            )
+        )
+        baselog["1waku"] = np.where(
+            baselog["umaban"] == 1,
+            -7,
+            np.where(
+                baselog["umaban"] == 2,
+                0,
+                0  # どちらにも合致しない場合
+            )
+        )
+        baselog["nakayama_waku"] = np.where(
+            (baselog["race_type"] == 0) & (baselog["ground_state"] == 2)& (baselog["weather"].isin([0, 1, 2])),
+            5,
+            0  # どちらにも合致しない場合
+            
+        )
+        # ダート、不良馬場は内側不利、逃げ不利    
+        baselog["dirt_uti_ame"] = np.where(
+            (baselog["race_type"] == 0) & (baselog["ground_state"] == 3),
+            2,
+            0  # 条件に合致しないとき
+        )
+
+
+        # ターフ、不良馬場は内側有利、逃げ不利    
+        baselog["turf_uti_ame"] = np.where(
+            (baselog["race_type"] == 1) & (baselog["ground_state"] == 0),
+            0,
+            np.where(
+                (baselog["race_type"] == 1) & (baselog["ground_state"] == 2),
+                -3,
+                np.where(
+                    (baselog["race_type"] == 1) & (baselog["ground_state"] == 1),
+                    -9,
+                    np.where(
+                        (baselog["race_type"] == 1) & (baselog["ground_state"] == 3),
+                        -12,
+                        0
+                    )
+                )
+            )
+        )
+        # start_range_processed_1 の計算
+        baselog["start_range_processed_umaban"] = ((baselog["start_range"] - 500) / 40).apply(lambda x: x * 7 if x < 0 else x * 2)
+
+
+
+
+
+        # 内が小さい,最大50くらいになってしまう
+        baselog["rank_diff_pace_diff_slope_range_groundstate_position_umaban"] = np.where(
+            (baselog["umaban_judge"] < 0),
+            baselog["rank_diff_pace_diff_slope_range_groundstate_position"] /
+            ((
+                ((baselog["umaban_processed_abs2"]) # 少ないほうがtimeが増える-4.5 から3
+                * (
+                    baselog["umaban_odd_processed_2"]# 奇数不利なので分母を増やして総合を減らす 1
+                        +  (baselog["start_point"] - 1)*10# 外枠が有利なので分母を増やして総合を減らす 1
+                        +  (baselog["curve_processed"]*1)# ラストカーブきついほど数値が減る6
+                        +  (baselog["last_curve_slope"]*1)# ラストカーブくだりほど数値が減る4
+                        +  ((baselog["waku_condition"])*2)# 馬場状態が良いほど数値が減る 7-7
+                        # +  (baselog["race_type"]+1)*-6# 芝ほど数値が減る 2
+                        # -  ((baselog["first_corner"] - 100)/50)# 最初のコーナーがでかいほど数値が減る1
+                        +(baselog["dirt_uti_ame"])*2
+                        # +baselog["start_range_processed_umaban"]
+                        # -(baselog["curve_amount"]*2)
+                        # +baselog["turf_short"]
+                        +baselog["nakayama_waku"]
+                        +baselog["turf_uti_ame"]*2
+                ) 
+            )+300) / 300)
+            ,
+            
+
+            np.where(
+                (baselog["umaban_judge"] >= 0),
+                baselog["rank_diff_pace_diff_slope_range_groundstate_position"] /
+                ((
+                    ((baselog["umaban_processed_abs2"]) # 少ないほうがtimeが増える-4.5 から3
+                    * (
+                        baselog["umaban_odd_processed_2"]# 奇数不利なので分母を増やして総合を減らす 1
+                        -  (baselog["start_point"] - 1)*10# 外枠が有利なので分母を増やして総合を減らす 1
+                        -  (baselog["curve_processed"]*1)# ラストカーブきついほど数値が減る4
+                        -  (baselog["last_curve_slope"]*1)# ラストカーブくだりほど数値が減る2
+                        -  ((baselog["waku_condition"])*2)# 馬場状態が良いほど数値が減る 7-7
+                        # -  (baselog["race_type"]+1)*-6# 芝ほど数値が減る 2
+                        # +  ((baselog["first_corner"] - 100)/50)# 最初のコーナーがでかいほど数値が減る1
+                        - (baselog["dirt_uti_ame"])*2
+                        # -baselog["start_range_processed_umaban"]
+                        # +(baselog["curve_amount"]*2)
+                        # -baselog["turf_short"]
+                        -baselog["nakayama_waku"]
+                        -baselog["turf_uti_ame"]*2
+                    ) 
+                ) +300) / 300),
+
+                baselog["rank_diff_pace_diff_slope_range_groundstate_position"]
+            )
+        )
+        baselog["rank_diff_pace_diff_slope_range_groundstate_position_umaban"] = baselog["rank_diff_pace_diff_slope_range_groundstate_position_umaban"] + baselog['waku_hit_rate_pre']
+
+
+
+
+
+
+
+
+        baselog["nobori"]= np.where(
+            ((baselog['race_position'] == 1)),
+            baselog["nobori"] - (baselog["pace_diff"] / 30),
+            np.where(
+                    ((baselog['race_position'] == 2)),
+                    baselog["nobori"] - (baselog["pace_diff"] / 30),
+                
+                    np.where(
+                        (baselog['race_position'] == 3),
+                        baselog["nobori"] - ((baselog["pace_diff"] / 30)* -1) ,
+                        
+                        np.where(
+                            ((baselog['race_position'] == 4)),
+                            baselog["nobori"] - ((baselog["pace_diff"] / 30)* -1) ,
+                            baselog["nobori"]  # どの条件にも当てはまらない場合は元の値を保持
+                        )
+                    
+                )
+            )
+
+        )
+        baselog["nobori"] = baselog["nobori"]+ (baselog["pace_diff"]/3.5) +  (baselog["place_season_condition_type_categori_processed"]/3) + (baselog["goal_range_processed_1"]/700) - (baselog["goal_slope"]/40)
+
+
+        baselog["rank_diff_hosei"] = baselog["rank_diff_pace_diff_slope_range_groundstate_position_umaban"]
+
+        grouped_df = baselog.groupby(["race_id", "horse_id"])
+        merged_df = self.population.copy()
+        for n_race in tqdm(n_races, desc="agg_horse_per_course_len"):
+            df = (
+                grouped_df.head(n_race)
+                .groupby(["race_id", "horse_id"])[
+                    [
+                        # "rank",
+                        # "rank_per_horse",
+                        # "prize",
+                        # "rank_diff",
+                        "rank_diff_hosei",
+                        # "time_courselen",
+                        "nobori",
+                        # # "corner_1",
+                        # # "corner_2",
+                        # # "corner_3",
+                        # # "corner_4",
+                        # "corner_1_per_horse",
+                        # "corner_2_per_horse",
+                        # "corner_3_per_horse",
+                        # "corner_4_per_horse",                        
+                        # "pace_1",
+                        # "pace_2",                        
+                        # "win",
+                        # "show",
+                    ]
+                ]
+                .agg(["mean", "min"])
+            )
+            df.columns = [
+                "_".join(col) + f"_{n_race}races_per_type_ground_state_hosei" for col in df.columns
+            ]
+            # レースごとの相対値に変換
+            tmp_df = df.groupby(["race_id"])
+            relative_df = ((df - tmp_df.mean()) / tmp_df.std()).add_suffix("_relative")
+            merged_df = merged_df.merge(
+                relative_df, on=["race_id", "horse_id"], how="left"
+            )
+            
+        # merged_df = merged_df.astype({col: 'float32' for col in merged_df.select_dtypes('float64').columns})
+        # merged_df = merged_df.astype({col: 'int32' for col in merged_df.select_dtypes('int64').columns})
+        
+        self.agg_horse_per_type_ground_state_hosei_df = merged_df
+
+
+
+
+
+
+
+        
+    def agg_horse_per_course_type_place_hosei(
+        self, n_races: list[int] = [1,  3, 5, 10]
+    ) -> None:
+        """
+        直近nレースの馬の過去成績を距離・race_typeごとに集計し、相対値に変換する関数。
+        """
+        baselog = (
+            self.population.merge(
+                self.race_info[["race_id", "course_len", "race_type", "place"]], on="race_id"
+            )
+            .merge(
+                self.horse_results,
+                on=["horse_id", "course_len", "race_type", "place"],
+                suffixes=("", "_horse"),
+            )
+            .query("date_horse < date")
+            .sort_values("date_horse", ascending=False)
+        )
+
+        
+
+
+
+
+
+        # waku_hit_rate
+        baselog['waku_hit_rate'] = np.select(
+            [
+                baselog['wakuban'] == 1,
+                baselog['wakuban'] == 2,
+                baselog['wakuban'] == 3,
+                baselog['wakuban'] == 4,
+                baselog['wakuban'] == 5,
+                baselog['wakuban'] == 6,
+                baselog['wakuban'] == 7,
+                baselog['wakuban'] == 8
+            ],
+            [
+                baselog['waku_1'],
+                baselog['waku_2'],
+                baselog['waku_3'],
+                baselog['waku_4'],
+                baselog['waku_5'],
+                baselog['waku_6'],
+                baselog['waku_7'],
+                baselog['waku_8']
+            ],
+            default=np.nan
+        )
+
+        # waku_return_rate
+        baselog['waku_return_rate'] = np.select(
+            [
+                baselog['wakuban'] == 1,
+                baselog['wakuban'] == 2,
+                baselog['wakuban'] == 3,
+                baselog['wakuban'] == 4,
+                baselog['wakuban'] == 5,
+                baselog['wakuban'] == 6,
+                baselog['wakuban'] == 7,
+                baselog['wakuban'] == 8
+            ],
+            [
+                baselog['waku_1_EX'],
+                baselog['waku_2_EX'],
+                baselog['waku_3_EX'],
+                baselog['waku_4_EX'],
+                baselog['waku_5_EX'],
+                baselog['waku_6_EX'],
+                baselog['waku_7_EX'],
+                baselog['waku_8_EX']
+            ],
+            default=np.nan
+        )
+
+        # position_hit_rate
+        baselog['position_hit_rate'] = np.select(
+            [
+                baselog['race_position'] == 1,
+                baselog['race_position'] == 2,
+                baselog['race_position'] == 3,
+                baselog['race_position'] == 4
+            ],
+            [
+                baselog['position_1'],
+                baselog['position_2'],
+                baselog['position_3'],
+                baselog['position_4']
+            ],
+            default=np.nan
+        )
+
+        # position_return_rate
+        baselog['position_return_rate'] = np.select(
+            [
+                baselog['race_position'] == 1,
+                baselog['race_position'] == 2,
+                baselog['race_position'] == 3,
+                baselog['race_position'] == 4
+            ],
+            [
+                baselog['position_1_EX'],
+                baselog['position_2_EX'],
+                baselog['position_3_EX'],
+                baselog['position_4_EX']
+            ],
+            default=np.nan
+        )
+
+        # 40のとき、0.3くらの差
+        baselog['waku_hit_rate_pre'] = (baselog['waku_hit_rate'] - 25)/50
+        baselog['position_hit_rate_pre'] = (baselog['position_hit_rate'] - 25)/50
+
+
+        baselog.loc[
+            (baselog["race_type"] == 0) &(baselog["start_point"] == 2) & (baselog["ground_state"] != 0),
+            "start_point"
+        ] = -3
+
+        baselog.loc[:, "place_season_condition_type_categori_processed"] = (
+            baselog["place_season_condition_type_categori"]
+            .replace({5: -0.4, 4: -0.2, 3: -0.1, 2: 0.15,1: 0.3, -1: -0.18, -2: 0, -3: 0.18,-4:0.3,-10000:0})
+        ).astype(float)
+
+        baselog["rank_diff_pace_diff"] = baselog["rank_diff"]+ 0.8
+        
+        
+
+
+
+
+        # 条件リスト
+        conditions_1 = [
+            (baselog["pace_diff"] >= 1),  # pace_diff が 1 以上
+            (baselog["pace_diff"] >= 1.8),
+            (baselog["pace_diff"] >= 2.5),
+            (baselog["place_season_condition_type_categori_processed"] <= -0.1),  # place_season_condition_type_categori_processed が -0.1 以下
+            (baselog["place_season_condition_type_categori_processed"] <= -0.4),
+            (baselog["course_len"] >= 2400),  # course_len が 2400 以上
+            (baselog["course_len"] >= 2800),  # course_len が 2400 以上
+            (baselog["course_len"] >= 3000),  # course_len が 2400 以上
+            (baselog["course_len"] >= 3200),
+            (baselog["course_len"] >= 3400),
+            (baselog["ground_state"] != 0),  # ground_state が 0 以外
+            (baselog["ground_state"] == 3),
+            (baselog["ground_state"] == 1),
+            (baselog["rank_diff"] >= 11),
+            (baselog["rank_diff"] >= 10),
+            (baselog["rank_diff"] >= 9),
+            (baselog["rank_diff"] >= 8),
+            (baselog["rank_diff"] >= 7.5),
+            (baselog["rank_diff"] >= 7),
+            (baselog["rank_diff"] >= 6.5),
+            (baselog["rank_diff"] >= 6),
+            (baselog["rank_diff"] >= 5),
+            (baselog["rank_diff"] >= 4),
+            (baselog["rank_diff"] >= 3),
+            (baselog["rank"] >= 7),
+            (baselog["rank"] >= 11),
+        ]
+
+        conditions_2 = [
+            (baselog["pace_diff"] <= -1),  # pace_diff が -1 以下
+            (baselog["pace_diff"] <= -1.8),
+            (baselog["pace_diff"] <= -2.5),
+            (baselog["rank_diff"] >= 0.1),  # rank_diff が 0.1 以上
+            (baselog["course_len"] <= 1800),  # course_len が 1600 以下
+            (baselog["course_len"] <= 1600),  # course_len が 1600 以下
+            (baselog["course_len"] <= 1400),  # course_len が 1600 以下
+            # (baselog["course_len"] <= 1200),
+        ]
+
+        # それぞれの条件に該当する場合の計算
+        for cond in conditions_1:
+            baselog.loc[cond, "rank_diff_pace_diff"] = baselog.loc[cond, "rank_diff_pace_diff"] * 0.9 + 0.2
+
+        for cond in conditions_2:
+            baselog.loc[cond, "rank_diff_pace_diff"] = baselog.loc[cond, "rank_diff_pace_diff"] * 1.1 - 0.2
+
+
+
+
+        baselog["goal_range_processed_1"] = (((baselog["goal_range"])-360))
+        baselog["goal_range_processed_1"] = baselog["goal_range_processed_1"].apply(
+            lambda x: x*2 if x < 0 else x*0.5
+        )
+
+        """
+        ハイスロー、脚質修正
+        コーナー順位が前（先行）で、ハイペースの場合、rank_diffをさらに-0.5する（不利条件）
+        前でローペースの場合、rank_diffを+0.2する(ペースによる)有利
+        後ろで、ローペースの場合、rank_diffを-0.1する（作っておけばrankdiffで使える）不利
+        後ろでハイの場合、rank_diffを+0.3する(ハイスローの分を相殺する)有利
+        #+だとハイペース、ーだとスローペース
+        """
+        #着差がつかない,不利を-側へ
+        # 条件ごとに処理を適用
+        baselog["rank_diff_pace_diff_slope_range_pace"] = np.where(
+            ((baselog['race_position'] == 1)),
+            baselog["rank_diff_pace_diff"] - (baselog["pace_diff"] / 8) + baselog['position_hit_rate_pre'] ,
+            np.where(
+                    ((baselog['race_position'] == 2)),
+                    baselog["rank_diff_pace_diff"] - (baselog["pace_diff"] / 10)+ baselog['position_hit_rate_pre']/1.3,
+                
+                    np.where(
+                        (baselog['race_position'] == 3),
+                        baselog["rank_diff_pace_diff"] - ((baselog["pace_diff"] / 10) * -1)+ baselog['position_hit_rate_pre'],
+                        
+                        np.where(
+                            ((baselog['race_position'] == 4)),
+                            baselog["rank_diff_pace_diff"] - ((baselog["pace_diff"] / 20) * -1)+ baselog['position_hit_rate_pre']/1.7,
+                            baselog["rank_diff_pace_diff"]  # どの条件にも当てはまらない場合は元の値を保持
+                        )
+                    
+                )
+            )
+
+        )
+        
+
+        baselog["rank_diff_pace_diff_slope_range_groundstate"] = baselog["rank_diff_pace_diff_slope_range_pace"]
+
+        # 1600で正規化,-0.5 - 1
+        baselog["course_len_processed"] = (baselog["course_len"] / 1700)-1
+
+        # ,-1.5 - 4
+        baselog["course_len_processed"] = baselog["course_len_processed"].apply(
+            lambda x: x*3 if x <= 0 else x*4
+        )
+        baselog["course_len_processed_rank_diff"] = ((baselog["course_len_processed"] + 10)/10)
+
+
+
+
+
+        baselog["start_range_processed_1"] = (((baselog["start_range"])-360))
+        baselog["start_range_processed_1"] = baselog["start_range_processed_1"].apply(
+            lambda x: x if x < 0 else x*1
+        )
+
+
+        # -4.5 を行う
+        baselog["curve_processed"] = baselog["curve"] - 4.5
+        # +の場合は数値を8倍する
+        baselog["curve_processed"] = baselog["curve_processed"].apply(
+            lambda x: x * 8 if x > 0 else x
+        )
+
+
+        # place_int の変換
+        baselog['place_int'] = pd.to_numeric(baselog['place'], errors='coerce').astype('Int64')
+
+        # 1. season_turf_condition の補正
+        adjusted = baselog['season_turf_condition'].copy()
+        adjusted = np.where(adjusted == 1, -8, adjusted)
+        adjusted = np.where(adjusted == 2, -4   , adjusted)
+
+        # 2. 条件分岐による処理
+        cond_front = baselog['place_int'].isin([1, 2, 3, 4, 10])
+        cond_else = ~cond_front
+
+        # 結果列の初期化
+        result_condition = np.zeros(len(baselog))
+
+        # 差し有利
+        result_condition = np.where(cond_front, (adjusted * 1/2)+2, result_condition)
+
+        # その他
+        other_adjusted = adjusted - 9
+        result_condition = np.where(cond_else, other_adjusted * -1/2, result_condition)
+
+        # 3. 結果を格納
+        baselog['tactics_bias'] = result_condition
+
+
+        # ペースに関係ある要素は弱体化
+        baselog["rank_diff_pace_diff_slope_range_groundstate_position"] = np.where(
+            ((baselog['race_position'] == 1) | (baselog['race_position'] == 2)),
+            baselog["rank_diff_pace_diff_slope_range_groundstate"] 
+            / ((2000 + baselog["start_range_processed_1"]) / 2000) 
+            * ((200 + baselog["start_slope"]) / 200) 
+            * ((2000 + baselog["curve_processed"]) / 2000) 
+            / ((baselog["goal_range_processed_1"] + 2000) / 2000) 
+            / ((baselog["goal_slope"] + 100) / 100) 
+            / ((baselog["place_season_condition_type_categori_processed"] + 7) / 7) 
+            / ((baselog['tactics_bias'] + 70)/70)
+            # / ((baselog["race_type"] + 79) / 80)
+            / ((baselog["course_len_processed"] + 1000)/1000),  # ここでカンマ
+
+            np.where(
+                ((baselog['race_position'] == 3) | (baselog['race_position'] == 4)),
+                baselog["rank_diff_pace_diff_slope_range_groundstate"] 
+                * ((2000 + baselog["start_range_processed_1"]) / 2000) 
+                / ((200 + baselog["start_slope"]) / 200) 
+                / ((2000 + baselog["curve_processed"]) / 2000) 
+                * ((baselog["goal_range_processed_1"]+ 2000) / 2000) 
+                * ((baselog["goal_slope"] + 100) / 100) 
+                * ((baselog["place_season_condition_type_categori_processed"] + 7) / 7) 
+                * ((baselog['tactics_bias'] + 70)/70)
+                # * ((baselog["race_type"] +79) / 80)
+                * ((baselog["course_len_processed"] + 1000)/1000), 
+
+                baselog["rank_diff_pace_diff_slope_range_groundstate"]
+            )
+        )
+
+
+
+
+
+        #-2-2,内がマイナス
+        baselog["umaban_processed"] = baselog["umaban"].apply(
+            lambda x: ((x*-1)) if x < 4 else ((x-6)/3)-1
+        ).astype(float)
+        #0-0.005
+
+        baselog["umaban_judge"] = (baselog["umaban"].astype(float)/baselog["n_horses"].astype(float))-0.55
+
+        #1（奇数）または 0（偶数）
+        baselog.loc[:, "umaban_odd_processed"] = (
+            (baselog["umaban_odd"]-1)
+        ).astype(float)
+
+        baselog["course_len_processed_2"] = ((baselog["course_len_processed"] + 3)/3)
+
+
+        baselog["umaban_processed_2"] = baselog["umaban_processed"] / baselog["course_len_processed_2"]
+        baselog["umaban_odd_processed_2"] = baselog["umaban_odd_processed"] / baselog["course_len_processed_2"]
+
+
+
+        baselog["first_corner"] = np.where(
+            (baselog["curve_amount"] == 2) | (baselog["curve_amount"] == 6),
+            baselog["curve_R34"],
+            np.where(
+                (baselog["curve_amount"] == 4) | (baselog["curve_amount"] == 8),
+                baselog["curve_R12"],
+                0  # それ以外のとき 0
+            )
+        )
+
+        baselog["umaban_processed_abs2"] = baselog["umaban_processed_2"].abs()
+
+
+
+
+        # 1. 補正処理
+        adjusted = baselog["season_turf_condition"].copy()
+        adjusted = np.where(adjusted == 1, -12, adjusted)
+        adjusted = np.where(adjusted == 2, -5, adjusted)
+
+        # 2. place_int 別に処理
+        result_waku = np.zeros(len(baselog))
+
+        # 1, 2, 10
+        cond1 = baselog["place_int"].isin([1, 8, 9])
+        x1 = adjusted - 5
+        x1 = np.where(x1 >= 0, x1 /3, x1)
+        x1 = np.where(x1 <= 0, x1 /2, x1)
+        result_waku = np.where(cond1, x1, result_waku)
+
+        # 3
+        cond2 = baselog["place_int"] == 3
+        x2 = adjusted - 5
+        x2 = np.where(x2 >= 0, x2 * 1, x2)
+        x2 = np.where(x2 <= 0, x2 * 2, x2)
+        result_waku = np.where(cond2, x2, result_waku)
+
+        # 7.10.4
+        cond3 = baselog["place_int"].isin([7, 10])
+        x3 = adjusted - 5
+        x3 = np.where(x3 >= 0, x3 * 1, x3)
+        x3 = np.where(x3 <= 0, x3 * 1.2, x3)
+        result_waku = np.where(cond3, x3, result_waku)
+
+        # 7.10.4
+        cond7 =baselog["place_int"] == 4
+        x7 = adjusted - 5
+        x7 = np.where(x7 >= 0, x7 * 3, x7)
+        x7 = np.where(x7 <= 0, x7 * 1.2, x7)
+        result_waku = np.where(cond7, x7, result_waku)
+
+        # 2
+        cond4 = baselog["place_int"] == 2
+        x4 = adjusted - 5
+        x4 = np.where(x4 >= 0, x4 * 1, x4)
+        x4 = np.where(x4 <= 0, x4 * 1/2, x4)
+        result_waku = np.where(cond4, x4, result_waku)
+
+
+
+        # 5, 6
+        cond5 = baselog["place_int"] == 5
+        x5 = -adjusted - 7
+        result_waku = np.where(cond5, x5 / 2.5, result_waku)
+
+        # 5, 6
+        cond6 = baselog["place_int"] == 6
+        x6 = -adjusted - 6
+        result_waku = np.where(cond6, x6/ 1.5, result_waku)
+
+        # 3. 結果を格納
+        baselog["waku_condition"] = result_waku
+
+
+
+        # ターフ、不良馬場は内側有利、逃げ不利    
+        baselog["turf_short"] = np.where(
+            (baselog["race_type"] == 1) & (baselog["course_len"] < 1200),
+            2,
+            np.where(
+                (baselog["race_type"] == 1) & (1200 <= baselog["course_len"]) & (baselog["course_len"] < 1400),
+                1,
+                np.where(
+                    (baselog["race_type"] == 1) & (1400 <= baselog["course_len"]) & (baselog["course_len"] < 1600),
+                    0,
+                    0
+                )
+            )
+        )
+        baselog["1waku"] = np.where(
+            baselog["umaban"] == 1,
+            -7,
+            np.where(
+                baselog["umaban"] == 2,
+                0,
+                0  # どちらにも合致しない場合
+            )
+        )
+        baselog["nakayama_waku"] = np.where(
+            (baselog["race_type"] == 0) & (baselog["ground_state"] == 2)& (baselog["weather"].isin([0, 1, 2])),
+            5,
+            0  # どちらにも合致しない場合
+            
+        )
+        # ダート、不良馬場は内側不利、逃げ不利    
+        baselog["dirt_uti_ame"] = np.where(
+            (baselog["race_type"] == 0) & (baselog["ground_state"] == 3),
+            2,
+            0  # 条件に合致しないとき
+        )
+
+
+        # ターフ、不良馬場は内側有利、逃げ不利    
+        baselog["turf_uti_ame"] = np.where(
+            (baselog["race_type"] == 1) & (baselog["ground_state"] == 0),
+            0,
+            np.where(
+                (baselog["race_type"] == 1) & (baselog["ground_state"] == 2),
+                -3,
+                np.where(
+                    (baselog["race_type"] == 1) & (baselog["ground_state"] == 1),
+                    -9,
+                    np.where(
+                        (baselog["race_type"] == 1) & (baselog["ground_state"] == 3),
+                        -12,
+                        0
+                    )
+                )
+            )
+        )
+        # start_range_processed_1 の計算
+        baselog["start_range_processed_umaban"] = ((baselog["start_range"] - 500) / 40).apply(lambda x: x * 7 if x < 0 else x * 2)
+
+
+
+
+
+        # 内が小さい,最大50くらいになってしまう
+        baselog["rank_diff_pace_diff_slope_range_groundstate_position_umaban"] = np.where(
+            (baselog["umaban_judge"] < 0),
+            baselog["rank_diff_pace_diff_slope_range_groundstate_position"] /
+            ((
+                ((baselog["umaban_processed_abs2"]) # 少ないほうがtimeが増える-4.5 から3
+                * (
+                    baselog["umaban_odd_processed_2"]# 奇数不利なので分母を増やして総合を減らす 1
+                        +  (baselog["start_point"] - 1)*10# 外枠が有利なので分母を増やして総合を減らす 1
+                        +  (baselog["curve_processed"]*1)# ラストカーブきついほど数値が減る6
+                        +  (baselog["last_curve_slope"]*1)# ラストカーブくだりほど数値が減る4
+                        +  ((baselog["waku_condition"])*2)# 馬場状態が良いほど数値が減る 7-7
+                        # +  (baselog["race_type"]+1)*-6# 芝ほど数値が減る 2
+                        # -  ((baselog["first_corner"] - 100)/50)# 最初のコーナーがでかいほど数値が減る1
+                        +(baselog["dirt_uti_ame"])*2
+                        # +baselog["start_range_processed_umaban"]
+                        # -(baselog["curve_amount"]*2)
+                        # +baselog["turf_short"]
+                        +baselog["nakayama_waku"]
+                        +baselog["turf_uti_ame"]*2
+                ) 
+            )+300) / 300)
+            ,
+            
+
+            np.where(
+                (baselog["umaban_judge"] >= 0),
+                baselog["rank_diff_pace_diff_slope_range_groundstate_position"] /
+                ((
+                    ((baselog["umaban_processed_abs2"]) # 少ないほうがtimeが増える-4.5 から3
+                    * (
+                        baselog["umaban_odd_processed_2"]# 奇数不利なので分母を増やして総合を減らす 1
+                        -  (baselog["start_point"] - 1)*10# 外枠が有利なので分母を増やして総合を減らす 1
+                        -  (baselog["curve_processed"]*1)# ラストカーブきついほど数値が減る4
+                        -  (baselog["last_curve_slope"]*1)# ラストカーブくだりほど数値が減る2
+                        -  ((baselog["waku_condition"])*2)# 馬場状態が良いほど数値が減る 7-7
+                        # -  (baselog["race_type"]+1)*-6# 芝ほど数値が減る 2
+                        # +  ((baselog["first_corner"] - 100)/50)# 最初のコーナーがでかいほど数値が減る1
+                        - (baselog["dirt_uti_ame"])*2
+                        # -baselog["start_range_processed_umaban"]
+                        # +(baselog["curve_amount"]*2)
+                        # -baselog["turf_short"]
+                        -baselog["nakayama_waku"]
+                        -baselog["turf_uti_ame"]*2
+                    ) 
+                ) +300) / 300),
+
+                baselog["rank_diff_pace_diff_slope_range_groundstate_position"]
+            )
+        )
+        baselog["rank_diff_pace_diff_slope_range_groundstate_position_umaban"] = baselog["rank_diff_pace_diff_slope_range_groundstate_position_umaban"] + baselog['waku_hit_rate_pre']
+
+
+
+
+
+
+
+
+        baselog["nobori"]= np.where(
+            ((baselog['race_position'] == 1)),
+            baselog["nobori"] - (baselog["pace_diff"] / 30),
+            np.where(
+                    ((baselog['race_position'] == 2)),
+                    baselog["nobori"] - (baselog["pace_diff"] / 30),
+                
+                    np.where(
+                        (baselog['race_position'] == 3),
+                        baselog["nobori"] - ((baselog["pace_diff"] / 30)* -1) ,
+                        
+                        np.where(
+                            ((baselog['race_position'] == 4)),
+                            baselog["nobori"] - ((baselog["pace_diff"] / 30)* -1) ,
+                            baselog["nobori"]  # どの条件にも当てはまらない場合は元の値を保持
+                        )
+                    
+                )
+            )
+
+        )
+        baselog["nobori"] = baselog["nobori"]+ (baselog["pace_diff"]/3.5) +  (baselog["place_season_condition_type_categori_processed"]/3) + (baselog["goal_range_processed_1"]/700) - (baselog["goal_slope"]/40)
+
+
+        baselog["rank_diff_hosei"] = baselog["rank_diff_pace_diff_slope_range_groundstate_position_umaban"]
+
+        grouped_df = baselog.groupby(["race_id", "horse_id"])
+        merged_df = self.population.copy()
+        for n_race in tqdm(n_races, desc="agg_horse_per_course_len"):
+            df = (
+                grouped_df.head(n_race)
+                .groupby(["race_id", "horse_id"])[
+                    [
+                        # "rank",
+                        # "rank_per_horse",
+                        # "prize",
+                        # "rank_diff",
+                        "rank_diff_hosei",
+                        # "time_courselen",
+                        "nobori",
+                        # # "corner_1",
+                        # # "corner_2",
+                        # # "corner_3",
+                        # # "corner_4",
+                        # "corner_1_per_horse",
+                        # "corner_2_per_horse",
+                        # "corner_3_per_horse",
+                        # "corner_4_per_horse",                        
+                        # "pace_1",
+                        # "pace_2",                        
+                        # "win",
+                        # "show",
+                    ]
+                ]
+                .agg(["mean", "min"])
+            )
+            df.columns = [
+                "_".join(col) + f"_{n_race}races_per_course_type_place_hosei" for col in df.columns
+            ]
+            # レースごとの相対値に変換
+            tmp_df = df.groupby(["race_id"])
+            relative_df = ((df - tmp_df.mean()) / tmp_df.std()).add_suffix("_relative")
+            merged_df = merged_df.merge(
+                relative_df, on=["race_id", "horse_id"], how="left"
+            )
+            
+        # merged_df = merged_df.astype({col: 'float32' for col in merged_df.select_dtypes('float64').columns})
+        # merged_df = merged_df.astype({col: 'int32' for col in merged_df.select_dtypes('int64').columns})
+        
+        self.agg_horse_per_course_type_place_hosei_df = merged_df
+
+
+
+
+
+
+
+
+
+
     
 
     def create_features(self) -> pd.DataFrame:
@@ -12602,6 +16249,12 @@ class FeatureCreator:
         # self.agg_horse_n_races_relative()
         self.agg_course_len()
         self.results_relative()
+
+
+        self.agg_horse_per_course_type_hosei()
+        self.agg_horse_per_course_type_place_hosei()
+        self.agg_horse_per_type_ground_state_hosei()
+
 
         self.cross_rank_diff()
         self.cross_time()
@@ -12881,7 +16534,24 @@ class FeatureCreator:
                 how="left",
                 # copy=False,
             )       
-
+            .merge(
+                self.agg_horse_per_course_type_hosei_df,
+                on=["race_id","date", "horse_id"],
+                how="left",
+                # copy=False,
+            )
+            .merge(
+                self.agg_horse_per_course_type_place_hosei_df,
+                on=["race_id","date", "horse_id"],
+                how="left",
+                # copy=False,
+            )
+            .merge(
+                self.agg_horse_per_type_ground_state_hosei_df,
+                on=["race_id","date", "horse_id"],
+                how="left",
+                # copy=False,
+            )
             # .merge(
             #     self.agg_horse_per_group_cols_dfs["around_per_wakuban"],
             #     on=["race_id", "date", "horse_id"],
@@ -12915,3 +16585,10 @@ class FeatureCreator:
         features.to_csv(self.output_dir / self.output_filename, sep="\t", index=False)
         print("merging all features...comp")
         return features
+
+
+
+
+
+
+

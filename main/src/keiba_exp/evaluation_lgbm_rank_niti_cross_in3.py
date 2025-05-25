@@ -41,12 +41,18 @@ class Evaluator_lightgbm_rank_niti_cross_in3:
         sortする場合は個々で記入
         """
         # self.evaluation_df = self.evaluation_df.query("course_len <= 1500")
-        # self.evaluation_df = self.evaluation_df.query("1500 < course_len <= 2200")
+        # self.evaluation_df = self.evaluation_df.query("1500 < course_len < 1900")
         # self.evaluation_df = self.evaluation_df.query("1900 <= course_len")
+        # self.evaluation_df = self.evaluation_df.query("place == 10")
 
+        
+        # self.evaluation_df = self.evaluation_df.query("3 <=  tansho_odds")
+        # self.evaluation_df = self.evaluation_df.query("2 <=  popularity")
+        
         # self.evaluation_df = self.evaluation_df.query("1800 <= course_len< 1900 ")
         # self.evaluation_df = self.evaluation_df.query("weather <= 2")
         # self.evaluation_df = self.evaluation_df.query("2 <  weather")
+        # self.evaluation_df = self.evaluation_df.query("place == 10")
 
         # self.evaluation_df = self.evaluation_df.query("ground_state <= 0")
         # self.evaluation_df = self.evaluation_df.query("1 <=  ground_state")

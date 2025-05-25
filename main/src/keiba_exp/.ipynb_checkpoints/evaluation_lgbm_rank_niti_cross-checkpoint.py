@@ -41,12 +41,27 @@ class Evaluator_lightgbm_rank_niti_cross:
         sortする場合は個々で記入
         """
         # self.evaluation_df = self.evaluation_df.query("course_len <= 1500")
-        # self.evaluation_df = self.evaluation_df.query("1500 < course_len <= 2200")
-        # self.evaluation_df = self.evaluation_df.query("1900 <= course_len")
+        # self.evaluation_df = self.evaluation_df.query("1500 < course_len < 1900")
+        self.evaluation_df = self.evaluation_df.query("1900 <= course_len")
+        # self.evaluation_df = self.evaluation_df.query("place == 1")
+        # self.evaluation_df = self.evaluation_df.query("place == 2")
+        # self.evaluation_df = self.evaluation_df.query("place == 3")
+        # self.evaluation_df = self.evaluation_df.query("place == 4")
+        # self.evaluation_df = self.evaluation_df.query("place == 5")
+        # self.evaluation_df = self.evaluation_df.query("place == 6")
+        # self.evaluation_df = self.evaluation_df.query("place == 7")
+        # self.evaluation_df = self.evaluation_df.query("place == 8")
+        # self.evaluation_df = self.evaluation_df.query("place == 9")
+        self.evaluation_df = self.evaluation_df.query("place == 10")
+        # self.evaluation_df = self.evaluation_df.query("place != 7")
 
+        
         # self.evaluation_df = self.evaluation_df.query("weather <= 2")
         # self.evaluation_df = self.evaluation_df.query("2 <  weather")
-
+        # self.evaluation_df = self.evaluation_df.query("3 <=  tansho_odds")
+        # self.evaluation_df = self.evaluation_df.query("2 <=  popularity")
+        # self.evaluation_df = self.evaluation_df.query("10 >=  popularity")
+        
         # self.evaluation_df = self.evaluation_df.query("ground_state <= 0")
         # self.evaluation_df = self.evaluation_df.query("1 <=  ground_state")
 
@@ -55,14 +70,17 @@ class Evaluator_lightgbm_rank_niti_cross:
 
         # self.evaluation_df = self.evaluation_df.query("mean_age <= 3.4")
         # self.evaluation_df = self.evaluation_df.query("3.4 < mean_age")
-
+        # self.evaluation_df = self.evaluation_df.query("place == 7")
+        
+        # 68
+        
         # self.evaluation_df = self.evaluation_df.query("n_horses <=8")
         # self.evaluation_df = self.evaluation_df.query("n_horses <=10")
         # self.evaluation_df = self.evaluation_df.query("16 <= n_horses")
         # self.evaluation_df = self.evaluation_df.query("10 <= n_horses <=15")
-        # self.evaluation_df = self.evaluation_df.query("tansho_odds >=2")
+        # self.evaluation_df = self.evaluation_df.query("tansho_odds >=3")
         # self.evaluation_df = self.evaluation_df.query("tansho_odds >=4")
-        # self.evaluation_df = self.evaluation_df.query("tansho_odds <=10")
+        # self.evaluation_df = self.evaluation_df.query("tansho_odds <=50")
 
 
 

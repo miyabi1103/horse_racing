@@ -64,7 +64,7 @@ def def_predict_exe_obstract(kaisai_date:str,race_id:str):
     ))
     prediction.predict(
         features,
-        model_filename="model_lightgbm_rank_niti_cv_full_dev_obstract_in3.pkl",
-        config_filepath="config_lightgbm_niti_dev_obstract.yaml"
+        model_filename="model_lightgbm_rank_niti_cv_full_dev_obstract_noweight_in3.pkl",
+        config_filepath="config_lightgbm_niti_dev_obstract_noweight.yaml"
     )
     print("obstract")

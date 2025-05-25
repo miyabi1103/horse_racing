@@ -178,7 +178,7 @@ async def Create_time_table(kaisai_data:str):
     df = df[df["class"] != 0]
 
     # typeが0かつclassが1かつlongが1900未満の行を除外
-    df = df[~((df["type"] == 0) & (df["long"] < 1900))]
+    # df = df[~((df["type"] == 0) & (df["long"] < 1900))]
     # df = df[~((df["type"] == 0) & (df["class"] == 1) & (df["long"] < 1900))]
 
     place_mapping = {
@@ -197,6 +197,7 @@ async def Create_time_table(kaisai_data:str):
 
     # 曜日を取得するためのマッピング
     weekday_mapping = ["mon", "tue", "wed", "thu", "fri", "sat", "sun"]
+    df["place"] = df["race_id"].str.slice(4, 6).astype(int)
 
     # RACE_INFO列を作成
     df["RACE_INFO"] = df["race_id"].apply(

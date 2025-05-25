@@ -3,13 +3,16 @@ params:
     "objective": "regression"  # 回帰問題に変更
     'metric': 'rmse'
     'num_leaves': 63
-    'min_child_samples': 83
+    'min_child_samples': 87
     'learning_rate': 0.01
     'reg_alpha': 0
     'reg_lambda': 0
     'max_bin': 256
     'subsample': 0.85
     # "colsample_bytree": 0.7
+
+
+
 
        # ハイパーパラメータ	デフォルト値	説明
         # objective	'binary'	目的関数。バイナリ分類では 'binary'
@@ -964,12 +967,12 @@ features:
 #     #     - rank_diff_mean_1races_per_race_place_len_relative
 #     #     - rank_diff_max_1races_per_race_place_len_relative
 #     #     - rank_diff_min_1races_per_race_place_len_relative
-    - time_mean_1races_per_race_place_len_relative
-    - time_max_1races_per_race_place_len_relative
-    - time_min_1races_per_race_place_len_relative
-    - nobori_mean_1races_per_race_place_len_relative
-    - nobori_max_1races_per_race_place_len_relative
-    - nobori_min_1races_per_race_place_len_relative
+#     - time_mean_1races_per_race_place_len_relative
+#     - time_max_1races_per_race_place_len_relative
+#     - time_min_1races_per_race_place_len_relative
+#     - nobori_mean_1races_per_race_place_len_relative
+#     - nobori_max_1races_per_race_place_len_relative
+#     - nobori_min_1races_per_race_place_len_relative
     - corner_1_per_horse_mean_1races_per_race_place_len_relative
     - corner_1_per_horse_max_1races_per_race_place_len_relative
     - corner_1_per_horse_min_1races_per_race_place_len_relative
@@ -982,33 +985,33 @@ features:
     - corner_4_per_horse_mean_1races_per_race_place_len_relative
     - corner_4_per_horse_max_1races_per_race_place_len_relative
     - corner_4_per_horse_min_1races_per_race_place_len_relative
-# #    - pace_1_mean_1races_per_race_place_len_relative
-# #    - pace_1_max_1races_per_race_place_len_relative
-# #    - pace_1_min_1races_per_race_place_len_relative
-# #    - pace_2_mean_1races_per_race_place_len_relative
-# #    - pace_2_max_1races_per_race_place_len_relative
-# #    - pace_2_min_1races_per_race_place_len_relative
-#     #     - win_mean_1races_per_race_place_len_relative
-#     #     - win_max_1races_per_race_place_len_relative
-#     #     - win_min_1races_per_race_place_len_relative
-#     #     - show_mean_1races_per_race_place_len_relative
-#     #     - show_max_1races_per_race_place_len_relative
-#     #     - show_min_1races_per_race_place_len_relative
-#     #     - rank_per_horse_mean_3races_per_race_place_len_relative
-#     #     - rank_per_horse_max_3races_per_race_place_len_relative
-#     #     - rank_per_horse_min_3races_per_race_place_len_relative
-# #     #     - prize_mean_3races_per_race_place_len_relative
-# #     #     - prize_max_3races_per_race_place_len_relative
-# #     #     - prize_min_3races_per_race_place_len_relative
-#     #     - rank_diff_mean_3races_per_race_place_len_relative
-#     #     - rank_diff_max_3races_per_race_place_len_relative
-#     #     - rank_diff_min_3races_per_race_place_len_relative
-    - time_mean_3races_per_race_place_len_relative
-    - time_max_3races_per_race_place_len_relative
-    - time_min_3races_per_race_place_len_relative
-    - nobori_mean_3races_per_race_place_len_relative
-    - nobori_max_3races_per_race_place_len_relative
-    - nobori_min_3races_per_race_place_len_relative
+#    - pace_1_mean_1races_per_race_place_len_relative
+#    - pace_1_max_1races_per_race_place_len_relative
+#    - pace_1_min_1races_per_race_place_len_relative
+#    - pace_2_mean_1races_per_race_place_len_relative
+#    - pace_2_max_1races_per_race_place_len_relative
+#    - pace_2_min_1races_per_race_place_len_relative
+    #     - win_mean_1races_per_race_place_len_relative
+    #     - win_max_1races_per_race_place_len_relative
+    #     - win_min_1races_per_race_place_len_relative
+    #     - show_mean_1races_per_race_place_len_relative
+    #     - show_max_1races_per_race_place_len_relative
+    #     - show_min_1races_per_race_place_len_relative
+    #     - rank_per_horse_mean_3races_per_race_place_len_relative
+    #     - rank_per_horse_max_3races_per_race_place_len_relative
+    #     - rank_per_horse_min_3races_per_race_place_len_relative
+#     #     - prize_mean_3races_per_race_place_len_relative
+#     #     - prize_max_3races_per_race_place_len_relative
+#     #     - prize_min_3races_per_race_place_len_relative
+    #     - rank_diff_mean_3races_per_race_place_len_relative
+    #     - rank_diff_max_3races_per_race_place_len_relative
+    #     - rank_diff_min_3races_per_race_place_len_relative
+    # - time_mean_3races_per_race_place_len_relative
+    # - time_max_3races_per_race_place_len_relative
+    # - time_min_3races_per_race_place_len_relative
+    # - nobori_mean_3races_per_race_place_len_relative
+    # - nobori_max_3races_per_race_place_len_relative
+    # - nobori_min_3races_per_race_place_len_relative
     - corner_1_per_horse_mean_3races_per_race_place_len_relative
     - corner_1_per_horse_max_3races_per_race_place_len_relative
     - corner_1_per_horse_min_3races_per_race_place_len_relative
@@ -1021,33 +1024,33 @@ features:
     - corner_4_per_horse_mean_3races_per_race_place_len_relative
     - corner_4_per_horse_max_3races_per_race_place_len_relative
     - corner_4_per_horse_min_3races_per_race_place_len_relative
-# #    - pace_1_mean_3races_per_race_place_len_relative
-# #    - pace_1_max_3races_per_race_place_len_relative
-# #    - pace_1_min_3races_per_race_place_len_relative
-# #    - pace_2_mean_3races_per_race_place_len_relative
-# #    - pace_2_max_3races_per_race_place_len_relative
-# #    - pace_2_min_3races_per_race_place_len_relative
-#     #     - win_mean_3races_per_race_place_len_relative
-#     #     - win_max_3races_per_race_place_len_relative
-#     #     - win_min_3races_per_race_place_len_relative
-#     #     - show_mean_3races_per_race_place_len_relative
-#     #     - show_max_3races_per_race_place_len_relative
-#     #     - show_min_3races_per_race_place_len_relative
-#     #     - rank_per_horse_mean_5races_per_race_place_len_relative
-#     #     - rank_per_horse_max_5races_per_race_place_len_relative
-#     #     - rank_per_horse_min_5races_per_race_place_len_relative
-# #     #     - prize_mean_5races_per_race_place_len_relative
-# #     #     - prize_max_5races_per_race_place_len_relative
-# #     #     - prize_min_5races_per_race_place_len_relative
-#     #     - rank_diff_mean_5races_per_race_place_len_relative
-#     #     - rank_diff_max_5races_per_race_place_len_relative
-#     #     - rank_diff_min_5races_per_race_place_len_relative
-    - time_mean_5races_per_race_place_len_relative
-    - time_max_5races_per_race_place_len_relative
-    - time_min_5races_per_race_place_len_relative
-    - nobori_mean_5races_per_race_place_len_relative
-    - nobori_max_5races_per_race_place_len_relative
-    - nobori_min_5races_per_race_place_len_relative
+#    - pace_1_mean_3races_per_race_place_len_relative
+#    - pace_1_max_3races_per_race_place_len_relative
+#    - pace_1_min_3races_per_race_place_len_relative
+#    - pace_2_mean_3races_per_race_place_len_relative
+#    - pace_2_max_3races_per_race_place_len_relative
+#    - pace_2_min_3races_per_race_place_len_relative
+    #     - win_mean_3races_per_race_place_len_relative
+    #     - win_max_3races_per_race_place_len_relative
+    #     - win_min_3races_per_race_place_len_relative
+    #     - show_mean_3races_per_race_place_len_relative
+    #     - show_max_3races_per_race_place_len_relative
+    #     - show_min_3races_per_race_place_len_relative
+    #     - rank_per_horse_mean_5races_per_race_place_len_relative
+    #     - rank_per_horse_max_5races_per_race_place_len_relative
+    #     - rank_per_horse_min_5races_per_race_place_len_relative
+#     #     - prize_mean_5races_per_race_place_len_relative
+#     #     - prize_max_5races_per_race_place_len_relative
+#     #     - prize_min_5races_per_race_place_len_relative
+    #     - rank_diff_mean_5races_per_race_place_len_relative
+    #     - rank_diff_max_5races_per_race_place_len_relative
+    #     - rank_diff_min_5races_per_race_place_len_relative
+    # - time_mean_5races_per_race_place_len_relative
+    # - time_max_5races_per_race_place_len_relative
+    # - time_min_5races_per_race_place_len_relative
+    # - nobori_mean_5races_per_race_place_len_relative
+    # - nobori_max_5races_per_race_place_len_relative
+    # - nobori_min_5races_per_race_place_len_relative
     - corner_1_per_horse_mean_5races_per_race_place_len_relative
     - corner_1_per_horse_max_5races_per_race_place_len_relative
     - corner_1_per_horse_min_5races_per_race_place_len_relative
@@ -1060,33 +1063,33 @@ features:
     - corner_4_per_horse_mean_5races_per_race_place_len_relative
     - corner_4_per_horse_max_5races_per_race_place_len_relative
     - corner_4_per_horse_min_5races_per_race_place_len_relative
-# #    - pace_1_mean_5races_per_race_place_len_relative
-# #    - pace_1_max_5races_per_race_place_len_relative
-# #    - pace_1_min_5races_per_race_place_len_relative
-# #    - pace_2_mean_5races_per_race_place_len_relative
-# #    - pace_2_max_5races_per_race_place_len_relative
-# #    - pace_2_min_5races_per_race_place_len_relative
-#     #     - win_mean_5races_per_race_place_len_relative
-#     #     - win_max_5races_per_race_place_len_relative
-#     #     - win_min_5races_per_race_place_len_relative
-#     #     - show_mean_5races_per_race_place_len_relative
-#     #     - show_max_5races_per_race_place_len_relative
-#     #     - show_min_5races_per_race_place_len_relative
-#     #     - rank_per_horse_mean_10races_per_race_place_len_relative
-#     #     - rank_per_horse_max_10races_per_race_place_len_relative
-#     #     - rank_per_horse_min_10races_per_race_place_len_relative
-# #     #     - prize_mean_10races_per_race_place_len_relative
-# #     #     - prize_max_10races_per_race_place_len_relative
-# #     #     - prize_min_10races_per_race_place_len_relative
-#     #     - rank_diff_mean_10races_per_race_place_len_relative
-#     #     - rank_diff_max_10races_per_race_place_len_relative
-#     #     - rank_diff_min_10races_per_race_place_len_relative
-    - time_mean_10races_per_race_place_len_relative
-    - time_max_10races_per_race_place_len_relative
-    - time_min_10races_per_race_place_len_relative
-    - nobori_mean_10races_per_race_place_len_relative
-    - nobori_max_10races_per_race_place_len_relative
-    - nobori_min_10races_per_race_place_len_relative
+#    - pace_1_mean_5races_per_race_place_len_relative
+#    - pace_1_max_5races_per_race_place_len_relative
+#    - pace_1_min_5races_per_race_place_len_relative
+#    - pace_2_mean_5races_per_race_place_len_relative
+#    - pace_2_max_5races_per_race_place_len_relative
+#    - pace_2_min_5races_per_race_place_len_relative
+    #     - win_mean_5races_per_race_place_len_relative
+    #     - win_max_5races_per_race_place_len_relative
+    #     - win_min_5races_per_race_place_len_relative
+    #     - show_mean_5races_per_race_place_len_relative
+    #     - show_max_5races_per_race_place_len_relative
+    #     - show_min_5races_per_race_place_len_relative
+    #     - rank_per_horse_mean_10races_per_race_place_len_relative
+    #     - rank_per_horse_max_10races_per_race_place_len_relative
+    #     - rank_per_horse_min_10races_per_race_place_len_relative
+#     #     - prize_mean_10races_per_race_place_len_relative
+#     #     - prize_max_10races_per_race_place_len_relative
+#     #     - prize_min_10races_per_race_place_len_relative
+    #     - rank_diff_mean_10races_per_race_place_len_relative
+    #     - rank_diff_max_10races_per_race_place_len_relative
+    #     - rank_diff_min_10races_per_race_place_len_relative
+    # - time_mean_10races_per_race_place_len_relative
+    # - time_max_10races_per_race_place_len_relative
+    # - time_min_10races_per_race_place_len_relative
+    # - nobori_mean_10races_per_race_place_len_relative
+    # - nobori_max_10races_per_race_place_len_relative
+    # - nobori_min_10races_per_race_place_len_relative
     - corner_1_per_horse_mean_10races_per_race_place_len_relative
     - corner_1_per_horse_max_10races_per_race_place_len_relative
     - corner_1_per_horse_min_10races_per_race_place_len_relative
@@ -2944,6 +2947,7 @@ features:
 
 
 
+
     # - rush_type_min_1races_relative
     # - rush_type_max_1races_relative
     # - rush_type_mean_1races_relative
@@ -3870,3 +3874,15 @@ features:
     # - time_correction_min_8races_relative
     # - time_correction_max_8races_relative
     # - time_correction_mean_8races_relative
+    - waku_hit_rate_standardized  
+    # - waku_return_rate_standardized
+    - position_hit_rate_standardized
+    # - position_return_rate_standardized
+    - course_len_diff_hit_rate_standardized
+    # - course_len_diff_return_rate_standardized
+    - class_diff_hit_rate_standardized
+    # - class_diff_return_rate_standardized
+    - age_hit_rate_standardized
+    # - age_return_rate_standardized
+    - sex_hit_rate_standardized
+    # - sex_return_rate_standardized

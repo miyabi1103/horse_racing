@@ -1614,7 +1614,10 @@ def process_race_info(
     df["race_class"] = df["race_class"].astype(int)
     df["ground_state"] = df["ground_state"].astype(int)
     df["around"] = df["around"].fillna(3).astype(int)
-    df["weather"] = df["weather"].astype(int)
+    # 例: 欠損値を 0（または他の適切な値）で埋める
+    df["weather"] = df["weather"].fillna(0).astype(int)
+
+    # df["weather"] = df["weather"].astype(int)
     
     
     

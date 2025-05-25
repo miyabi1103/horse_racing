@@ -1,0 +1,17 @@
+    # - rank_diff_hosei_mean_1races_per_hosei_relative
+    # - rank_diff_hosei_min_1races_per_hosei_relative
+    - nobori_mean_1races_per_hosei_relative
+    - nobori_min_1races_per_hosei_relative
+    # - rank_diff_hosei_mean_3races_per_hosei_relative
+    # - rank_diff_hosei_min_3races_per_hosei_relative
+    - nobori_mean_3races_per_hosei_relative
+    - nobori_min_3races_per_hosei_relative
+    # - rank_diff_hosei_mean_5races_per_hosei_relative
+    # - rank_diff_hosei_min_5races_per_hosei_relative
+    - nobori_mean_5races_per_hosei_relative
+    - nobori_min_5races_per_hosei_relative
+    # - rank_diff_hosei_mean_10races_per_hosei_relative
+    # - rank_diff_hosei_min_10races_per_hosei_relative
+    - nobori_mean_10races_per_hosei_relative
+    - nobori_min_10races_per_hosei_relative
+

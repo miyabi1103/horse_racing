@@ -132,7 +132,46 @@ async def Auto_purchase_sanrenpuku(race_id:str, top_n: int = 3,amount: str = "10
 
 
         await page1.get_by_role("link", name="ボックス").click()
-        await page1.locator("td:nth-child(5) > .btn-mark").click()
+        # await page1.locator("td:nth-child(5) > .btn-mark").click()
+        try:
+            # まず普通にクリックする
+            await page1.locator("td:nth-child(5) > .btn-mark").click()
+            print("普通にクリック成功しました")
+            await asyncio.sleep(2)  # ★ クリック後に1秒待機
+        except Exception as e:
+            print(f"普通クリック失敗: {e}。三連複を探します。")
+            try:
+                # ボタン全部取得
+                buttons = await page1.locator("td:nth-child(5) > .btn-mark").all()
+
+                if not buttons:
+                    print("ボタンが一個もないのでスキップします")
+                else:
+                    clicked = False
+                    for button in buttons:
+                        try:
+                            text = await button.inner_text()
+                            if "三連複" in text:
+                                await button.click()
+                                print("三連複ボタンをクリックしました")
+                                await asyncio.sleep(2)  # ★ クリック後に1秒待機
+                                clicked = True
+                                break
+                        except Exception as e_inner:
+                            print(f"ボタンテキスト取得エラー: {e_inner}")
+                            continue
+
+                    if not clicked:
+                        # 三連単ボタンがなかったので最初のボタンをクリック
+                        print("三連複が見つからなかったので最初のボタンをクリックします")
+                        await buttons[0].click()
+                        await asyncio.sleep(2)  # ★ クリック後に1秒待機
+
+            except Exception as e2:
+                print(f"三連複探しも最初のクリックも失敗しました: {e2}")
+                # ここで諦めてスキップ
+
+
         # パターン①: セルの中のボタン
         try:
             cell = page1.get_by_role("cell", name=first_umaban, exact=True)
@@ -204,12 +243,23 @@ async def Auto_purchase_sanrenpuku(race_id:str, top_n: int = 3,amount: str = "10
         # await page1.get_by_role("row", name="1").get_by_label("円").dblclick()
         # await page1.get_by_role("row", name="1").get_by_label("円").fill(amount_num)
         await page1.get_by_role("button", name="金額セット用テンキ―").first.click()
-        await page1.locator("#bet-list-top").get_by_role("button", name=amount_num).click()
+        # 1桁ならそのままクリック、2桁なら1文字ずつクリック
+        if len(amount_num) == 1:
+            await page1.locator("#bet-list-top").get_by_role("button", name=amount_num).click()
+        elif len(amount_num) == 2:
+            await page1.locator("#bet-list-top").get_by_role("button", name=amount_num[0]).click()
+            await page1.locator("#bet-list-top").get_by_role("button", name=amount_num[1]).click()
+        else:
+            print(f"Error: 想定外の金額形式（{amount_num}）")
+
+
+        # await page1.locator("#bet-list-top").get_by_role("button", name=amount_num).click()
         await page1.locator("#bet-list-top").get_by_role("button", name="セット", exact=True).click()
         await page1.get_by_role("button", name="一括セット").click()
         await asyncio.sleep(1)
 
         await page1.get_by_role("cell", name="合計金額入力： 円 金額セット用テンキ―").get_by_role("textbox").click()
+        await asyncio.sleep(1)
         await page1.get_by_role("cell", name="合計金額入力： 円 金額セット用テンキ―").get_by_role("textbox").fill(amount)
         await asyncio.sleep(1)
         await page1.get_by_role("button", name="購入する").click()

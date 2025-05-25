@@ -50,7 +50,7 @@ if not PARS_URL:
 # if not PARS_URL:
 #     raise ValueError("PARS_NOが設定されていません。'.env'ファイルを確認してください。")
 
-async def Auto_purchase_tansho_turf(race_id:str= "202509020611",amount: str = "100",amount_num: str = "1"):
+async def Auto_purchase_tansho_turf(race_id:str,amount: str = "100",amount_num: str = "1"):
     csv_path = Path("../../data/05_prediction_results/prediction_result.csv")
 
     """
@@ -60,7 +60,7 @@ async def Auto_purchase_tansho_turf(race_id:str= "202509020611",amount: str = "1
     try:
         # CSVファイルを読み込む
         df = pd.read_csv(csv_path, sep="\t")
-        filtered = df[(df["pred"] > 0.1) & (df["tansho_odds"] < 100) & (df["Ex_value"] >= 7.9)]
+        filtered = df[(df["tansho_odds"] < 100) & (df["Ex_value"] >= 9.06)]
         umaban_list = filtered["umaban"].tolist()
     except Exception as e:
         print("単勝投票はありません")
@@ -145,7 +145,16 @@ async def Auto_purchase_tansho_turf(race_id:str= "202509020611",amount: str = "1
             # await page1.get_by_role("row", name="1").get_by_label("円").dblclick()
             # await page1.get_by_role("row", name="1").get_by_label("円").fill(amount_num)
             await page1.get_by_role("button", name="金額セット用テンキ―").first.click()
-            await page1.locator("#bet-list-top").get_by_role("button", name=amount_num).click()
+
+            # 1桁ならそのままクリック、2桁なら1文字ずつクリック
+            if len(amount_num) == 1:
+                await page1.locator("#bet-list-top").get_by_role("button", name=amount_num).click()
+            elif len(amount_num) == 2:
+                await page1.locator("#bet-list-top").get_by_role("button", name=amount_num[0]).click()
+                await page1.locator("#bet-list-top").get_by_role("button", name=amount_num[1]).click()
+            else:
+                print(f"Error: 想定外の金額形式（{amount_num}）")
+                
             await page1.locator("#bet-list-top").get_by_role("button", name="セット", exact=True).click()
             await page1.get_by_role("button", name="一括セット").click()
             await asyncio.sleep(2)

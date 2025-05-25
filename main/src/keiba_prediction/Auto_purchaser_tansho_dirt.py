@@ -59,7 +59,7 @@ async def Auto_purchase_tansho_dirt(race_id:str,amount: str = "100",amount_num: 
     """
     try:
         df = pd.read_csv(csv_path, sep="\t")
-        filtered = df[(df["pred"] > 0.1) & (df["tansho_odds"] < 100) & (df["Ex_value"] > 7)]
+        filtered = df[(df["pred"] > 0.2) & (df["tansho_odds"] < 100) & (df["Ex_value"] > 6)]
         umaban_list = filtered["umaban"].tolist()
 
     except Exception as e:
@@ -131,7 +131,16 @@ async def Auto_purchase_tansho_dirt(race_id:str,amount: str = "100",amount_num: 
             # await page1.get_by_role("row", name="1").get_by_label("円").dblclick()
             # await page1.get_by_role("row", name="1").get_by_label("円").fill(amount_num)
             await page1.get_by_role("button", name="金額セット用テンキ―").first.click()
-            await page1.locator("#bet-list-top").get_by_role("button", name=amount_num).click()
+
+            # 1桁ならそのままクリック、2桁なら1文字ずつクリック
+            if len(amount_num) == 1:
+                await page1.locator("#bet-list-top").get_by_role("button", name=amount_num).click()
+            elif len(amount_num) == 2:
+                await page1.locator("#bet-list-top").get_by_role("button", name=amount_num[0]).click()
+                await page1.locator("#bet-list-top").get_by_role("button", name=amount_num[1]).click()
+            else:
+                print(f"Error: 想定外の金額形式（{amount_num}）")
+
             await page1.locator("#bet-list-top").get_by_role("button", name="セット", exact=True).click()
             await page1.get_by_role("button", name="一括セット").click()
             await asyncio.sleep(2)

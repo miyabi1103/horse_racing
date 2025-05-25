@@ -57,6 +57,9 @@ class Evaluator_lightgbm_rank_niti_cross:
         # self.evaluation_df = self.evaluation_df.query("mean_age <= 3.4")
         # self.evaluation_df = self.evaluation_df.query("3.4 < mean_age")
 
+        # self.evaluation_df = self.evaluation_df.query("3 <=  tansho_odds")
+        # self.evaluation_df = self.evaluation_df.query("2 <=  popularity")
+
 
         # self.evaluation_df = self.evaluation_df.query("n_horses <=8")
         # self.evaluation_df = self.evaluation_df.query("n_horses <=10")

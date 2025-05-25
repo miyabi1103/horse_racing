@@ -84,7 +84,7 @@ class TicketsPurchaser:
         # P-ARS番号
         self.pars_no = PARS_URL
         # JRA IPATへの入金金額[yen]
-        self.deposit_money = 20000
+        self.deposit_money = 60000
         # 馬券の購入枚数
         self.ticket_nm = 1
         # seleniumの待機時間[sec]

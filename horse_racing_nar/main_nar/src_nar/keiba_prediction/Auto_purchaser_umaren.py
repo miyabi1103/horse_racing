@@ -108,12 +108,14 @@ async def Auto_purchase_umaren(race_id:str,top_n: int = 2,amount: str = "100",am
         await page.get_by_text("ログイン", exact=True).click()
         await asyncio.sleep(2)
         close_buttons = page.get_by_role("button", name="閉じる")
+        print("ログイン完了")
         if await close_buttons.count() > 0:
             if await close_buttons.nth(0).is_visible():
                 await close_buttons.nth(0).click()
         else:
             await asyncio.sleep(2)
         await asyncio.sleep(1)
+        print("トップ画面到達")
         try:
             # ここでplace_countRをクリック（一定時間だけ待つ）
             await asyncio.wait_for(
@@ -125,23 +127,34 @@ async def Auto_purchase_umaren(race_id:str,top_n: int = 2,amount: str = "100",am
             await page.get_by_role("button", name="照会").click()
             await page.get_by_role("button", name="開催要領").click()
         await page.get_by_role("link", name=f"{place_count}R").click()
+        print("レース到達")
         async with page.expect_popup() as page2_info:
             await page.get_by_role("button", name="マークカード投票").click()
+        await asyncio.sleep(1)
         page2 = await page2_info.value
         await page2.get_by_text("ボックス").click()
+        print("ボックス完了")
         await page2.get_by_text("馬複").click()
         await page2.get_by_role("button", name=first_umaban, exact=True).click()
         await page2.get_by_role("button", name=second_umaban, exact=True).click()
+        await asyncio.sleep(1)
+        print("選択完了")
         await page2.get_by_text("投票金額入力へ").click()
         await page2.get_by_role("cell", name="各 00円 0円").get_by_role("textbox").click()
         await page2.get_by_role("cell", name="各 00円 0円").get_by_role("textbox").fill(amount_num)
+        await asyncio.sleep(1)
+        print("金額入力")
         await page2.locator("#gotoCfm-buy").click()
+        print("投票完了_1")
         await page2.locator("input[name=\"cfm_ansho\"]").click()
         await page2.locator("input[name=\"cfm_ansho\"]").fill(PASSWORD)
+        print("投票完了_2")
         await asyncio.sleep(1)
         await page2.locator("input[name=\"cfm_amount\"]").click()
+        print("投票完了_3")
         await asyncio.sleep(1)
         await page2.locator("input[name=\"cfm_amount\"]").fill(amount)
+        print("投票完了_4")
         await asyncio.sleep(2)
         try:
             # ここでplace_countRをクリック（一定時間だけ待つ）
@@ -153,6 +166,7 @@ async def Auto_purchase_umaren(race_id:str,top_n: int = 2,amount: str = "100",am
             await page2.locator("div").filter(has_text=place_name).first.click()
             await asyncio.sleep(2)
             await page2.get_by_text("投票する").click()
+        print("投票完了_fin")
         await asyncio.sleep(2)
         # ---------------------
         await context.close()

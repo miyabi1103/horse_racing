@@ -2825,16 +2825,8 @@ class PredictionFeatureCreator:
         def determine_dominant_position(row):
             
             # 5racesの中から計算
-            if not row[position_columns_5].isnull().all():
-                max_column = row[position_columns_5].idxmax()
-                return {
-                    "escape_5races": 1,
-                    "taking_lead_5races": 2,
-                    "in_front_5races": 3,
-                    "pursuit_5races": 4,
-                }[max_column]
-            # 3racesの中から計算
-            elif not row[position_columns_3].isnull().all():
+
+            if not row[position_columns_3].isnull().all():
                 max_column = row[position_columns_3].idxmax()
                 return {
                     "escape_3races": 1,
@@ -2843,6 +2835,15 @@ class PredictionFeatureCreator:
                     "pursuit_3races": 4,
                 }[max_column]
             # 1racesの中から計算
+            elif not row[position_columns_5].isnull().all():
+                max_column = row[position_columns_5].idxmax()
+                return {
+                    "escape_5races": 1,
+                    "taking_lead_5races": 2,
+                    "in_front_5races": 3,
+                    "pursuit_5races": 4,
+                }[max_column]
+            # 3racesの中から計算
             elif not row[position_columns_1].isnull().all():
                 max_column = row[position_columns_1].idxmax()
                 return {
@@ -4799,17 +4800,8 @@ class PredictionFeatureCreator:
         
         def determine_dominant_position(row):
             
-            # 5racesの中から計算
-            if not row[position_columns_5].isnull().all():
-                max_column = row[position_columns_5].idxmax()
-                return {
-                    "escape_5races": 1,
-                    "taking_lead_5races": 2,
-                    "in_front_5races": 3,
-                    "pursuit_5races": 4,
-                }[max_column]
-            # 3racesの中から計算
-            elif not row[position_columns_3].isnull().all():
+
+            if not row[position_columns_3].isnull().all():
                 max_column = row[position_columns_3].idxmax()
                 return {
                     "escape_3races": 1,
@@ -4818,6 +4810,15 @@ class PredictionFeatureCreator:
                     "pursuit_3races": 4,
                 }[max_column]
             # 1racesの中から計算
+            elif not row[position_columns_5].isnull().all():
+                max_column = row[position_columns_5].idxmax()
+                return {
+                    "escape_5races": 1,
+                    "taking_lead_5races": 2,
+                    "in_front_5races": 3,
+                    "pursuit_5races": 4,
+                }[max_column]
+            # 3racesの中から計算
             elif not row[position_columns_1].isnull().all():
                 max_column = row[position_columns_1].idxmax()
                 return {
@@ -4880,7 +4881,6 @@ class PredictionFeatureCreator:
         def calculate_pace_category(row):
             escape_count = row.get("escape_count", 0)
             taking_lead_per = row.get("taking_lead_per", 0)
-        
             if escape_count >= 3:
                 return 4  # ハイペース
             elif escape_count == 2:
@@ -5282,16 +5282,9 @@ class PredictionFeatureCreator:
         def determine_dominant_position(row):
             
             # 5racesの中から計算
-            if not row[position_columns_5].isnull().all():
-                max_column = row[position_columns_5].idxmax()
-                return {
-                    "escape_5races": 1,
-                    "taking_lead_5races": 2,
-                    "in_front_5races": 3,
-                    "pursuit_5races": 4,
-                }[max_column]
-            # 3racesの中から計算
-            elif not row[position_columns_3].isnull().all():
+
+
+            if not row[position_columns_3].isnull().all():
                 max_column = row[position_columns_3].idxmax()
                 return {
                     "escape_3races": 1,
@@ -5300,6 +5293,15 @@ class PredictionFeatureCreator:
                     "pursuit_3races": 4,
                 }[max_column]
             # 1racesの中から計算
+            elif not row[position_columns_5].isnull().all():
+                max_column = row[position_columns_5].idxmax()
+                return {
+                    "escape_5races": 1,
+                    "taking_lead_5races": 2,
+                    "in_front_5races": 3,
+                    "pursuit_5races": 4,
+                }[max_column]
+            # 3racesの中から計算
             elif not row[position_columns_1].isnull().all():
                 max_column = row[position_columns_1].idxmax()
                 return {
@@ -6726,17 +6728,8 @@ class PredictionFeatureCreator:
         未来の脚質を予想
         """
         def determine_dominant_position(row):
-            # 5racesの中から計算
-            if not row[position_columns_5].isnull().all():
-                max_column = row[position_columns_5].idxmax()
-                return {
-                    "escape_5races": 1,
-                    "taking_lead_5races": 2,
-                    "in_front_5races": 3,
-                    "pursuit_5races": 4,
-                }[max_column]
-            # 3racesの中から計算
-            elif not row[position_columns_3].isnull().all():
+
+            if not row[position_columns_3].isnull().all():
                 max_column = row[position_columns_3].idxmax()
                 return {
                     "escape_3races": 1,
@@ -6745,6 +6738,15 @@ class PredictionFeatureCreator:
                     "pursuit_3races": 4,
                 }[max_column]
             # 1racesの中から計算
+            elif not row[position_columns_5].isnull().all():
+                max_column = row[position_columns_5].idxmax()
+                return {
+                    "escape_5races": 1,
+                    "taking_lead_5races": 2,
+                    "in_front_5races": 3,
+                    "pursuit_5races": 4,
+                }[max_column]
+            # 3racesの中から計算
             elif not row[position_columns_1].isnull().all():
                 max_column = row[position_columns_1].idxmax()
                 return {
@@ -11414,16 +11416,8 @@ class PredictionFeatureCreator:
         def determine_dominant_position(row):
             
             # 5racesの中から計算
-            if not row[position_columns_5].isnull().all():
-                max_column = row[position_columns_5].idxmax()
-                return {
-                    "escape_5races": 1,
-                    "taking_lead_5races": 2,
-                    "in_front_5races": 3,
-                    "pursuit_5races": 4,
-                }[max_column]
-            # 3racesの中から計算
-            elif not row[position_columns_3].isnull().all():
+
+            if not row[position_columns_3].isnull().all():
                 max_column = row[position_columns_3].idxmax()
                 return {
                     "escape_3races": 1,
@@ -11432,6 +11426,15 @@ class PredictionFeatureCreator:
                     "pursuit_3races": 4,
                 }[max_column]
             # 1racesの中から計算
+            elif not row[position_columns_5].isnull().all():
+                max_column = row[position_columns_5].idxmax()
+                return {
+                    "escape_5races": 1,
+                    "taking_lead_5races": 2,
+                    "in_front_5races": 3,
+                    "pursuit_5races": 4,
+                }[max_column]
+            # 3racesの中から計算
             elif not row[position_columns_1].isnull().all():
                 max_column = row[position_columns_1].idxmax()
                 return {
@@ -11443,7 +11446,6 @@ class PredictionFeatureCreator:
             # すべて欠損の場合は1を返す
             else:
                 return 3
-        
         # 各行に対して dominant_position_category を適用
         merged_df["dominant_position_category"] = merged_df.apply(determine_dominant_position, axis=1)
         merged_df1 = merged_df
@@ -13526,16 +13528,8 @@ class PredictionFeatureCreator:
         def determine_dominant_position(row):
             
             # 5racesの中から計算
-            if not row[position_columns_5].isnull().all():
-                max_column = row[position_columns_5].idxmax()
-                return {
-                    "escape_5races": 1,
-                    "taking_lead_5races": 2,
-                    "in_front_5races": 3,
-                    "pursuit_5races": 4,
-                }[max_column]
-            # 3racesの中から計算
-            elif not row[position_columns_3].isnull().all():
+
+            if not row[position_columns_3].isnull().all():
                 max_column = row[position_columns_3].idxmax()
                 return {
                     "escape_3races": 1,
@@ -13544,6 +13538,15 @@ class PredictionFeatureCreator:
                     "pursuit_3races": 4,
                 }[max_column]
             # 1racesの中から計算
+            elif not row[position_columns_5].isnull().all():
+                max_column = row[position_columns_5].idxmax()
+                return {
+                    "escape_5races": 1,
+                    "taking_lead_5races": 2,
+                    "in_front_5races": 3,
+                    "pursuit_5races": 4,
+                }[max_column]
+            # 3racesの中から計算
             elif not row[position_columns_1].isnull().all():
                 max_column = row[position_columns_1].idxmax()
                 return {
@@ -13555,7 +13558,6 @@ class PredictionFeatureCreator:
             # すべて欠損の場合は1を返す
             else:
                 return 3
-        
         # 各行に対して dominant_position_category を適用
         merged_df["dominant_position_category"] = merged_df.apply(determine_dominant_position, axis=1)
         merged_df1 = merged_df
@@ -13606,7 +13608,6 @@ class PredictionFeatureCreator:
         def calculate_pace_category(row):
             escape_count = row.get("escape_count", 0)
             taking_lead_per = row.get("taking_lead_per", 0)
-        
             if escape_count >= 3:
                 return 4  # ハイペース
             elif escape_count == 2:
